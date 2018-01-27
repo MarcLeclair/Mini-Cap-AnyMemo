@@ -1,9 +1,9 @@
 package org.liberty.android.fantastischmemo.downloader.anymemo;
 
-import android.os.Bundle;
+        import android.os.Bundle;
 
-import org.liberty.android.fantastischmemo.R;
-import org.liberty.android.fantastischmemo.common.BaseActivity;
+        import org.liberty.android.fantastischmemo.R;
+        import org.liberty.android.fantastischmemo.common.BaseActivity;
 
 public class AnyMemoDownloaderActivity extends BaseActivity {
     @Override
