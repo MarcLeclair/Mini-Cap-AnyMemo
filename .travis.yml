@@ -57,11 +57,6 @@ env:
 
 
 
-install:
-
-  # Setup gradle.properties
-
-  - cp gradle.properties-example gradle.properties
 
 
 
