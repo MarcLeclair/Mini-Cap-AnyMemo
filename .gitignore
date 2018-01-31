@@ -1,6 +1,7 @@
 .DS_Store
 *.sw*
 build.xml
+local.properties
 gen/
 bin/
 libs/armeabi
