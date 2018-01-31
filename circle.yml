@@ -42,4 +42,5 @@ dependencies:
 test:
 
     override:
-      - ./gradlew build
+      - ./gradlew build:
+            timeout: 300000
