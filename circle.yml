@@ -39,9 +39,6 @@ test:
 
 
 
-        - (./gradlew assemble):
-
-            timeout: 10000
-
+        -./gradlew assembleRelease
        - ./gradlew installFreeDebugTest
        - ./gradlew connectedInstrumentTestFreeDebug
