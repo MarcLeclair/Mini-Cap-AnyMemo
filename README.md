@@ -1,6 +1,6 @@
 [![](http://anymemominicap.pagekite.me/buildStatus/icon?job=AnyMemo)](http://anymemominicap.pagekite.me/job/AnyMemo/)
 
-http://anymemominicap.pagekite.me/buildStatus/icon?job=AnyMemo
+http://anymemominicap.pagekite.me/buildStatus/icon?job=AnyMemo.png
 
 AnyMemo Readme
 ==============
