@@ -1,4 +1,4 @@
-[![Build Status](http://anymemominicap.pagekite.me/buildStatus/icon?job=AnyMemo)](http://anymemominicap.pagekite.me/job/AnyMemo/)
+[![Build Status](http://anymemominicap.pagekite.me/buildStatus/icon?job=AnyMemo.png)](http://anymemominicap.pagekite.me/job/AnyMemo/)
 
 
 AnyMemo Readme
