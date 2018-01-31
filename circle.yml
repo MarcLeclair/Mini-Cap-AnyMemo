@@ -13,8 +13,7 @@ general:
 
         - /home/ubuntu/Mini-Cap-AnyMemo/app/build/outputs/apk/
 
-     post:
-             - cp -r /usr/local/bin/git $HOME/git
+
 
 machine:
 
@@ -37,16 +36,10 @@ dependencies:
 
 
         - ANDROID_HOME=/usr/local/android-sdk-linux ./gradlew dependencies
-     post:
-         - sudo cp -r $HOME/git /usr/local/bin/git
+
 
 
 test:
 
     override:
-
-
-
-        -./gradlew assembleRelease
-       - ./gradlew installFreeDebugTest
-       - ./gradlew connectedInstrumentTestFreeDebug
+      - ./gradlew build
