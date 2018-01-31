@@ -37,9 +37,11 @@ test:
 
     override:
 
-        - ./gradlew installFreeDebugTest
-        - ./gradlew connectedInstrumentTestFreeDebug
+
 
         - (./gradlew assemble):
 
-            timeout: 1200
+            timeout: 10000
+
+       - ./gradlew installFreeDebugTest
+       - ./gradlew connectedInstrumentTestFreeDebug
