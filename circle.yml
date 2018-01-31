@@ -7,14 +7,14 @@
 
 
 general:
-     post:
-         - cp -r /usr/local/bin/git $HOME/git
+
 
     artifacts:
 
         - /home/ubuntu/Mini-Cap-AnyMemo/app/build/outputs/apk/
 
-
+     post:
+             - cp -r /usr/local/bin/git $HOME/git
 
 machine:
 
@@ -28,8 +28,7 @@ dependencies:
 
     cache_directories:
       - $HOME/git
-    post:
-       - sudo cp -r $HOME/git /usr/local/bin/git
+
 
 
     override:
@@ -38,7 +37,8 @@ dependencies:
 
 
         - ANDROID_HOME=/usr/local/android-sdk-linux ./gradlew dependencies
-
+     post:
+         - sudo cp -r $HOME/git /usr/local/bin/git
 
 
 test:
