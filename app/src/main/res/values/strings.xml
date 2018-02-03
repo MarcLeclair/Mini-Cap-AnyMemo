@@ -468,4 +468,8 @@
     <string name="google_sign_in_not_successful_error_text">Google sign in is not successful</string>
     <string name="google_sign_in_empty_error_text">Google sign in result is empty</string>
     <string name="google_sign_in_account_empty_result">Unable to get Google account</string>
+    <string name="show_hint">Show hint</string>
+    <string name="picture_hint" translatable="false">Picture hint</string>
+    <string name="multiple_choice_hint">Multiple choice hint</string>
+    <string name="letter_hint">Letter hint</string>
 </resources>

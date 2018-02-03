@@ -13,4 +13,14 @@
     <item android:id="@+id/menu_speak_answer"
   		  android:icon="@drawable/speak_a_48"
           android:title="@string/speak_answer_menu_text" />
+    <item
+        android:id="@+id/picture_hint"
+        android:title="@string/picture_hint" />
+    <item
+        android:id="@+id/multiple_choice_hint"
+        android:title="@string/multiple_choice_hint" />
+
+    <item
+        android:id="@+id/letter_hint"
+        android:title="@string/letter_hint" />
 </menu>

@@ -260,4 +260,5 @@
     <string name="dict_fora">Fora Dictionary</string>
     <string name="error_no_dict">no es instalado. Por favor, descargue ColorDict de Android Market o seleccione otro diccionario en Opciones. Error: </string>
     <string name="item_update_warning">¿Seguro que quiere actualizar esta tarjeta?</string>
+    <string name="picture_hint">Picture hint</string>
 </resources>

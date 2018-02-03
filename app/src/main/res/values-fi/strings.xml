@@ -448,5 +448,6 @@
     <string name="close_text">Sulje</string>
     <string name="greek_text">Kreikka</string>
     <string name="hour_text">h</string>
-    <string name="minute_text">min</string> 
+    <string name="minute_text">min</string>
+    <string name="picture_hint">Picture hint</string>
 </resources>

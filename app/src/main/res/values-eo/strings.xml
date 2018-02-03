@@ -466,4 +466,5 @@
     <string name="google_sign_in_not_successful_error_text">Ensaluto al Google malsukcesis</string>
     <string name="google_sign_in_empty_error_text">Rezulto de ensaluto al Google estas malplena</string>
     <string name="google_sign_in_account_empty_result">Ne povis aliri al Google-konto</string>
+    <string name="picture_hint">Picture hint</string>
 </resources>

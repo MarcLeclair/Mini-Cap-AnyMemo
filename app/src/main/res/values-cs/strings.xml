@@ -182,4 +182,5 @@
     <string name="grade_text">Stupeň</string>
     <string name="enable_volume_key_text">Povolit klávesovou zkratku</string>
     <string name="enable_volume_key_summary">Použijte tlačítka hlasitosti pro odstupňování karet při učení.</string>
+    <string name="picture_hint">Picture hint</string>
 </resources>

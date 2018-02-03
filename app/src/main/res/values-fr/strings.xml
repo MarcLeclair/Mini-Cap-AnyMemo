@@ -229,4 +229,5 @@
     <string name="download_source_anymemo">http://anymemo.org (défault)</string>
     <string name="swap_text">Intervertir</string>
     <string name="swapdup_text">Copier et intervertir</string>
+    <string name="picture_hint">Picture hint</string>
 </resources>

@@ -445,4 +445,5 @@
     <string name="search_by_title_text">Cerca per titolo</string>
     <string name="open_text">Apri</string>
     <string name="close_text">Chiudi</string>
+    <string name="picture_hint">Picture hint</string>
 </resources>
