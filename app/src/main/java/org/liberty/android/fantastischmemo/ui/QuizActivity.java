@@ -29,6 +29,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -167,11 +168,22 @@ public class QuizActivity extends QACardActivity {
                 speakAnswer();
                 break;
             }
+            case R.id.picture_hint:{
+                break;
+            }
+            case R.id.multiple_choice_hint:{
+                break;
+            }
+            case R.id.letter_hint:{
+
+                break;
+            }
             case R.id.menu_paint:
             {
                 Intent myIntent = new Intent(this, PaintActivity.class);
                 startActivity(myIntent);
             }
+
         }
         return false;
     }
