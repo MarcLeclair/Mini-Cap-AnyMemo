@@ -255,4 +255,7 @@
     <string name="locale_japanese_text">日本語</string>
     <string name="directory_empty_text">（空ディレクトリ）</string>
     <string name="today_text">今日</string>
+    <string name="picture_hint">ピクチャヒント</string>
+    <string name="multiple_choice_hint">多肢選択ヒント</string>
+    <string name="letter_hint">手紙のヒント</string>
 </resources>
