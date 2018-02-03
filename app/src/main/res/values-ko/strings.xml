@@ -224,5 +224,7 @@
     <string name="swap_text">교환</string>
     <string name="swapdup_text">교환&amp;복사</string>
     <string name="locale_german_text">German</string>
-    <string name="picture_hint">Picture hint</string>
+    <string name="picture_hint">그림 힌트</string>
+    <string name="multiple_choice_hint">객관식 힌트</string>
+    <string name="letter_hint">편지 힌트</string>
 </resources>

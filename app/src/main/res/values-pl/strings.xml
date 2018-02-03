@@ -465,5 +465,7 @@
 	<string name="google_sign_in_not_successful_error_text">Nie udało zalogować się do konta Google</string>
 	<string name="google_sign_in_empty_error_text">Rezultat uwierzytelnianiado konta Google jest pusty</string>
 	<string name="google_sign_in_account_empty_result">Nie można dostać się do konta Google</string>
-    <string name="picture_hint">Picture hint</string>
+    <string name="picture_hint">Podpowiedź obrazu</string>
+    <string name="multiple_choice_hint">wskazówka wielokrotnego wyboru</string>
+    <string name="letter_hint">podpowiedź na literę</string>
 </resources>

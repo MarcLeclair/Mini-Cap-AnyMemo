@@ -228,5 +228,7 @@
     <string name="locale_korean_text">Coreano</string>
     <string name="locale_french_text">Francês</string>
     <string name="locale_portuguese_text">Português (Brasil)</string>
-    <string name="picture_hint">Picture hint</string>
+    <string name="picture_hint">Dica de imagem</string>
+    <string name="multiple_choice_hint">dica de múltipla escolha</string>
+    <string name="letter_hint">sugestão de letra</string>
 </resources>

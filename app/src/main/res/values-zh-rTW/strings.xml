@@ -441,5 +441,7 @@
     <string name="directory_empty_text">（資料夾為空）</string>
     <string name="today_text">今天</string>
     <string name="more_text">更多模式</string>
-    <string name="picture_hint">Picture hint</string>
+    <string name="picture_hint">图片提示</string>
+    <string name="multiple_choice_hint">選擇題提示</string>
+    <string name="letter_hint">字母提示</string>
 </resources>

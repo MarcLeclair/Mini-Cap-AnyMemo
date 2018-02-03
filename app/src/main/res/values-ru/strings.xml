@@ -462,5 +462,7 @@
     <string name="google_sign_in_not_successful_error_text">Не удалось войти в аккаунт Google</string>
     <string name="google_sign_in_empty_error_text">Результат входа в аккаунт Google отсутствует</string>
     <string name="google_sign_in_account_empty_result">Не удалось получить аккаунт Google</string>
-    <string name="picture_hint">Picture hint</string>
+    <string name="picture_hint">Подсказка изображения</string>
+    <string name="multiple_choice_hint">подсказка множественного выбора</string>
+    <string name="letter_hint">письмо-подсказка</string>
 </resources>
