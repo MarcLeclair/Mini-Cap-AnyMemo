@@ -167,6 +167,16 @@ public class QuizActivity extends QACardActivity {
                 speakAnswer();
                 break;
             }
+            case R.id.picture_hint:{
+                break;
+            }
+            case R.id.multiple_choice_hint:{
+                break;
+            }
+            case R.id.letter_hint:{
+                showHint();
+                break;
+            }
             case R.id.menu_paint:
             {
                 Intent myIntent = new Intent(this, PaintActivity.class);
