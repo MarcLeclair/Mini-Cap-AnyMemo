@@ -451,4 +451,7 @@
     <string name="directory_empty_text">(Leeres Verzeichnis)</string>
     <string name="today_text">Heute</string>
     <string name="more_text">MEHR</string>
+    <string name="picture_hint">Bildhinweis</string>
+    <string name="multiple_choice_hint">Multiple-Choice-Hinweis</string>
+    <string name="letter_hint">Briefhinweis</string>
 </resources>
