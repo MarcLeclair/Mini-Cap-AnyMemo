@@ -265,7 +265,7 @@ public abstract class QACardActivity extends BaseActivity {
                 .setCardOnClickListener(onAnswerViewClickListener)
                 .setTextFontSize(setting.getAnswerFontSize())
                 .setTypefaceFromFile(setting.getAnswerFont())
-                .setDisplayInHtml(setting.getDisplayInHTMLEnum().contains(Setting.CardField.ANSWER))
+                .setDisplayInHtml(setting.getDisplayInHTMLEnum().contains(Setting.CardField.HINT))
                 .setHtmlLinebreakConversion(setting.getHtmlLineBreakConversion())
                 .setImageSearchPaths(imageSearchPaths);
 
@@ -323,7 +323,7 @@ public abstract class QACardActivity extends BaseActivity {
             }
 
             if (setting.getQuestionFieldEnum().contains(Setting.CardField.HINT)) {
-                builders1List.add(noteFragmentBuilder);
+                builders1List.add(showHintFragmentBuilder);
             }
 
             List<CardFragment.Builder> builders2List = new ArrayList<CardFragment.Builder>(4);
