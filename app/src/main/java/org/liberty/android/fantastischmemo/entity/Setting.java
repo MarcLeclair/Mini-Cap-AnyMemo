@@ -122,7 +122,8 @@ public class Setting implements Serializable, VersionableDomainObject {
     public static enum CardField {
         QUESTION,
         ANSWER,
-        NOTE
+        NOTE,
+        HINT
     }
 
 

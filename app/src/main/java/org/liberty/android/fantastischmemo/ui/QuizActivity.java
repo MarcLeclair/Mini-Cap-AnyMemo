@@ -174,7 +174,7 @@ public class QuizActivity extends QACardActivity {
                 break;
             }
             case R.id.letter_hint:{
-
+                showHint();
                 break;
             }
             case R.id.menu_paint:
@@ -182,7 +182,6 @@ public class QuizActivity extends QACardActivity {
                 Intent myIntent = new Intent(this, PaintActivity.class);
                 startActivity(myIntent);
             }
-
         }
         return false;
     }
