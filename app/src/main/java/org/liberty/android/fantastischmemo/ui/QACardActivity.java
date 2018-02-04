@@ -316,7 +316,7 @@ public abstract class QACardActivity extends BaseActivity {
                 builders1List.add(questionFragmentBuilder);
             }
             if (setting.getQuestionFieldEnum().contains(Setting.CardField.ANSWER)) {
-                builders1List.add(showHintFragmentBuilder);
+                builders1List.add(showAnswerFragmentBuilder);
             }
             if (setting.getQuestionFieldEnum().contains(Setting.CardField.NOTE)) {
                 builders1List.add(noteFragmentBuilder);
