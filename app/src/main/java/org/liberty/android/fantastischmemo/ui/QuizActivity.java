@@ -83,7 +83,11 @@ public class QuizActivity extends QACardActivity {
     private boolean shuffleCards = false;
 
     private int totalQuizSize = -1;
+    private int letterHintCount = 0;
 
+//    public void setLetterHintCount(int letterHintCount){
+//        this.letterHintCount =letterHintCount;
+//    }
     @Override
     public int getContentView() {
         return R.layout.qa_card_layout_study;
@@ -176,6 +180,10 @@ public class QuizActivity extends QACardActivity {
             }
             case R.id.letter_hint:{
 
+            if(!isAnswerShown()){
+                letterHintCount++;
+                showHint(letterHintCount);
+            }
                 break;
             }
             case R.id.menu_paint:
@@ -222,6 +230,7 @@ public class QuizActivity extends QACardActivity {
     protected boolean onClickAnswerView() {
         if (!isAnswerShown()) {
             displayCard(true);
+            letterHintCount =0;
         } else if (setting.getCardStyle() == Setting.CardStyle.DOUBLE_SIDED && isAnswerShown()) {
             displayCard(false);
         }

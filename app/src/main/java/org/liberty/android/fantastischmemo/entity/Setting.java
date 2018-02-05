@@ -122,7 +122,8 @@ public class Setting implements Serializable, VersionableDomainObject {
     public static enum CardField {
         QUESTION,
         ANSWER,
-        NOTE
+        NOTE,
+        HINT
     }
 
 
@@ -320,6 +321,14 @@ public class Setting implements Serializable, VersionableDomainObject {
 
     public void setAnswerEnum(EnumSet<CardField> answerFieldEnum) {
         answerField = AMStringUtils.getStringFromEnumSet(answerFieldEnum);
+    }
+
+    public EnumSet<CardField> getHintFieldEnum() {
+        return AMStringUtils.getEnumSetFromString(CardField.class, answerField);
+    }
+
+    public void setHintEnum(EnumSet<CardField> hintFieldEnum) {
+        answerField = AMStringUtils.getStringFromEnumSet(hintFieldEnum);
     }
 
     public String getQuestionFont() {
