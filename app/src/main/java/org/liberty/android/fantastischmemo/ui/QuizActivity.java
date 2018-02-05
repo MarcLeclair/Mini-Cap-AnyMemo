@@ -82,6 +82,7 @@ public class QuizActivity extends QACardActivity {
     private boolean shuffleCards = false;
 
     private int totalQuizSize = -1;
+    private int letterHintCounter = 0;
 
     @Override
     public int getContentView() {
@@ -175,11 +176,13 @@ public class QuizActivity extends QACardActivity {
             }
             case R.id.letter_hint:{
 
-            if(!isAnswerShown()){
-                showHint();
-            }
+                if(!isAnswerShown()){
+                    letterHintCounter++;
+                    showHint(letterHintCounter);
+                }
                 break;
             }
+
             case R.id.menu_paint:
             {
                 Intent myIntent = new Intent(this, PaintActivity.class);
@@ -223,6 +226,7 @@ public class QuizActivity extends QACardActivity {
     protected boolean onClickAnswerView() {
         if (!isAnswerShown()) {
             displayCard(true);
+            letterHintCounter =0;
         } else if (setting.getCardStyle() == Setting.CardStyle.DOUBLE_SIDED && isAnswerShown()) {
             displayCard(false);
         }

@@ -188,7 +188,22 @@ public abstract class QACardActivity extends BaseActivity {
         return dbName;
     }
 
-    protected void displayCardWithHint(boolean showAnswer) {
+    public String displayLetterHint(int count) {
+
+        String word = getCurrentCard().getAnswer();
+        String hintWord = "";
+        for (int i = 0; i < word.length(); i++) {
+            if (word.charAt(i) == ' ') {
+                hintWord += "  " ;
+            } else if (i <= count - 1) { //show letters up to the number of clicks for hint
+                hintWord += word.charAt(i);
+            } else {
+                hintWord += " _";
+            }
+        }
+        return hintWord;
+    }
+    protected void displayCardWithHint(boolean showAnswer , int letterHintCounter) {
 
         // First prepare the text to display
 
@@ -258,7 +273,7 @@ public abstract class QACardActivity extends BaseActivity {
                 .setImageSearchPaths(imageSearchPaths);
 
 
-    CardFragment.Builder showHintFragmentBuilder = new CardFragment.Builder("!!!"/*getCurrentCard().getAnswer()*/)
+    CardFragment.Builder showHintFragmentBuilder = new CardFragment.Builder(displayLetterHint(letterHintCounter))
                 .setTextAlignment(answerAlign)
                 .setTypefaceFromFile(answerTypefaceValue)
                 .setTextOnClickListener(onAnswerTextClickListener)
@@ -724,8 +739,8 @@ public abstract class QACardActivity extends BaseActivity {
         return true;
     }
 
-    protected boolean showHint() {
-        displayCardWithHint(true);
+    protected boolean showHint(int letterHintCounter) {
+        displayCardWithHint(true, letterHintCounter);
         return true;
     }
 
