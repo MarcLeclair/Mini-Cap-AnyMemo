@@ -29,7 +29,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -84,10 +83,6 @@ public class QuizActivity extends QACardActivity {
 
     private int totalQuizSize = -1;
 
-
-//    public void setLetterHintCount(int letterHintCount){
-//        this.letterHintCount =letterHintCount;
-//    }
     @Override
     public int getContentView() {
         return R.layout.qa_card_layout_study;
@@ -190,7 +185,6 @@ public class QuizActivity extends QACardActivity {
                 Intent myIntent = new Intent(this, PaintActivity.class);
                 startActivity(myIntent);
             }
-
         }
         return false;
     }
