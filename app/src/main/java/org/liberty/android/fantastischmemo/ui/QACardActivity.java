@@ -188,7 +188,22 @@ public abstract class QACardActivity extends BaseActivity {
         return dbName;
     }
 
-    protected void displayCardWithHint(boolean showAnswer) {
+    public String displayLetterHint(int count) {
+     //this function is called in the displayCardWithHint method, line 276
+        String word = getCurrentCard().getAnswer();
+        String StringBuilder  = "";
+        for (int i = 0; i < word.length(); i++) {
+            if (word.charAt(i) == ' ') {
+                StringBuilder  += "  " ;
+            } else if (i <= count - 1) { //show letters up to the number of clicks for hint
+                StringBuilder  += word.charAt(i);
+            } else {
+                StringBuilder  += " _";
+            }
+        }
+        return StringBuilder;
+    }
+    protected void displayCardWithHint(boolean showAnswer , int letterHintCounter) {
 
         // First prepare the text to display
 
@@ -258,7 +273,7 @@ public abstract class QACardActivity extends BaseActivity {
                 .setImageSearchPaths(imageSearchPaths);
 
 
-    CardFragment.Builder showHintFragmentBuilder = new CardFragment.Builder("!!!"/*getCurrentCard().getAnswer()*/)
+    CardFragment.Builder showHintFragmentBuilder = new CardFragment.Builder(displayLetterHint(letterHintCounter))
                 .setTextAlignment(answerAlign)
                 .setTypefaceFromFile(answerTypefaceValue)
                 .setTextOnClickListener(onAnswerTextClickListener)
@@ -607,7 +622,6 @@ public abstract class QACardActivity extends BaseActivity {
         }
 
         currentDisplayedCard = getCurrentCard();
-
         onPostDisplayCard();
     }
 
@@ -725,8 +739,9 @@ public abstract class QACardActivity extends BaseActivity {
         return true;
     }
 
-    protected boolean showHint() {
-        displayCardWithHint(true);
+    protected boolean showHint(int letterHintCounter) {
+        //the method is in the line 206
+        displayCardWithHint(true, letterHintCounter);
         return true;
     }
 
