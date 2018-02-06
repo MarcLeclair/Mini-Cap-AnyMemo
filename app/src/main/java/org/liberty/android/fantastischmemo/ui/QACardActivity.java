@@ -189,19 +189,19 @@ public abstract class QACardActivity extends BaseActivity {
     }
 
     public String displayLetterHint(int count) {
-
+     //this function is called in the displayCardWithHint method, line 276
         String word = getCurrentCard().getAnswer();
-        String hintWord = "";
+        String StringBuilder  = "";
         for (int i = 0; i < word.length(); i++) {
             if (word.charAt(i) == ' ') {
-                hintWord += "  " ;
+                StringBuilder  += "  " ;
             } else if (i <= count - 1) { //show letters up to the number of clicks for hint
-                hintWord += word.charAt(i);
+                StringBuilder  += word.charAt(i);
             } else {
-                hintWord += " _";
+                StringBuilder  += " _";
             }
         }
-        return hintWord;
+        return StringBuilder;
     }
     protected void displayCardWithHint(boolean showAnswer , int letterHintCounter) {
 
@@ -740,6 +740,7 @@ public abstract class QACardActivity extends BaseActivity {
     }
 
     protected boolean showHint(int letterHintCounter) {
+        //the method is in the line 206
         displayCardWithHint(true, letterHintCounter);
         return true;
     }
