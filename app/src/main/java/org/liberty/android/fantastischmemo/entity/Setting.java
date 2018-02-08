@@ -323,6 +323,14 @@ public class Setting implements Serializable, VersionableDomainObject {
         answerField = AMStringUtils.getStringFromEnumSet(answerFieldEnum);
     }
 
+    public EnumSet<CardField> getHintFieldEnum() {
+        return AMStringUtils.getEnumSetFromString(CardField.class, answerField);
+    }
+
+    public void setHintEnum(EnumSet<CardField> hintFieldEnum) {
+        answerField = AMStringUtils.getStringFromEnumSet(hintFieldEnum);
+    }
+
     public String getQuestionFont() {
         return questionFont;
     }
