@@ -83,6 +83,8 @@ public class QuizQueueManager implements QueueManager {
         newCache.remove(card);
 	}
 
+
+	public List<Card> getAllCards(){ return  newCache;}
 	@Override
 	public synchronized void release() {
         // Update the queue
