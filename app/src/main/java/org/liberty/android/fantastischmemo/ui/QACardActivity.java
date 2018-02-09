@@ -189,39 +189,18 @@ public abstract class QACardActivity extends BaseActivity {
     }
 
     public String displayLetterHint(int count) {
-        //this function is called in the displayCardWithHint method, line 276
-        char[] word = getCurrentCard().getAnswer().trim().toCharArray();
-        String StringBuilder = "";
-        for (int i = 0; i <= word.length - 1; i++) {
-            if (i <= count - 1) //show letters up to the number of clicks for hint, show 3
-            // characters if someone pressed on the hint option 3 times
-            {
-                if (word[i] == ' ') //if you see a space
-                {
-                    if (i + 1 <= word.length - 1)// if there is a next character after the space
-                    {
-                        //no need to verify that next character is not a space
-                        //the app does not let you enter more than 1 space between 2 characters
-
-                        StringBuilder += " " + word[i + 1]; //consider the space and the
-                        // character
-                        // as 1 so they appear at the same time when the user presses on hint
-                        i++;
-                        count++;
-                    }
-                } else // if you don't see a space, only a character
-                {
-                    StringBuilder += word[i];//display the character
+     //this function is called in the displayCardWithHint method, line 276
+        String word = getCurrentCard().getAnswer();
+        String StringBuilder  = "";
+        for (int i = 0; i < word.length(); i++) {
+             if (i <= count - 1) { //show letters up to the number of clicks for hint
+                if(word.charAt(i) == ' '){
+                    StringBuilder  += " " ;
                 }
-            } else //show the remaining characters not yet clicked for a hint as an underscore
-                //except for the spaces that remain spaces
-                if (word[i] != ' ') {
-                    StringBuilder += " _ ";
-                } else {
-                    StringBuilder += "  ";
-
-                }
-
+                StringBuilder  += word.charAt(i);
+            } else {
+                StringBuilder  += " _";
+            }
         }
         return StringBuilder;
     }
@@ -353,7 +332,7 @@ public abstract class QACardActivity extends BaseActivity {
                 builders1List.add(questionFragmentBuilder);
             }
             if (setting.getQuestionFieldEnum().contains(Setting.CardField.ANSWER)) {
-                builders1List.add(showAnswerFragmentBuilder);
+                builders1List.add(showHintFragmentBuilder);
             }
             if (setting.getQuestionFieldEnum().contains(Setting.CardField.NOTE)) {
                 builders1List.add(noteFragmentBuilder);
