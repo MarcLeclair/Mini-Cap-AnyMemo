@@ -35,10 +35,10 @@ public abstract class AbstractConverterTest extends BaseTest {
 
         converter = getConverter();
 
-        String srcFileName = getFileNamePrefix() + "." + converter.getSrcExtension();
+        String srcFileName = getFileNamePrefix() + "" + converter.getSrcExtension();
 
-        srcFilePath = "/sdcard/" + getFileNamePrefix() + "." + converter.getSrcExtension();
-        destFilePath = "/sdcard/" + getFileNamePrefix() + "." + converter.getDestExtension();
+        srcFilePath = "/sdcard/" + getFileNamePrefix() + "" + converter.getSrcExtension();
+        destFilePath = "/sdcard/" + getFileNamePrefix() + "" + converter.getDestExtension();
 
         // This amFileUtil is used on the test package so it can copy the 
         // asset file from the test package.

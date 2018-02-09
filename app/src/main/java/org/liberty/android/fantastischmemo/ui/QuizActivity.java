@@ -23,7 +23,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Paint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -50,6 +49,10 @@ import org.liberty.android.fantastischmemo.queue.QuizQueueManager;
 import org.liberty.android.fantastischmemo.scheduler.Scheduler;
 import org.liberty.android.fantastischmemo.ui.loader.DBLoader;
 import org.liberty.android.fantastischmemo.utils.DictionaryUtil;
+
+import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -85,6 +88,8 @@ public class QuizActivity extends QACardActivity {
     //the hintCounter is to count how many times the user clicks the letter hint button
     private int letterHintCounter = 0;
 
+    //Random variable declared
+    private static SecureRandom random = new SecureRandom();
     @Override
     public int getContentView() {
         return R.layout.qa_card_layout_study;
@@ -173,6 +178,19 @@ public class QuizActivity extends QACardActivity {
                 break;
             }
             case R.id.multiple_choice_hint:{
+                List<Card> mcCards = new ArrayList<>();
+                //find random index for array
+                for(int i = 0; i < 3; i++ ){
+                    int randomNumb = random.nextInt(queueManager.getAllCards().size());
+                    while(randomNumb == 0){
+                        randomNumb = random.nextInt(queueManager.getAllCards().size());
+                    }
+                    mcCards.add(queueManager.getAllCards().get(randomNumb));
+                }
+
+                if(!isAnswerShown()){
+                    showMcHint(mcCards);
+                }
                 break;
             }
             case R.id.letter_hint:{
