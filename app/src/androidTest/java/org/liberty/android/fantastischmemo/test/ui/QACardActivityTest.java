@@ -1,6 +1,7 @@
 
 package org.liberty.android.fantastischmemo.test.ui;
 import android.support.test.filters.SmallTest;
+import android.util.Log;
 
 import static org.mockito.Mockito.spy;
 import org.junit.Test;
@@ -19,6 +20,9 @@ public class QACardActivityTest extends BaseTest {
 
     // number of clicks on letter hint option exceeds word length
     private int pastLastCharacterHintCounter = word.length() + 1;
+
+    String TAG = "displayLetterHintTest";
+
 
     @SmallTest
     @Test
@@ -39,11 +43,14 @@ public class QACardActivityTest extends BaseTest {
         Mockito.when(spyQuizActivity.getCurrentCard()).thenReturn(mockCard);
 
         //compare returned values from displayLetterHint with values that should be displayed
+        Log.d(TAG, "displayLetterHintTest!!!:"+ spyQuizActivity.displayLetterHint(20)+"!");
         if (spyQuizActivity.displayLetterHint(1).equals("l _ _ _ _ _ _") &&
-                spyQuizActivity.displayLetterHint(middleHintCounter).equals("la  _ _ _ _") &&
-                spyQuizActivity.displayLetterHint(pastLastCharacterHintCounter).equals("la  _ _ _" +
-                        " _"))
+            spyQuizActivity.displayLetterHint(middleHintCounter).equals("la   _ _ _ _") &&
+            spyQuizActivity.displayLetterHint(pastLastCharacterHintCounter).equals("la  tête"))
+        {
             valid = true;
+
+        }
         assertTrue(valid);
     }
 }
