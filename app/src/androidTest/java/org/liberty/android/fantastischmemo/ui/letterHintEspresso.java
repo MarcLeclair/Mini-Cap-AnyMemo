@@ -1,8 +1,5 @@
 package org.liberty.android.fantastischmemo.ui;
 
-
-import android.os.SystemClock;
-import android.support.test.espresso.DataInteraction;
 import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.rule.ActivityTestRule;
@@ -12,28 +9,19 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
-
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
-import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static android.support.test.espresso.action.ViewActions.*;
-import static android.support.test.espresso.assertion.ViewAssertions.*;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
-
 import org.liberty.android.fantastischmemo.R;
-
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
-import org.hamcrest.core.IsInstanceOf;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.is;
 
 @LargeTest
@@ -60,11 +48,12 @@ public class letterHintEspresso {
                             isDisplayed()));
             appCompatButton.perform(click());
         } catch (NoMatchingViewException e) {
-            //view not displayed logic
+            //catch exception if there is no dialogue box with an OK text
+            //sometimes this text will only appear on the first time of running the test
             Log.d(TAG, "letterHintEspresso() returned: exception, could not find text with OK" );
         }
 
-
+        //click on More on the RHS of the quiz name, a dropdown menu will appear
         ViewInteraction appCompatButton2 = onView(
                 allOf(withId(R.id.recent_item_more_button), withText("MORE"),
                         childAtPosition(
@@ -75,6 +64,7 @@ public class letterHintEspresso {
                         isDisplayed()));
         appCompatButton2.perform(click());
 
+        //click on quiz, a dialog box will ask to confirm the start of quiz
         ViewInteraction linearLayout = onView(
                 allOf(withId(R.id.quiz),
                         childAtPosition(
@@ -96,7 +86,7 @@ public class letterHintEspresso {
 
         openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
 
-        //click on letter hint from top menu
+        //click on letter hint from top menu for an arbitrary number of clicks
         int repetitions = 10;
         for (int i= repetitions; i<= repetitions - 1; i++) {
             ViewInteraction appCompatTextView = onView(
@@ -110,16 +100,6 @@ public class letterHintEspresso {
                             isDisplayed()));
             appCompatTextView.perform(click());
         }
-
-//        ViewInteraction linearLayout2 = onView(
-//                allOf(withId(R.id.root),
-//                        withParent(allOf(withId(R.id.field1),
-//                                childAtPosition(
-//                                        withId(R.id.parentField),
-//                                        2))),
-//                        isDisplayed()));
-//        linearLayout2.perform(click());
-
     }
 
     private static Matcher<View> childAtPosition(

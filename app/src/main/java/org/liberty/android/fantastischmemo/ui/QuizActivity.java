@@ -508,6 +508,9 @@ public class QuizActivity extends QACardActivity {
                 .show();
     }
 
+    //adding an inner class to override the getCurrentCard of QuizActivity.java with public instead
+    // of protected access. The protected method is not accessible when mock testing in the
+    // QACardActivityTest.java. Therefore, we must override it to give it public access.
     public class QuizActivityPublicAccess extends QuizActivity {
         @Override
         public Card getCurrentCard() {
