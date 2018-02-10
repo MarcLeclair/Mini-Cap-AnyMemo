@@ -1,33 +1,39 @@
 package org.liberty.android.fantastischmemo.ui;
 
 
+import android.os.SystemClock;
+import android.support.test.espresso.DataInteraction;
+import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static android.support.test.espresso.Espresso.onData;
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.pressBack;
+import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
+import static android.support.test.espresso.action.ViewActions.*;
+import static android.support.test.espresso.assertion.ViewAssertions.*;
+import static android.support.test.espresso.matcher.ViewMatchers.*;
+
+import org.liberty.android.fantastischmemo.R;
+
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import org.hamcrest.core.IsInstanceOf;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.liberty.android.fantastischmemo.R;
 
-import static android.support.test.InstrumentationRegistry.getInstrumentation;
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.scrollTo;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withParent;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.is;
 
 @LargeTest
@@ -39,6 +45,26 @@ public class letterHintEspresso {
 
     @Test
     public void letterHintEspresso() {
+        final String TAG = "Espresso logger";
+        try {
+             //view is displayed logic
+            ViewInteraction appCompatButton = onView(
+                    allOf(withId(android.R.id.button1), withText("OK"),
+                            childAtPosition(
+                                    allOf(withClassName(is("com.android.internal.widget" +
+                                                    ".ButtonBarLayout")),
+                                            childAtPosition(
+                                                    withClassName(is("android.widget.LinearLayout")),
+                                                    3)),
+                                    3),
+                            isDisplayed()));
+            appCompatButton.perform(click());
+        } catch (NoMatchingViewException e) {
+            //view not displayed logic
+            Log.d(TAG, "letterHintEspresso() returned: exception, could not find text with OK" );
+        }
+
+
         ViewInteraction appCompatButton2 = onView(
                 allOf(withId(R.id.recent_item_more_button), withText("MORE"),
                         childAtPosition(
@@ -58,6 +84,7 @@ public class letterHintEspresso {
                                 3)));
         linearLayout.perform(scrollTo(), click());
 
+        //click on start quiz
         ViewInteraction appCompatButton3 = onView(
                 allOf(withId(R.id.start_quiz_button), withText("Start quiz"),
                         childAtPosition(
@@ -69,29 +96,29 @@ public class letterHintEspresso {
 
         openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
 
-        ViewInteraction appCompatTextView = onView(
-                allOf(withId(R.id.title), withText("Letter hint"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.support.v7.view.menu" +
-                                                ".ListMenuItemView")),
-                                        0),
-                                0),
-                        isDisplayed()));
-        appCompatTextView.perform(click());
+        //click on letter hint from top menu
+        int repetitions = 10;
+        for (int i= repetitions; i<= repetitions - 1; i++) {
+            ViewInteraction appCompatTextView = onView(
+                    allOf(withId(R.id.title), withText("Letter hint"),
+                            childAtPosition(
+                                    childAtPosition(
+                                            withClassName(is("android.support.v7.view.menu" +
+                                                    ".ListMenuItemView")),
+                                            0),
+                                    0),
+                            isDisplayed()));
+            appCompatTextView.perform(click());
+        }
 
-        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
-
-        ViewInteraction appCompatTextView2 = onView(
-                allOf(withId(R.id.title), withText("Letter hint"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.support.v7.view.menu" +
-                                                ".ListMenuItemView")),
-                                        0),
-                                0),
-                        isDisplayed()));
-        appCompatTextView2.perform(click());
+//        ViewInteraction linearLayout2 = onView(
+//                allOf(withId(R.id.root),
+//                        withParent(allOf(withId(R.id.field1),
+//                                childAtPosition(
+//                                        withId(R.id.parentField),
+//                                        2))),
+//                        isDisplayed()));
+//        linearLayout2.perform(click());
 
     }
 
