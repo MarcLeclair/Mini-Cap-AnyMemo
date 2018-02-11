@@ -194,9 +194,10 @@ public abstract class QACardActivity extends BaseActivity {
         String word = getCurrentCard().getAnswer();
         String StringBuilder  = "";
         for (int i = 0; i < word.length(); i++) {
-            if (word.charAt(i) == ' ') {
-                StringBuilder  += "  " ;
-            } else if (i <= count - 1) { //show letters up to the number of clicks for hint
+             if (i <= count - 1) { //show letters up to the number of clicks for hint
+                 if(word.charAt(i) == ' '){
+                    StringBuilder  += " " ;
+                }
                 StringBuilder  += word.charAt(i);
             } else {
                 StringBuilder  += " _";
