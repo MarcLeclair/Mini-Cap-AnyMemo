@@ -23,7 +23,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Paint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -50,6 +49,10 @@ import org.liberty.android.fantastischmemo.queue.QuizQueueManager;
 import org.liberty.android.fantastischmemo.scheduler.Scheduler;
 import org.liberty.android.fantastischmemo.ui.loader.DBLoader;
 import org.liberty.android.fantastischmemo.utils.DictionaryUtil;
+
+import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -82,7 +85,11 @@ public class QuizActivity extends QACardActivity {
     private boolean shuffleCards = false;
 
     private int totalQuizSize = -1;
+    //the hintCounter is to count how many times the user clicks the letter hint button
+    private int letterHintCounter = 0;
 
+    //Random variable declared
+    private static SecureRandom random = new SecureRandom();
     @Override
     public int getContentView() {
         return R.layout.qa_card_layout_study;
@@ -171,18 +178,37 @@ public class QuizActivity extends QACardActivity {
                 break;
             }
             case R.id.multiple_choice_hint:{
+                List<Card> mcCards = new ArrayList<>();
+                //find random index for array
+                for(int i = 0; i < 3; i++ ){
+                    int randomNumb = random.nextInt(queueManager.getAllCards().size());
+                    while(randomNumb == 0){
+                        randomNumb = random.nextInt(queueManager.getAllCards().size());
+                    }
+                    mcCards.add(queueManager.getAllCards().get(randomNumb));
+                }
+
+                if(!isAnswerShown()){
+                    showMcHint(mcCards);
+                }
                 break;
             }
             case R.id.letter_hint:{
 
+                if(!isAnswerShown()){
+                    //everytime the button gets clicked, counter increases by 1
+                    letterHintCounter++;
+                    //showhint() is in QACardActivity.java
+                    showHint(letterHintCounter);
+                }
                 break;
             }
+
             case R.id.menu_paint:
             {
                 Intent myIntent = new Intent(this, PaintActivity.class);
                 startActivity(myIntent);
             }
-
         }
         return false;
     }
@@ -221,6 +247,8 @@ public class QuizActivity extends QACardActivity {
     protected boolean onClickAnswerView() {
         if (!isAnswerShown()) {
             displayCard(true);
+            //when the answer of a flash card is shown, the counter of the letterhint is set back to 0
+            letterHintCounter =0;
         } else if (setting.getCardStyle() == Setting.CardStyle.DOUBLE_SIDED && isAnswerShown()) {
             displayCard(false);
         }

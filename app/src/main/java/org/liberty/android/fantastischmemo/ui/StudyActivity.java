@@ -415,6 +415,7 @@ public class StudyActivity extends QACardActivity {
     }
 
 
+
     @Override
     protected boolean onClickQuestionView() {
         if (!isAnswerShown()) {
