@@ -258,4 +258,5 @@
     <string name="picture_hint">ピクチャヒント</string>
     <string name="multiple_choice_hint">多肢選択ヒント</string>
     <string name="letter_hint">手紙のヒント</string>
+    <string name="favourite_text" >お気に入りとしてマーク</string>
 </resources>
