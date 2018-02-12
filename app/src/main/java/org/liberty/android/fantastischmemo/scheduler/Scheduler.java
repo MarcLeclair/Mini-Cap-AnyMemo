@@ -26,4 +26,8 @@ public interface Scheduler {
      * Return true if the card is never studied before.
      */
     boolean isCardForReview(LearningData data);
+    /*
+     * Return true if the card is favourited.
+     */
+    boolean isCardFavourite(LearningData data);
 }

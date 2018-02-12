@@ -7,4 +7,5 @@ public interface LearningDataDao extends HelperDao<LearningData, Integer> {
     void resetLearningData(LearningData ld);
     void resetAllLearningData();
     void markAsLearnedForever(LearningData ld);
+    void markAsFavourite(LearningData ld);
 }
