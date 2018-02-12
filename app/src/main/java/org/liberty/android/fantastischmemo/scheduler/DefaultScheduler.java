@@ -150,8 +150,8 @@ public class DefaultScheduler implements Scheduler {
 
     /*
      * This method returns true if the card should not
-     * be repeated immediately. False if it need to be
-     * repeaeted immediately.
+     * be repeated immediately. False if it needs to be
+     * repeated immediately.
      */
     @Override
     public boolean isCardLearned(LearningData data) {
@@ -170,12 +170,17 @@ public class DefaultScheduler implements Scheduler {
     }
 
     @Override
+    public boolean isCardFavourite(LearningData data) {
+        return true;
+    }
+    @Override
     public boolean isCardForReview(LearningData data) {
         if (isCardNew(data)) {
             return false;
         }
         return data.getNextLearnDate().compareTo(new Date()) <= 0;
     }
+
 
     /*
      * Whether a grade is considered successful not not.
