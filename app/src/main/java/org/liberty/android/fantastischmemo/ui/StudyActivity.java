@@ -197,6 +197,11 @@ public class StudyActivity extends QACardActivity {
                 showMarkAsLearnedForeverDialog();
                 return true;
             }
+            case R.id.menu_favourite:
+            {
+                showMarkAsFavouriteDialog();
+                return true;
+            }
             case R.id.menu_context_gotoprev:
             {
                 gotoPreviewEdit();
@@ -409,7 +414,8 @@ public class StudyActivity extends QACardActivity {
         return true;
     }
 
-    
+
+
     @Override
     protected boolean onClickQuestionView() {
         if (!isAnswerShown()) {
@@ -679,6 +685,14 @@ public class StudyActivity extends QACardActivity {
             restartActivity();
         }
     }
+    //activity will restart at the same place, after the card is marked as favourite
+    private void markCurrentCardAsFavourite() {
+        if(getCurrentCard() != null) {
+            getDbOpenHelper().getLearningDataDao()
+                    .markAsFavourite(getCurrentCard().getLearningData());
+            restartActivity();
+        }
+    }
 
     private void showGesturesDialog() {
         final HashMap<String, String> gestureNameDescriptionMap
@@ -735,6 +749,18 @@ public class StudyActivity extends QACardActivity {
             })
         .setNegativeButton(R.string.cancel_text, null)
             .show();
+    }
+    private void showMarkAsFavouriteDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("Mark as Favourite")
+                .setMessage("This item will be added to your favourites list")
+                .setPositiveButton(R.string.ok_text, new DialogInterface.OnClickListener(){
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        markCurrentCardAsFavourite();
+                    }
+                })
+                .setNegativeButton(R.string.cancel_text, null)
+                .show();
     }
 
     private void gotoPreviewEdit() {
