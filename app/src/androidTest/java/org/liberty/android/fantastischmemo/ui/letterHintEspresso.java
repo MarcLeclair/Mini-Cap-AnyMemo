@@ -1,6 +1,5 @@
 package org.liberty.android.fantastischmemo.ui;
 
-
 import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.rule.ActivityTestRule;
@@ -10,39 +9,33 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
-
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
+import static android.support.test.espresso.action.ViewActions.*;
+import static android.support.test.espresso.matcher.ViewMatchers.*;
+import org.liberty.android.fantastischmemo.R;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.liberty.android.fantastischmemo.R;
-
-import static android.support.test.InstrumentationRegistry.getInstrumentation;
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.scrollTo;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class MultipleChoiceHintEspresso {
+public class letterHintEspresso {
 
     @Rule
     public ActivityTestRule<AnyMemo> mActivityTestRule = new ActivityTestRule<>(AnyMemo.class);
 
     @Test
-    public void multipleChoiceHintEspresso() {
+    public void letterHintEspresso() {
         final String TAG = "Espresso logger";
         try {
-            //view is displayed logic
+             //view is displayed logic
             ViewInteraction appCompatButton = onView(
                     allOf(withId(android.R.id.button1), withText("OK"),
                             childAtPosition(
@@ -93,11 +86,11 @@ public class MultipleChoiceHintEspresso {
 
         openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
 
-        //click on multiple choice hint from top menu for an arbitrary number of clicks
+        //click on letter hint from top menu for an arbitrary number of clicks
         int repetitions = 10;
         for (int i= repetitions; i<= repetitions - 1; i++) {
             ViewInteraction appCompatTextView = onView(
-                    allOf(withId(R.id.title), withText("Multiple choice hint"),
+                    allOf(withId(R.id.title), withText("Letter hint"),
                             childAtPosition(
                                     childAtPosition(
                                             withClassName(is("android.support.v7.view.menu" +
