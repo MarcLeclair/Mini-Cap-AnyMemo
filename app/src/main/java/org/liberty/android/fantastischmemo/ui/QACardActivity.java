@@ -297,7 +297,7 @@ public abstract class QACardActivity extends BaseActivity {
                 .setImageSearchPaths(imageSearchPaths);
 
 
-        CardFragment.Builder answerFragmentBuilder = new CardFragment.Builder( "<img \"src=https://www.taylorherring.com/blog/wp-content/uploads/2015/03/Archetypal-Male-Face-of-Beauty-embargoed-to-00.01hrs-30.03.15.jpg\" />"/*"1. " + card1.getAnswer() + "\n2. " + card2.getAnswer() + "\n3. " + card3.getAnswer() + "\n4. " + card4.getAnswer() */)
+        CardFragment.Builder answerFragmentBuilder = new CardFragment.Builder( "1. " + card1.getAnswer() + "\n2. " + card2.getAnswer() + "\n3. " + card3.getAnswer() + "\n4. " + card4.getAnswer() )
                 .setTextAlignment(answerAlign)
                 .setTypefaceFromFile(answerTypefaceValue)
                 .setTextOnClickListener(onAnswerTextClickListener)
