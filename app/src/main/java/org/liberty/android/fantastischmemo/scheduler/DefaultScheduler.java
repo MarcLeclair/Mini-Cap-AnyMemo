@@ -171,6 +171,9 @@ public class DefaultScheduler implements Scheduler {
 
     @Override
     public boolean isCardFavourite(LearningData data) {
+        if (isCardNew(data)) {
+            return false;
+        }
         return true;
     }
     @Override
