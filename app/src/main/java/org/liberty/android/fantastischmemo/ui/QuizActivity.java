@@ -33,6 +33,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -65,7 +66,7 @@ public class QuizActivity extends QACardActivity {
 
     /* UI elements */
     private GradeButtonsFragment gradeButtonsFragment;
-
+    private ImageView  mImageView;
     /* Settings */
     private Setting setting;
     private Option option;
@@ -175,6 +176,7 @@ public class QuizActivity extends QACardActivity {
                 break;
             }
             case R.id.picture_hint:{
+                showPictureHint();
                 break;
             }
             case R.id.multiple_choice_hint:{

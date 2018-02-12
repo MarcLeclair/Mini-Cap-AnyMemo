@@ -43,6 +43,8 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.andreabaccega.widget.FormEditText;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.liberty.android.fantastischmemo.R;
@@ -61,13 +63,16 @@ import org.liberty.android.fantastischmemo.ui.AudioRecorderFragment.AudioRecorde
 import org.liberty.android.fantastischmemo.ui.CategoryEditorFragment.CategoryEditorResultListener;
 
 import java.io.File;
+import java.util.regex.Pattern;
 
-public class CardEditor extends BaseActivity {
+public class CardEditor extends BaseActivity   {
     private final int ACTIVITY_IMAGE_FILE = 1;
     private final int ACTIVITY_AUDIO_FILE = 2;
 
+    private String isValidURL = "";
     private static final int PERMISSION_REQUEST_RECORD_AUDIO = 1;
 
+    private static final Pattern sPattern = Pattern.compile("(?:([^:/?#]+):)?(?://([^/?#]*))?([^?#]*\\.(?:jpg|gif|png))(?:\\?([^#]*))?(?:#(.*))?");
     Card currentCard = null;
 
     Card prevCard = null;
@@ -75,6 +80,7 @@ public class CardEditor extends BaseActivity {
     private Integer currentCardId;
     private EditText questionEdit;
     private EditText answerEdit;
+    private FormEditText imgPath;
     private Button categoryButton;
     private EditText noteEdit;
     private RadioGroup addRadio;
@@ -91,6 +97,7 @@ public class CardEditor extends BaseActivity {
     private String originalQuestion;
     private String originalAnswer;
     private String originalNote;
+    private String originalImgPath;
 
     public static String EXTRA_DBPATH = "dbpath";
     public static String EXTRA_CARD_ID = "id";
@@ -125,10 +132,13 @@ public class CardEditor extends BaseActivity {
 
     @Override
     public void onBackPressed() {
+       // validate();
         String qText = questionEdit.getText().toString();
         String aText = answerEdit.getText().toString();
         String nText = noteEdit.getText().toString();
-        if (!isEditNew && (!qText.equals(originalQuestion) || !aText.equals(originalAnswer) || !nText.equals(originalNote))) {
+        String imgText = imgPath.getText().toString();
+
+        if (!isEditNew && (!qText.equals(originalQuestion) || !aText.equals(originalAnswer) || !nText.equals(originalNote) || !imgText.equals(originalImgPath))) {
             new AlertDialog.Builder(this)
                 .setTitle(R.string.warning_text)
                 .setMessage(R.string.edit_dialog_unsave_warning)
@@ -157,7 +167,13 @@ public class CardEditor extends BaseActivity {
 
         }
     }
+    public void onClickNext(View v){
+        FormEditText imgField = (FormEditText)imgPath;
+        if(imgField.testValidity()){
+            Toast.makeText(this,":)",Toast.LENGTH_LONG).show();
+        }
 
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         MenuInflater inflater = getMenuInflater();
@@ -170,9 +186,13 @@ public class CardEditor extends BaseActivity {
         switch (item.getItemId()) {
 
             case R.id.save:
-                SaveCardTask task = new SaveCardTask();
-                task.execute((Void)null);
-                return true;
+                if(validate()) {
+                    SaveCardTask task = new SaveCardTask();
+                    task.execute((Void) null);
+                    return true;
+                }else{
+                    return false;
+                }
 
             case R.id.editor_menu_br:
                 if(focusView == questionEdit || focusView ==answerEdit || focusView == noteEdit){
@@ -207,6 +227,7 @@ public class CardEditor extends BaseActivity {
                 return true;
 
         }
+
         return false;
     }
 
@@ -472,14 +493,18 @@ public class CardEditor extends BaseActivity {
         if(isEditNew){
             /* Use this one or the one below ?*/
             noteEdit.setText(currentCard.getNote());
+
         }
         if(!isEditNew){
             originalQuestion = currentCard.getQuestion();
             originalAnswer = currentCard.getAnswer();
             originalNote = currentCard.getNote();
+            originalImgPath = currentCard.getImgPath();
             questionEdit.setText(originalQuestion);
             answerEdit.setText(originalAnswer);
             noteEdit.setText(originalNote);
+            imgPath.setText(originalImgPath);
+            //validate();
         }
     }
 
@@ -555,7 +580,9 @@ public class CardEditor extends BaseActivity {
             answerEdit = (EditText)findViewById(R.id.edit_dialog_answer_entry);
             categoryButton = (Button)findViewById(R.id.edit_dialog_category_button);
             noteEdit = (EditText)findViewById(R.id.edit_dialog_note_entry);
+            imgPath = (FormEditText)findViewById(R.id.edit_imgpath_entry);
             addRadio = (RadioGroup)findViewById(R.id.add_radio);
+
 
             categoryButton.setOnClickListener(categoryButtonClickListener);
 
@@ -565,6 +592,14 @@ public class CardEditor extends BaseActivity {
             setInitRadioButton();
             progressDialog.dismiss();
         }
+    }
+
+    private boolean validate() {
+        FormEditText fields= imgPath;
+        boolean allValid = true;
+        allValid = fields.testValidity() && allValid;
+
+        return allValid;
     }
 
     private View.OnClickListener categoryButtonClickListener =
@@ -593,12 +628,16 @@ public class CardEditor extends BaseActivity {
             progressDialog.setCancelable(false);
             progressDialog.show();
 
+
             String qText = questionEdit.getText().toString();
             String aText = answerEdit.getText().toString();
             String nText = noteEdit.getText().toString();
+            String imgText = imgPath.getText().toString();
             currentCard.setQuestion(qText);
             currentCard.setAnswer(aText);
             currentCard.setNote(nText);
+            currentCard.setImgPath(imgText);
+
 
             assert currentCard != null : "Current card shouldn't be null";
         }
