@@ -206,7 +206,7 @@ public abstract class QACardActivity extends BaseActivity {
         return StringBuilder;
     }
 
-    protected List<Card> shuffleHintDeck(List<Card> deck){
+    public List<Card> shuffleHintDeck(List<Card> deck){
         //Using Yates shuffle algorithm
         int n = deck.size();
         SecureRandom random = new SecureRandom();
