@@ -231,4 +231,5 @@
     <string name="picture_hint">Dica de imagem</string>
     <string name="multiple_choice_hint">dica de múltipla escolha</string>
     <string name="letter_hint">sugestão de letra</string>
+    <string name="favourite_text" >Marque como Favorito</string>
 </resources>

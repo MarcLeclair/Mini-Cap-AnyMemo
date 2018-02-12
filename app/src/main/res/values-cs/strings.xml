@@ -185,4 +185,5 @@
     <string name="picture_hint">Nápověda obrázku</string>
     <string name="multiple_choice_hint">nápověda s možností výběru</string>
     <string name="letter_hint">nápověda dopisu</string>
+    <string name="favourite_text" >Označit jako oblíbené</string>
 </resources>

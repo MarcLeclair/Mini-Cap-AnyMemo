@@ -232,4 +232,5 @@
     <string name="picture_hint">Image indice</string>
     <string name="multiple_choice_hint">Indice choix multiples</string>
     <string name="letter_hint">Lndice avec lettres</string>
+    <string name="favourite_text" >Marquer comme favori</string>
 </resources>

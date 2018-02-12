@@ -80,7 +80,8 @@ public class CardListActivity extends BaseActivity {
     private static final int CARD_WRAPPER_LOADER_ID = 0;
 
     private static final int LEARNED_CARD_ITEM_COLOR = 0x4F00FF00;
-    private static final int REVIEW_CARD_ITEM_COLOR = 0x4FFFFF00;
+    private static final int REVIEW_CARD_ITEM_COLOR = 0xFFE4B5CC;
+    private static final int FAVOURITE_CARD_ITEM_COLOR = 0x4FFFFF00;
 
     private String dbPath;
 
@@ -191,18 +192,20 @@ public class CardListActivity extends BaseActivity {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
-                case R.id.mark_as_learned_menu:
-                    markAsLearned(card);
-                    break;
-                case R.id.mark_as_forgotten_menu:
-                    markAsForgotten(card);
-                    break;
-                case R.id.mark_as_new_menu:
-                    markAsNew(card);
-                    break;
-                case R.id.mark_as_learned_forever_menu:
-                    markAsLearnedForever(card);
-                    break;
+                    case R.id.mark_as_learned_menu:
+                        markAsLearned(card);
+                        break;
+                    case R.id.mark_as_forgotten_menu:
+                        markAsForgotten(card);
+                        break;
+                    case R.id.mark_as_new_menu:
+                        markAsNew(card);
+                        break;
+                    case R.id.mark_as_learned_forever_menu:
+                        markAsLearnedForever(card);
+                        break;
+                    case R.id.menu_favourite:
+                        markAsFavourite(card);
                 }
                 return true;
             }
@@ -211,7 +214,7 @@ public class CardListActivity extends BaseActivity {
     }
 
     private void showListItemLongClickPopup(final View childView,
-            final Card card) {
+                                            final Card card) {
         View view = childView.findViewById(R.id.item_question);
         PopupMenu popup = new PopupMenu(this, view);
         MenuInflater inflater = popup.getMenuInflater();
@@ -221,16 +224,16 @@ public class CardListActivity extends BaseActivity {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
-                case R.id.edit:
-                    gotoCardEditorActivity(card);
-                    break;
-                case R.id.detail:
-                    gotoDetailActivity(card);
-                    break;
+                    case R.id.edit:
+                        gotoCardEditorActivity(card);
+                        break;
+                    case R.id.detail:
+                        gotoDetailActivity(card);
+                        break;
 
-                case R.id.preview_edit:
-                    gotoPreviewEditActivity(card);
-                    break;
+                    case R.id.preview_edit:
+                        gotoPreviewEditActivity(card);
+                        break;
 
                 }
                 return true;
@@ -287,6 +290,13 @@ public class CardListActivity extends BaseActivity {
                 card.getLearningData());
         cardListAdapter.notifyDataSetChanged();
     }
+    private void markAsFavourite(Card card) {
+        dbOpenHelper.getLearningDataDao().markAsFavourite(
+                card.getLearningData());
+        cardListAdapter.notifyDataSetChanged();
+
+    }
+
 
     private void highlightCardViewAsLearned(View view) {
         // Light green color
@@ -296,6 +306,10 @@ public class CardListActivity extends BaseActivity {
     private void highlightCardViewAsForgotten(View view) {
         // Light yellow color
         view.setBackgroundColor(REVIEW_CARD_ITEM_COLOR);
+    }
+    private void highlightCardViewAsFavourite(View view) {
+        // Light pink color
+        view.setBackgroundColor(FAVOURITE_CARD_ITEM_COLOR);
     }
 
     // Need to maintain compatibility with Android 2.3
@@ -490,9 +504,14 @@ public class CardListActivity extends BaseActivity {
                 highlightCardViewAsNew(convertView);
             } else if (scheduler.isCardForReview(card.getLearningData())) {
                 highlightCardViewAsForgotten(convertView);
-            } else {
+            }
+            else if (scheduler.isCardLearned(card.getLearningData())){
                 highlightCardViewAsLearned(convertView);
             }
+            else if (scheduler.isCardFavourite(card.getLearningData())){
+                highlightCardViewAsFavourite(convertView);
+            }
+
 
             if (cardWrapper.isAnswerVisible()) {
                 answerView.setVisibility(View.VISIBLE);
