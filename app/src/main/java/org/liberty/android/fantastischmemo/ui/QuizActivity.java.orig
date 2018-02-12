@@ -176,6 +176,9 @@ public class QuizActivity extends QACardActivity {
             case R.id.picture_hint: {
                 break;
             }
+<<<<<<< HEAD
+            case R.id.multiple_choice_hint: {
+=======
             case R.id.multiple_choice_hint:{
                 List<Card> mcCards = new ArrayList<>();
                 //find random index for array
@@ -190,6 +193,7 @@ public class QuizActivity extends QACardActivity {
                 if(!isAnswerShown()){
                     showMcHint(mcCards);
                 }
+>>>>>>> master
                 break;
             }
             case R.id.letter_hint: {

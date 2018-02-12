@@ -263,4 +263,5 @@
     <string name="picture_hint">Sugerencia de la imagen</string>
     <string name="multiple_choice_hint">sugerencia de elección múltiple</string>
     <string name="letter_hint">sugerencia de letra</string>
+    <string name="favourite_text" >Marcar como favorito</string>
 </resources>
