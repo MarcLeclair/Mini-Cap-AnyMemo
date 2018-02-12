@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
     <string name="app_name">AnyMemo</string>
     <string name="app_full_name">AnyMemo</string>
@@ -469,4 +469,5 @@
     <string name="picture_hint">Pentraĵo</string>
     <string name="multiple_choice_hint">Multoblaj elekta aludo</string>
     <string name="letter_hint">letero aludon</string>
+    <string name="favourite_text" >Marki kiel Plej ŝatata</string>
 </resources>

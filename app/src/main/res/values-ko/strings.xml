@@ -227,4 +227,5 @@
     <string name="picture_hint">그림 힌트</string>
     <string name="multiple_choice_hint">객관식 힌트</string>
     <string name="letter_hint">편지 힌트</string>
+    <string name="favourite_text" >즐겨 찾기로 표시</string>
 </resources>

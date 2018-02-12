@@ -452,4 +452,5 @@
     <string name="picture_hint">Kuva hint</string>
     <string name="multiple_choice_hint">monivalintavihje</string>
     <string name="letter_hint">kirjeenvihje</string>
+    <string name="favourite_text" >Merkitse suosikiksi</string>
 </resources>

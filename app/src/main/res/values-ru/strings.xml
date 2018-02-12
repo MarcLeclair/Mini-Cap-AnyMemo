@@ -465,4 +465,5 @@
     <string name="picture_hint">Подсказка изображения</string>
     <string name="multiple_choice_hint">подсказка множественного выбора</string>
     <string name="letter_hint">письмо-подсказка</string>
+    <string name="favourite_text" >Пометить как избранное</string>
 </resources>
