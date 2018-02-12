@@ -861,6 +861,7 @@ public abstract class QACardActivity extends BaseActivity {
         if(getCurrentCard().getImgPath() == null) {
             getCurrentCard().setImgPath("");
         }
+        
         if(getCurrentCard().getImgPath().isEmpty()){
                 final int ACTIVITY_EDIT = 11;
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
