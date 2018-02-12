@@ -45,6 +45,8 @@ public class Card implements VersionableDomainObject {
     @DatabaseField(format="yyyy-MM-dd HH:mm:ss.SSSSSS", dataType=DataType.DATE_STRING)
     private Date updateDate;
 
+    @DatabaseField(defaultValue = "", width = 8192)
+    private String imgPath = "";
     public Card() {}
 
 
@@ -109,7 +111,17 @@ public class Card implements VersionableDomainObject {
         } else {
             this.note = note;
         }
+
     }
+    public void setImgPath(String imgPath){
+        if(imgPath == null) {
+            this.imgPath = "";
+        }else{
+            this.imgPath = imgPath;
+        }
+    }
+
+    public String getImgPath(){return imgPath;}
 
     public Date getCreationDate() {
         return creationDate;

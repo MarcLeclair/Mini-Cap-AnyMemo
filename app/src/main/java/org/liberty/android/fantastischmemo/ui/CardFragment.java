@@ -28,8 +28,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 
 import org.liberty.android.fantastischmemo.R;
 import org.liberty.android.fantastischmemo.common.AMEnv;
@@ -53,6 +56,9 @@ public class CardFragment extends BaseFragment {
 
     private TextView cardTextView;
 
+
+    private ImageView imgView;
+
     private String fontFile = null;
 
     private OnClickListener cardOnClickListener = null;
@@ -74,6 +80,8 @@ public class CardFragment extends BaseFragment {
     private boolean displayInHtml = true;
 
     private boolean htmlLinebreakConversion = false;
+
+    private boolean pictureHint = false;
 
     private CardTextUtil cardTextUtil;
 
@@ -109,7 +117,9 @@ public class CardFragment extends BaseFragment {
             Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.card_layout, container, false);
         cardTextView = (TextView) v.findViewById(R.id.card_text_view);
+        imgView = (ImageView) v.findViewById(R.id.img_hint);
         rootView = (LinearLayout) v.findViewById(R.id.root);
+
 
         cardTextView.setText(cardTextUtil.getSpannableText(mCardText, displayInHtml, htmlLinebreakConversion));
 
@@ -153,6 +163,12 @@ public class CardFragment extends BaseFragment {
             cardTextView.setTypeface(qt);
         }
 
+        if(pictureHint == true){
+            cardTextView.setText(cardTextUtil.getSpannableText("", displayInHtml, htmlLinebreakConversion));
+            Glide.with(getContext())
+                    .load(mCardText)
+                    .into(imgView);
+        }
         cardTextView.setTextSize(fontSize);
 
         // It is tricky to set up the alignment of the text.
@@ -211,6 +227,8 @@ public class CardFragment extends BaseFragment {
     }
 
 
+
+
     public static class Builder implements Serializable {
 
         private static final long serialVersionUID = -3698059438530591747L;
@@ -238,6 +256,8 @@ public class CardFragment extends BaseFragment {
         private boolean displayInHtml = true;
 
         private boolean htmlLinebreakConversion = false;
+
+        private boolean pictureHint = false;
 
         private String[] imageSearchPaths = {AMEnv.DEFAULT_IMAGE_PATH};
 
@@ -305,6 +325,10 @@ public class CardFragment extends BaseFragment {
             this.imageSearchPaths = imageSearchPaths;
             return this;
         }
+        public Builder setPictureHint(boolean pictureHint){
+            this.pictureHint = pictureHint;
+            return this;
+        }
 
         /*
          * Set up the alignment of the text in the card.
@@ -321,6 +345,7 @@ public class CardFragment extends BaseFragment {
             b.putString(EXTRA_CARD_TEXT, text);
 
             fragment.setArguments(b);
+
 
             if (fontFile != null) {
                 fragment.fontFile = fontFile;
@@ -357,6 +382,8 @@ public class CardFragment extends BaseFragment {
             if (textAlignment != null) {
                 fragment.textAlignment = textAlignment;
             }
+
+            fragment.pictureHint = pictureHint;
 
             fragment.htmlLinebreakConversion = htmlLinebreakConversion;
 
