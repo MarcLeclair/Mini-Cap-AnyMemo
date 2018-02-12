@@ -685,6 +685,7 @@ public class StudyActivity extends QACardActivity {
             restartActivity();
         }
     }
+    //activity will restart at the same place, after the card is marked as favourite
     private void markCurrentCardAsFavourite() {
         if(getCurrentCard() != null) {
             getDbOpenHelper().getLearningDataDao()
