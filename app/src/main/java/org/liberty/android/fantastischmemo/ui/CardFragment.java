@@ -121,7 +121,10 @@ public class CardFragment extends BaseFragment {
         rootView = (LinearLayout) v.findViewById(R.id.root);
 
 
-        cardTextView.setText(cardTextUtil.getSpannableText(mCardText, displayInHtml, htmlLinebreakConversion));
+        if(pictureHint == false) {
+            imgView .setVisibility(View.GONE);
+            cardTextView.setText(cardTextUtil.getSpannableText(mCardText, displayInHtml, htmlLinebreakConversion));
+        }
 
         // Uncomment the line below for the text field to handle links.
         // The line is commented out because it is not well tested.
@@ -164,6 +167,7 @@ public class CardFragment extends BaseFragment {
         }
 
         if(pictureHint == true){
+            imgView .setVisibility(View.VISIBLE);
             cardTextView.setText(cardTextUtil.getSpannableText("", displayInHtml, htmlLinebreakConversion));
             Glide.with(getContext())
                     .load(mCardText)
