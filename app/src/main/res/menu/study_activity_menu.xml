@@ -18,6 +18,8 @@
             android:title="@string/speak_answer_menu_text" />
     <item android:id="@+id/menu_favourite"
         android:title="@string/favourite_text" />
+    <item android:id="@+id/spell_test"
+        android:title="@string/spell_test" />
     <item android:id="@+id/menu_memo_category"
             android:title="@string/filter_category_text"
             android:icon="@drawable/ic_menu_search" />
