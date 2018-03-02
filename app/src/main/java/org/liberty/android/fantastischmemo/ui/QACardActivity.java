@@ -193,7 +193,7 @@ public abstract class QACardActivity extends BaseActivity {
 
     public String spellTest(String checkSpelling){
         String spell = getCurrentCard().getAnswer();
-        String mockLineThingy = "_______";
+        String temporaryLine = "_______";
         int ctr = 0;
         while(ctr <= 3) {
             boolean correct = false;
@@ -208,7 +208,7 @@ public abstract class QACardActivity extends BaseActivity {
                 }
             }
         }
-        return mockLineThingy;
+        return temporaryLine;
     }
 
     public String displayLetterHint(int count) {
