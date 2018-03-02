@@ -240,6 +240,7 @@ public class StudyActivity extends QACardActivity {
 
             case R.id.spell_test:
             {
+
                 return true;
             }
 

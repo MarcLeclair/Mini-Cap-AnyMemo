@@ -191,6 +191,23 @@ public abstract class QACardActivity extends BaseActivity {
         return dbName;
     }
 
+    public String spellTest(String checkSpelling){
+        String spell = getCurrentCard().getAnswer();
+        String mockLineThingy = "_______";
+        boolean correct = false;
+        for (int i = 0; i < spell.length(); i++){
+            if(spell.equals(checkSpelling)){
+                correct = true;
+                break;
+            }
+            else {
+                correct = false;
+                break;
+            }
+        }
+        return mockLineThingy;
+    }
+
     public String displayLetterHint(int count) {
      //this function is called in the displayCardWithHint method, line 276
         String word = getCurrentCard().getAnswer();
@@ -719,7 +736,7 @@ public abstract class QACardActivity extends BaseActivity {
                 .setImageSearchPaths(imageSearchPaths);
 
 
-        CardFragment.Builder showSpellTestFragmentBuilder = new CardFragment.Builder(displaySpellTest(true))
+        CardFragment.Builder showSpellTestFragmentBuilder = new CardFragment.Builder(spellTest(checkSpelling))
                 .setTextAlignment(answerAlign)
                 .setTypefaceFromFile(answerTypefaceValue)
                 .setTextOnClickListener(onAnswerTextClickListener)
