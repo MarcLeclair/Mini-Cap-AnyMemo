@@ -666,7 +666,7 @@ public abstract class QACardActivity extends BaseActivity {
     // Important class that display the card using fragment
     // the showAnswer parameter is handled differently on single
     // sided card and double sided card.
-    protected void displaySpellTest(boolean showAnswer) {
+    protected void displaySpellTest(boolean showAnswer, String spellCompare) {
 
         // First prepare the text to display
 
@@ -736,7 +736,7 @@ public abstract class QACardActivity extends BaseActivity {
                 .setImageSearchPaths(imageSearchPaths);
 
 
-        CardFragment.Builder showSpellTestFragmentBuilder = new CardFragment.Builder(spellTest(checkSpelling))
+        CardFragment.Builder showSpellTestFragmentBuilder = new CardFragment.Builder(spellTest(spellCompare))
                 .setTextAlignment(answerAlign)
                 .setTypefaceFromFile(answerTypefaceValue)
                 .setTextOnClickListener(onAnswerTextClickListener)
@@ -1424,6 +1424,12 @@ public abstract class QACardActivity extends BaseActivity {
     protected boolean showHint(int letterHintCounter) {
         //the method is in the line 206
         displayCardWithHint(true, letterHintCounter);
+        return true;
+    }
+
+    protected boolean showSpelling(String spellCompare){
+        //method used from line
+        displaySpellTest(true, spellCompare);
         return true;
     }
 
