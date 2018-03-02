@@ -238,6 +238,11 @@ public class StudyActivity extends QACardActivity {
                 return true;
             }
 
+            case R.id.spell_test:
+            {
+                return true;
+            }
+
         }
 
         return false;
@@ -798,5 +803,9 @@ public class StudyActivity extends QACardActivity {
         myIntent.addCategory(Intent.CATEGORY_BROWSABLE);
         myIntent.setData(Uri.parse(WEBSITE_HELP_MEMO));
         startActivity(myIntent);
+    }
+
+    private void spellCheck(){
+        String answer = getCurrentCard().getAnswer();
     }
 }
