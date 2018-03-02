@@ -47,7 +47,6 @@ public class OpenActionsFragment extends BaseDialogFragment {
     private String dbPath;
 
     private View studyItem;
-    private View studyModeItem;
     private View editItem;
     private View listItem;
     private View quizItem;
@@ -90,9 +89,6 @@ public class OpenActionsFragment extends BaseDialogFragment {
         studyItem = v.findViewById(R.id.study);
         studyItem.setOnClickListener(buttonClickListener);
 
-        studyModeItem = v.findViewById(R.id.study_mode);
-        studyModeItem.setOnClickListener(buttonClickListener);
-
         editItem = v.findViewById(R.id.edit);
         editItem.setOnClickListener(buttonClickListener);
 
@@ -128,11 +124,6 @@ public class OpenActionsFragment extends BaseDialogFragment {
                 myIntent.putExtra(StudyActivity.EXTRA_DBPATH, dbPath);
                 startActivity(myIntent);
                 recentListUtil.addToRecentList(dbPath);
-            }
-
-            if (v == studyModeItem) {
-              //TODO
-
             }
 
             if (v == editItem) {
