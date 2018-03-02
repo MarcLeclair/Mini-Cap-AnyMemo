@@ -474,6 +474,5 @@
     <string name="letter_hint">Letter hint</string>
     <string name="favourite_text">Mark as Favourite</string>
     <string name="spell_test">Spell Test mode </string>
-
-
+    <string name="add_to_study_mode">Add to study mode</string>
 </resources>
