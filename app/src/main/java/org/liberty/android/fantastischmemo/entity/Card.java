@@ -47,6 +47,10 @@ public class Card implements VersionableDomainObject {
 
     @DatabaseField(defaultValue = "", width = 8192)
     private String imgPath = "";
+
+    @DatabaseField(format="yyyy-MM-dd HH:mm:ss.SSSSSS", dataType=DataType.DATE_STRING)
+    private Date learningDate;
+
     public Card() {}
 
 
@@ -56,6 +60,14 @@ public class Card implements VersionableDomainObject {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public void setLearningDate(Date creationDate) {
+        this.learningDate = learningDate;
+    }
+
+    public Date getLearningDate() {
+        return learningDate;
     }
 
     public Integer getOrdinal() {
@@ -155,21 +167,21 @@ public class Card implements VersionableDomainObject {
         this.updateDate = updateDate;
     }
 
-	public LearningData getLearningData() {
-		return learningData;
-	}
+    public LearningData getLearningData() {
+        return learningData;
+    }
 
-	public void setLearningData(LearningData learningData) {
-		this.learningData = learningData;
-	}
+    public void setLearningData(LearningData learningData) {
+        this.learningData = learningData;
+    }
 
     @Override
     public String toString() {
         return Objects.toStringHelper(this)
-            .add("id", id)
-            .add("question", question)
-            .add("answer", answer)
-            .toString();
+                .add("id", id)
+                .add("question", question)
+                .add("answer", answer)
+                .toString();
     }
 
     @Override
