@@ -194,15 +194,18 @@ public abstract class QACardActivity extends BaseActivity {
     public String spellTest(String checkSpelling){
         String spell = getCurrentCard().getAnswer();
         String mockLineThingy = "_______";
-        boolean correct = false;
-        for (int i = 0; i < spell.length(); i++){
-            if(spell.equals(checkSpelling)){
-                correct = true;
-                break;
-            }
-            else {
-                correct = false;
-                break;
+        int ctr = 0;
+        while(ctr <= 3) {
+            boolean correct = false;
+            for (int i = 0; i < spell.length(); i++) {
+                if (spell.equals(checkSpelling)) {
+                    correct = true;
+                    break;
+                } else {
+                    correct = false;
+                    ctr++;
+                    break;
+                }
             }
         }
         return mockLineThingy;
