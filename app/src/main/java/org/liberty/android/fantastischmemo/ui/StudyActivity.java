@@ -240,7 +240,7 @@ public class StudyActivity extends QACardActivity {
 
             case R.id.spell_test:
             {
-                showSpelling("Something temporary");
+                showSpelling();
                 return true;
             }
 

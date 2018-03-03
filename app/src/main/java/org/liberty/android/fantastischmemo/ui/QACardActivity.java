@@ -196,10 +196,10 @@ public abstract class QACardActivity extends BaseActivity {
     }
 
 
-    public String spellTest(String checkSpelling){
+    public String spellTest(){
       //  View v = getActivity().getLayoutInflater().inflate(R.layout.study_activity_menu, null, false);
-        final EditText answerIn = (EditText)findViewById(R.id.spell_test);
-
+        EditText userInput = (EditText)findViewById(R.id.spell_test);
+        String answerIn = userInput.getText().toString();
 
         //inputSpellTest = (EditText) v.findViewById(R.id.spell_test);
 
@@ -209,7 +209,7 @@ public abstract class QACardActivity extends BaseActivity {
         while(ctr <= 3) {
             //boolean correct = false;
             for (int i = 0; i < spell.length(); i++) {
-                if (spell.equals(checkSpelling)) {
+                if (spell.equals(answerIn)) {
                     //correct = true;
                     break;
                 } else {
@@ -680,7 +680,7 @@ public abstract class QACardActivity extends BaseActivity {
     // Important class that display the card using fragment
     // the showAnswer parameter is handled differently on single
     // sided card and double sided card.
-    protected void displaySpellTest(boolean showAnswer, String spellCompare) {
+    protected void displaySpellTest(boolean showAnswer) {
 
         // First prepare the text to display
 
@@ -750,7 +750,7 @@ public abstract class QACardActivity extends BaseActivity {
                 .setImageSearchPaths(imageSearchPaths);
 
 
-        CardFragment.Builder showSpellTestFragmentBuilder = new CardFragment.Builder(spellTest(spellCompare))
+        CardFragment.Builder showSpellTestFragmentBuilder = new CardFragment.Builder(spellTest())
                 .setTextAlignment(answerAlign)
                 .setTypefaceFromFile(answerTypefaceValue)
                 .setTextOnClickListener(onAnswerTextClickListener)
@@ -1441,9 +1441,9 @@ public abstract class QACardActivity extends BaseActivity {
         return true;
     }
 
-    protected boolean showSpelling(String spellCompare){
+    protected boolean showSpelling(){
         //method used from line
-        displaySpellTest(true, spellCompare);
+        displaySpellTest(true);
         return true;
     }
 
