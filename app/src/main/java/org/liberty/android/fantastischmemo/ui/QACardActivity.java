@@ -198,25 +198,22 @@ public abstract class QACardActivity extends BaseActivity {
 
     public String spellTest(){
       //  View v = getActivity().getLayoutInflater().inflate(R.layout.study_activity_menu, null, false);
-        EditText userInput = (EditText)findViewById(R.id.spell_test);
-        String answerIn = userInput.getText().toString();
 
-        //inputSpellTest = (EditText) v.findViewById(R.id.spell_test);
+        //EditText userInput = (EditText)findViewById(R.id.spell_test);
+        //String answerIn = userInput.getText().toString();
+        String answerIn = "temp Answer";
 
         String spell = getCurrentCard().getAnswer();
         String temporaryLine = "_______";
         int ctr = 0;
         while(ctr <= 3) {
             //boolean correct = false;
-            for (int i = 0; i < spell.length(); i++) {
-                if (spell.equals(answerIn)) {
-                    //correct = true;
-                    break;
-                } else {
-                   // correct = false;
-                    ctr++;
-                    break;
-                }
+            if (spell.equals(answerIn)) {
+                //correct = true;
+                break;
+            } else {
+                // correct = false;
+                ctr++;
             }
         }
         return temporaryLine;
@@ -757,7 +754,7 @@ public abstract class QACardActivity extends BaseActivity {
                 .setCardOnClickListener(onAnswerViewClickListener)
                 .setTextFontSize(setting.getAnswerFontSize())
                 .setTypefaceFromFile(setting.getAnswerFont())
-                .setDisplayInHtml(setting.getDisplayInHTMLEnum().contains(Setting.CardField.HINT))
+                .setDisplayInHtml(setting.getDisplayInHTMLEnum().contains(Setting.CardField.SPELL))
                 .setHtmlLinebreakConversion(setting.getHtmlLineBreakConversion())
                 .setImageSearchPaths(imageSearchPaths);
 
@@ -814,7 +811,7 @@ public abstract class QACardActivity extends BaseActivity {
                 builders1List.add(noteFragmentBuilder);
             }
 
-            if (setting.getQuestionFieldEnum().contains(Setting.CardField.HINT)) {
+            if (setting.getQuestionFieldEnum().contains(Setting.CardField.SPELL)) {
                 builders1List.add(showSpellTestFragmentBuilder);
             }
 
