@@ -198,6 +198,7 @@ public abstract class QACardActivity extends BaseActivity {
 
     public String spellTest(String checkSpelling){
       //  View v = getActivity().getLayoutInflater().inflate(R.layout.study_activity_menu, null, false);
+        final EditText answerIn = (EditText)findViewById(R.id.spell_test);
 
 
         //inputSpellTest = (EditText) v.findViewById(R.id.spell_test);
