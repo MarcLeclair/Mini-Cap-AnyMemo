@@ -37,6 +37,7 @@ import android.text.ClipboardManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.common.base.Strings;
@@ -107,6 +108,9 @@ public abstract class QACardActivity extends BaseActivity {
     private CardTTSUtil cardTTSUtil;
 
     private GestureLibrary gestureLibrary;
+
+    private EditText inputSpellTest;
+
 
     /**
      * This needs to be defined before onCreate so in onCreate, all loaders will
@@ -191,18 +195,24 @@ public abstract class QACardActivity extends BaseActivity {
         return dbName;
     }
 
+
     public String spellTest(String checkSpelling){
+      //  View v = getActivity().getLayoutInflater().inflate(R.layout.study_activity_menu, null, false);
+
+
+        //inputSpellTest = (EditText) v.findViewById(R.id.spell_test);
+
         String spell = getCurrentCard().getAnswer();
         String temporaryLine = "_______";
         int ctr = 0;
         while(ctr <= 3) {
-            boolean correct = false;
+            //boolean correct = false;
             for (int i = 0; i < spell.length(); i++) {
                 if (spell.equals(checkSpelling)) {
-                    correct = true;
+                    //correct = true;
                     break;
                 } else {
-                    correct = false;
+                   // correct = false;
                     ctr++;
                     break;
                 }

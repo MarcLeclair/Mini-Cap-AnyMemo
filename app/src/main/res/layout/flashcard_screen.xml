@@ -45,6 +45,12 @@
                 android:textSize="16pt"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content" />
+            <EditText
+                android:id="@+id/spell_test"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize = "16pt"
+                android:inputType="text"/>
         </ScrollView>
     </LinearLayout>
 </LinearLayout>
