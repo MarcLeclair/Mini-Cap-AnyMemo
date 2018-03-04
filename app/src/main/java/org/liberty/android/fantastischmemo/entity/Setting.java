@@ -104,6 +104,9 @@ public class Setting implements Serializable, VersionableDomainObject {
     @DatabaseField(format="yyyy-MM-dd HH:mm:ss.SSSSSS", dataType=DataType.DATE_STRING)
     private Date updateDate = new Date();
 
+    @DatabaseField(defaultValue = "0")
+    private Integer learningMode = 0;
+
     public Setting() {}
 
     public static enum Align {
@@ -126,10 +129,11 @@ public class Setting implements Serializable, VersionableDomainObject {
         HINT
     }
 
+    public Integer getLearningMode() { return learningMode; }
 
-    public Integer getId() {
-        return id;
-    }
+    public void setLearningMode(Integer learningMode){ this.learningMode = learningMode; }
+
+    public Integer getId() { return id; }
 
     public void setId(Integer id) {
         this.id = id;
@@ -382,9 +386,9 @@ public class Setting implements Serializable, VersionableDomainObject {
 
     public boolean isDefaultColor() {
         return questionTextColor == null &&
-               answerTextColor == null &&
-               questionBackgroundColor == null &&
-               answerBackgroundColor == null &&
-               separatorColor.equals(DEFAULT_SEPARATOR_COLOR);
+                answerTextColor == null &&
+                questionBackgroundColor == null &&
+                answerBackgroundColor == null &&
+                separatorColor.equals(DEFAULT_SEPARATOR_COLOR);
     }
 }
