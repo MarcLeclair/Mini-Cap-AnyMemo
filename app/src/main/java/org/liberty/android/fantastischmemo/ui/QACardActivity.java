@@ -58,6 +58,7 @@ import org.liberty.android.fantastischmemo.ui.loader.SettingLoader;
 import org.liberty.android.fantastischmemo.utils.AMFileUtil;
 import org.liberty.android.fantastischmemo.utils.AMStringUtils;
 import org.liberty.android.fantastischmemo.utils.CardTTSUtil;
+import org.liberty.android.fantastischmemo.utils.InputValidator;
 import org.liberty.android.fantastischmemo.widget.AnyMemoWidgetProvider;
 
 import java.io.File;
@@ -196,31 +197,6 @@ public abstract class QACardActivity extends BaseActivity {
         return dbName;
     }
 
-
-    public String spellTest(){
-        EditText userInput = (EditText)findViewById(R.id.spell_test);
-        String answerIn = userInput.getText().toString();
-
-        //inputSpellTest = (EditText) v.findViewById(R.id.spell_test);
-
-        String spell = getCurrentCard().getAnswer();
-        String temporaryLine = "_______";
-        int ctr = 0;
-        while(ctr <= 3) {
-            //boolean correct = false;
-            for (int i = 0; i < spell.length(); i++) {
-                if (spell.equals(answerIn)) {
-                    //correct = true;
-                    break;
-                } else {
-                   // correct = false;
-                    ctr++;
-                    break;
-                }
-            }
-        }
-        return temporaryLine;
-    }
 
     public String displayLetterHint(int count) {
      //this function is called in the displayLetterHint method, line 276
@@ -681,6 +657,7 @@ public abstract class QACardActivity extends BaseActivity {
     // the enableSpellingHint parameter is handled differently on single
     // sided card and double sided card.
     protected void displaySpellingHint(boolean enableSpellingHint) {
+
 
         String questionTypeface = setting.getQuestionFont();
         String answerTypeface = setting.getAnswerFont();

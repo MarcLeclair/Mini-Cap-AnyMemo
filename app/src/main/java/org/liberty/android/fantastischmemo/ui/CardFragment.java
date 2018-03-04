@@ -61,7 +61,6 @@ public class CardFragment extends BaseFragment {
     private TextView cardTextView;
 
     private ImageView imgView;
-
     private EditText spellingHintText;
 
     private Button spellingHintBtn;
@@ -129,39 +128,24 @@ public class CardFragment extends BaseFragment {
         View v = inflater.inflate(R.layout.card_layout, container, false);
         cardTextView = (TextView) v.findViewById(R.id.card_text_view);
         imgView = (ImageView) v.findViewById(R.id.img_hint);
+
         rootView = (LinearLayout) v.findViewById(R.id.root);
 
         //retrieve the edit text and submit button from the view for the spell hint option
-        spellingHintText = (EditText) v.findViewById(R.id.spell_hint_text);
-        spellingHintBtn = (Button) v.findViewById(R.id.spell_hint_btn_id);
+       // spellingHintText = (EditText) v.findViewById(R.id.spell_hint_text);
 
-        spellingHintBtn.setOnClickListener( new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try{
-                    //TODO
-                    //currently crashing so i put it into commennts
-//                Intent i = new Intent(CardFragment.this.getActivity(), StudyActivity.class);
-//                i.putExtra("spellingHintText", spellingHintText.getText().toString());
-//                startActivity(i);
-                }
-                catch (Exception e){
-                    Log.d(TAG, "onClickError: "+e);
-                }
-            }
-        });
+
 
         if(pictureHint == false) {
             imgView .setVisibility(View.GONE);
             cardTextView.setText(cardTextUtil.getSpannableText(mCardText, displayInHtml, htmlLinebreakConversion));
         }
+        if(spellingHint == false){
+
+        }
 
         //if the spell option hasnt been clicked, hide this from the view
         //otherwise this will always show up for every fragment
-        if(!spellingHint) {
-            spellingHintText.setVisibility(View.GONE);
-            spellingHintBtn.setVisibility(View.GONE);
-        }
 
 
 
