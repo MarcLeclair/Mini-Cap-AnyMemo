@@ -198,6 +198,7 @@ public abstract class QACardActivity extends BaseActivity {
 
 
     public String spellTest(){
+      //  View v = getActivity().getLayoutInflater().inflate(R.layout.study_activity_menu, null, false);
         EditText userInput = (EditText)findViewById(R.id.spell_test);
         String answerIn = userInput.getText().toString();
 
@@ -208,15 +209,12 @@ public abstract class QACardActivity extends BaseActivity {
         int ctr = 0;
         while(ctr <= 3) {
             //boolean correct = false;
-            for (int i = 0; i < spell.length(); i++) {
-                if (spell.equals(answerIn)) {
-                    //correct = true;
-                    break;
-                } else {
-                   // correct = false;
-                    ctr++;
-                    break;
-                }
+            if (spell.equals(answerIn)) {
+                //correct = true;
+                break;
+            } else {
+                // correct = false;
+                ctr++;
             }
         }
         return temporaryLine;
@@ -755,7 +753,7 @@ public abstract class QACardActivity extends BaseActivity {
                 .setCardOnClickListener(onAnswerViewClickListener)
                 .setTextFontSize(setting.getAnswerFontSize())
                 .setTypefaceFromFile(setting.getAnswerFont())
-                .setSpellingHint(true)
+                .setDisplayInHtml(setting.getDisplayInHTMLEnum().contains(Setting.CardField.HINT))
                 .setHtmlLinebreakConversion(setting.getHtmlLineBreakConversion())
                 .setImageSearchPaths(imageSearchPaths);
 
