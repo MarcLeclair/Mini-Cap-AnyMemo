@@ -131,7 +131,7 @@ public class OpenActionsFragment extends BaseDialogFragment {
             }
 
             if (v == studyModeItem) {
-              //TODO
+    //TODO
 
             }
 
