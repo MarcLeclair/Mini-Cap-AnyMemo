@@ -50,19 +50,6 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:textSize="16pt" />
-
-            <EditText
-                android:id="@+id/spell_test"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text"
-                android:textSize="16pt" />
-
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Submit"
-                android:id="@+id/spellCheckSubmit" />
         </ScrollView>
     </LinearLayout>
 </LinearLayout>

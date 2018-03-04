@@ -28,9 +28,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.EditText;
 
 import com.bumptech.glide.Glide;
 
@@ -56,8 +58,11 @@ public class CardFragment extends BaseFragment {
 
     private TextView cardTextView;
 
-
     private ImageView imgView;
+
+    private EditText spellingHintText;
+
+    private Button spellingHintBtn;
 
     private String fontFile = null;
 
@@ -82,6 +87,8 @@ public class CardFragment extends BaseFragment {
     private boolean htmlLinebreakConversion = false;
 
     private boolean pictureHint = false;
+
+    private boolean spellingHint = false;
 
     private CardTextUtil cardTextUtil;
 
@@ -120,11 +127,23 @@ public class CardFragment extends BaseFragment {
         imgView = (ImageView) v.findViewById(R.id.img_hint);
         rootView = (LinearLayout) v.findViewById(R.id.root);
 
+        //retrieve the edit text and submit button from the view for the spell hint option
+        spellingHintText = (EditText) v.findViewById(R.id.spell_hint_text);
+        spellingHintBtn = (Button) v.findViewById(R.id.spell_hint_btn_id);
 
         if(pictureHint == false) {
             imgView .setVisibility(View.GONE);
             cardTextView.setText(cardTextUtil.getSpannableText(mCardText, displayInHtml, htmlLinebreakConversion));
         }
+
+        //if the spell option hasnt been clicked, hide this from the view
+        //otherwise this will always show up for every fragment
+        if(!spellingHint) {
+            spellingHintText.setVisibility(View.GONE);
+            spellingHintBtn.setVisibility(View.GONE);
+        }
+
+
 
         // Uncomment the line below for the text field to handle links.
         // The line is commented out because it is not well tested.
@@ -263,6 +282,8 @@ public class CardFragment extends BaseFragment {
 
         private boolean pictureHint = false;
 
+        private boolean spellingHint = false;
+
         private String[] imageSearchPaths = {AMEnv.DEFAULT_IMAGE_PATH};
 
         public Builder(String text) {
@@ -334,6 +355,11 @@ public class CardFragment extends BaseFragment {
             return this;
         }
 
+        public Builder setSpellingHint(boolean spellingHint){
+            this.spellingHint = spellingHint;
+            return this;
+        }
+
         /*
          * Set up the alignment of the text in the card.
          * The parameter gravity is from Gravity.*
@@ -388,6 +414,8 @@ public class CardFragment extends BaseFragment {
             }
 
             fragment.pictureHint = pictureHint;
+
+            fragment.spellingHint = spellingHint;
 
             fragment.htmlLinebreakConversion = htmlLinebreakConversion;
 

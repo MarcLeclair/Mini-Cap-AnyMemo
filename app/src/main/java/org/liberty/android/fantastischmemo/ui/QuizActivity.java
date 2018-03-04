@@ -201,7 +201,7 @@ public class QuizActivity extends QACardActivity {
                     //everytime the button gets clicked, counter increases by 1
                     letterHintCounter++;
                     //showhint() is in QACardActivity.java
-                    showHint(letterHintCounter);
+                    showLetterHint(letterHintCounter);
                 }
                 break;
             }

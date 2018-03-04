@@ -21,6 +21,18 @@
             />
     </android.support.percent.PercentRelativeLayout>
 
+    <EditText
+    android:id="@+id/spell_hint_text"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:inputType="text"
+    android:textSize="16pt" />
+
+    <Button
+        android:id="@+id/spell_hint_btn_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/spell_hint_btn_text" />
 
     <ScrollView
         android:layout_width="match_parent"

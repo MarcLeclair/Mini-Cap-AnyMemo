@@ -238,9 +238,9 @@ public class StudyActivity extends QACardActivity {
                 return true;
             }
 
-            case R.id.spell_test:
+            case R.id.spell_hint:
             {
-                showSpelling();
+                showSpellingHint();
                 return true;
             }
 
