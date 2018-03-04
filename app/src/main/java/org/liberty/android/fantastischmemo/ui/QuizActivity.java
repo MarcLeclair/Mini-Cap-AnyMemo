@@ -175,8 +175,10 @@ public class QuizActivity extends QACardActivity {
                 break;
             }
             case R.id.picture_hint:{
-                showPictureHint();
-
+                if(!isAnswerShown())
+                {
+                    showPictureHint();
+                }
                 break;
             }
             case R.id.multiple_choice_hint:{
@@ -190,17 +192,19 @@ public class QuizActivity extends QACardActivity {
                     mcCards.add(queueManager.getAllCards().get(randomNumb));
                 }
 
-                if(!isAnswerShown()){
+                if(!isAnswerShown())
+                {
                     showMcHint(mcCards);
                 }
                 break;
             }
             case R.id.letter_hint: {
 
-                if (!isAnswerShown()) {
-                    //everytime the button gets clicked, counter increases by 1
+                if (!isAnswerShown())
+                {
+                    //every time the button gets clicked, counter increases by 1
                     letterHintCounter++;
-                    //showhint() is in QACardActivity.java
+                    //showLetterhint() is in QACardActivity.java
                     showLetterHint(letterHintCounter);
                 }
                 break;

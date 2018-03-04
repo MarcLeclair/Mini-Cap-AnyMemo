@@ -22,6 +22,7 @@ package org.liberty.android.fantastischmemo.ui;
 import android.app.Activity;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +34,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.EditText;
+import android.content.Intent;
 
 import com.bumptech.glide.Glide;
 
@@ -94,6 +96,8 @@ public class CardFragment extends BaseFragment {
 
     private String[] imageSearchPaths = {AMEnv.DEFAULT_IMAGE_PATH};
 
+    String TAG = "CardFragment.java";
+
     // The dummy animation is used to handle the nested fragment animation disappearing bug
     // See solution here:
     // http://stackoverflow.com/questions/14900738/nested-fragments-disappear-during-transition-animation
@@ -130,6 +134,22 @@ public class CardFragment extends BaseFragment {
         //retrieve the edit text and submit button from the view for the spell hint option
         spellingHintText = (EditText) v.findViewById(R.id.spell_hint_text);
         spellingHintBtn = (Button) v.findViewById(R.id.spell_hint_btn_id);
+
+        spellingHintBtn.setOnClickListener( new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try{
+                    //TODO
+                    //currently crashing so i put it into commennts
+//                Intent i = new Intent(CardFragment.this.getActivity(), StudyActivity.class);
+//                i.putExtra("spellingHintText", spellingHintText.getText().toString());
+//                startActivity(i);
+                }
+                catch (Exception e){
+                    Log.d(TAG, "onClickError: "+e);
+                }
+            }
+        });
 
         if(pictureHint == false) {
             imgView .setVisibility(View.GONE);
@@ -248,9 +268,6 @@ public class CardFragment extends BaseFragment {
     public static interface OnLongClickListener extends View.OnLongClickListener{
         // No definitions, inherrited void onClick(View v)
     }
-
-
-
 
     public static class Builder implements Serializable {
 

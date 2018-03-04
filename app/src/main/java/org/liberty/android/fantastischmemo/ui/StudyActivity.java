@@ -240,7 +240,12 @@ public class StudyActivity extends QACardActivity {
 
             case R.id.spell_hint:
             {
+                //if the person hasn't clicked to get the answer, let them type it in
+                if(!isAnswerShown())
+                {
                 showSpellingHint();
+               // spellTest();
+                }
                 return true;
             }
 

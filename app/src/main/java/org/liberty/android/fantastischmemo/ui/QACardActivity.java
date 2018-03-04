@@ -111,6 +111,7 @@ public abstract class QACardActivity extends BaseActivity {
 
     private EditText inputSpellTest;
 
+    String TAG = "spellingHint";
 
     /**
      * This needs to be defined before onCreate so in onCreate, all loaders will
@@ -747,7 +748,7 @@ public abstract class QACardActivity extends BaseActivity {
                 .setImageSearchPaths(imageSearchPaths);
 
 
-        CardFragment.Builder answerFragmentBuilder = new CardFragment.Builder("hello")
+        CardFragment.Builder answerFragmentBuilder = new CardFragment.Builder("")
                 .setTextAlignment(answerAlign)
                 .setTypefaceFromFile(answerTypefaceValue)
                 .setTextOnClickListener(onAnswerTextClickListener)
