@@ -500,6 +500,12 @@ public class CardListActivity extends BaseActivity {
 
             answerView.setText(cardTextUtil.getSpannableText(card.getAnswer(), true, false));
 
+            if (scheduler.isCardFavourite(card.getLearningData())){
+                idView.setTextColor(FAVOURITE_CARD_ITEM_COLOR);
+                questionView.setTextColor(FAVOURITE_CARD_ITEM_COLOR);
+                answerView.setTextColor(FAVOURITE_CARD_ITEM_COLOR);
+            }
+
             if (scheduler.isCardNew(card.getLearningData())) {
                 highlightCardViewAsNew(convertView);
             } else if (scheduler.isCardForReview(card.getLearningData())) {
@@ -507,11 +513,6 @@ public class CardListActivity extends BaseActivity {
             }
             else if (scheduler.isCardLearned(card.getLearningData())){
                 highlightCardViewAsLearned(convertView);
-            }
-            if (scheduler.isCardFavourite(card.getLearningData())){
-                idView.setTextColor(FAVOURITE_CARD_ITEM_COLOR);
-                questionView.setTextColor(FAVOURITE_CARD_ITEM_COLOR);
-                answerView.setTextColor(FAVOURITE_CARD_ITEM_COLOR);
             }
 
 
