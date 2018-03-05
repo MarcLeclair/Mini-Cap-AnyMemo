@@ -51,8 +51,6 @@ public class Card implements VersionableDomainObject {
     @DatabaseField(format="yyyy-MM-dd HH:mm:ss.SSSSSS", dataType=DataType.DATE_STRING)
     private Date learningDate;
 
-    @DatabaseField(defaultValue = "0", width = 8192)
-    private Integer favourite = 0;
 
     public Card() {}
 
@@ -139,17 +137,6 @@ public class Card implements VersionableDomainObject {
         }
     }
 
-    public Integer getFavourite(){
-        return this.favourite;
-    }
-
-    public void setFavourite(Integer favourite){
-        if(favourite == null) {
-            this.favourite = 0;
-        }else{
-            this.favourite = favourite;
-        }
-    }
 
     public Date getCreationDate() {
         return creationDate;
