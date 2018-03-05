@@ -449,4 +449,5 @@
     <string name="multiple_choice_hint">suggerimento a scelta multipla</string>
     <string name="letter_hint">suggerimento di lettera</string>
     <string name="favourite_text" >Contrassegna come preferito</string>
+    <string name="spell_test">modalità di test degli incantesimi </string>
 </resources>

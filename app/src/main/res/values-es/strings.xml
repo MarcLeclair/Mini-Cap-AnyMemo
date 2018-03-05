@@ -264,4 +264,5 @@
     <string name="multiple_choice_hint">sugerencia de elección múltiple</string>
     <string name="letter_hint">sugerencia de letra</string>
     <string name="favourite_text" >Marcar como favorito</string>
+    <string name="spell_test">Modo de prueba de hechizo </string>
 </resources>

@@ -37,7 +37,10 @@ import android.text.ClipboardManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.common.base.Strings;
 
@@ -108,6 +111,10 @@ public abstract class QACardActivity extends BaseActivity {
 
     private GestureLibrary gestureLibrary;
 
+    private EditText inputSpellTest;
+
+    String TAG = "spellingHint";
+
     /**
      * This needs to be defined before onCreate so in onCreate, all loaders will
      * be registered with the right manager.
@@ -138,6 +145,8 @@ public abstract class QACardActivity extends BaseActivity {
         super.onCreate(bundle);
         activityComponents().inject(this);
         setContentView(getContentView());
+
+
     }
 
     /**
@@ -191,8 +200,9 @@ public abstract class QACardActivity extends BaseActivity {
         return dbName;
     }
 
+
     public String displayLetterHint(int count) {
-     //this function is called in the displayCardWithHint method, line 276
+     //this function is called in the displayLetterHint method, line 276
         String word = getCurrentCard().getAnswer();
         String StringBuilder  = "";
         for (int i = 0; i < word.length(); i++) {
@@ -220,7 +230,7 @@ public abstract class QACardActivity extends BaseActivity {
         }
         return deck;
     }
-    protected void displayMcHint(boolean showAnswer,List<Card> list){
+    protected void displayMcHint(boolean enableMcHint,List<Card> list){
 
         list.add(getCurrentCard());
 
@@ -276,7 +286,7 @@ public abstract class QACardActivity extends BaseActivity {
             // It could be the question if it is the double sided card with only question shown
             // or answer view's color.
             if (!setting.isDefaultColor()) {
-                if (setting.getCardStyle() == Setting.CardStyle.DOUBLE_SIDED && !showAnswer &&
+                if (setting.getCardStyle() == Setting.CardStyle.DOUBLE_SIDED && !enableMcHint &&
                         setting.getQuestionBackgroundColor() != null) {
                     buttonsView.setBackgroundColor(setting.getQuestionBackgroundColor());
                 } else if (setting.getAnswerBackgroundColor() != null) {
@@ -365,7 +375,7 @@ public abstract class QACardActivity extends BaseActivity {
             }
 
             List<CardFragment.Builder> builders2List = new ArrayList<CardFragment.Builder>(4);
-            if (!showAnswer) {
+            if (!enableMcHint) {
                 builders2List.add(showAnswerFragmentBuilder);
             }
             if (setting.getAnswerFieldEnum().contains(Setting.CardField.QUESTION)) {
@@ -385,7 +395,7 @@ public abstract class QACardActivity extends BaseActivity {
 
             b.putSerializable(TwoFieldsCardFragment.EXTRA_FIELD1_CARD_FRAGMENT_BUILDERS, builders1);
             b.putSerializable(TwoFieldsCardFragment.EXTRA_FIELD2_CARD_FRAGMENT_BUILDERS, builders2);
-            if (showAnswer) {
+            if (enableMcHint) {
                 b.putInt(TwoFieldsCardFragment.EXTRA_FIELD2_INITIAL_POSITION, 0);
             } else {
                 b.putInt(TwoFieldsCardFragment.EXTRA_FIELD2_INITIAL_POSITION, 0);
@@ -403,7 +413,7 @@ public abstract class QACardActivity extends BaseActivity {
             Bundle b = new Bundle(1);
             CardFragment.Builder[] builders = {questionFragmentBuilder, answerFragmentBuilder, noteFragmentBuilder};
             b.putSerializable(FlipableCardFragment.EXTRA_CARD_FRAGMENT_BUILDERS, builders);
-            if (showAnswer) {
+            if (enableMcHint) {
                 b.putInt(FlipableCardFragment.EXTRA_INITIAL_POSITION, 1);
             } else {
                 b.putInt(FlipableCardFragment.EXTRA_INITIAL_POSITION, 0);
@@ -429,14 +439,14 @@ public abstract class QACardActivity extends BaseActivity {
         // Only copy to clipboard if answer is show
         // as a feature request:
         // http://code.google.com/p/anymemo/issues/detail?id=239
-        if (showAnswer == true) {
+        if (enableMcHint == true) {
             copyToClipboard();
         }
 
         currentDisplayedCard = getCurrentCard();
         onPostDisplayCard();
     }
-    protected void displayCardWithHint(boolean showAnswer , int letterHintCounter) {
+    protected void displayLetterHint(boolean enableLetterHint , int letterHintCounter) {
 
         // First prepare the text to display
 
@@ -485,7 +495,7 @@ public abstract class QACardActivity extends BaseActivity {
             // It could be the question if it is the double sided card with only question shown
             // or answer view's color.
             if (!setting.isDefaultColor()) {
-                if (setting.getCardStyle() == Setting.CardStyle.DOUBLE_SIDED && !showAnswer &&
+                if (setting.getCardStyle() == Setting.CardStyle.DOUBLE_SIDED && !enableLetterHint &&
                         setting.getQuestionBackgroundColor() != null) {
                     buttonsView.setBackgroundColor(setting.getQuestionBackgroundColor());
                 } else if (setting.getAnswerBackgroundColor() != null) {
@@ -575,7 +585,7 @@ public abstract class QACardActivity extends BaseActivity {
             }
 
             List<CardFragment.Builder> builders2List = new ArrayList<CardFragment.Builder>(4);
-            if (!showAnswer) {
+            if (!enableLetterHint) {
                 builders2List.add(showAnswerFragmentBuilder);
             }
             if (setting.getAnswerFieldEnum().contains(Setting.CardField.QUESTION)) {
@@ -595,7 +605,7 @@ public abstract class QACardActivity extends BaseActivity {
 
             b.putSerializable(TwoFieldsCardFragment.EXTRA_FIELD1_CARD_FRAGMENT_BUILDERS, builders1);
             b.putSerializable(TwoFieldsCardFragment.EXTRA_FIELD2_CARD_FRAGMENT_BUILDERS, builders2);
-            if (showAnswer) {
+            if (enableLetterHint) {
                 b.putInt(TwoFieldsCardFragment.EXTRA_FIELD2_INITIAL_POSITION, 0);
             } else {
                 b.putInt(TwoFieldsCardFragment.EXTRA_FIELD2_INITIAL_POSITION, 0);
@@ -613,7 +623,7 @@ public abstract class QACardActivity extends BaseActivity {
             Bundle b = new Bundle(1);
             CardFragment.Builder[] builders = {questionFragmentBuilder, showHintFragmentBuilder, noteFragmentBuilder};
             b.putSerializable(FlipableCardFragment.EXTRA_CARD_FRAGMENT_BUILDERS, builders);
-            if (showAnswer) {
+            if (enableLetterHint) {
                 b.putInt(FlipableCardFragment.EXTRA_INITIAL_POSITION, 1);
             } else {
                 b.putInt(FlipableCardFragment.EXTRA_INITIAL_POSITION, 0);
@@ -637,7 +647,7 @@ public abstract class QACardActivity extends BaseActivity {
         // Only copy to clipboard if answer is show
         // as a feature request:
         // http://code.google.com/p/anymemo/issues/detail?id=239
-        if (showAnswer == true) {
+        if (enableLetterHint == true) {
             copyToClipboard();
         }
 
@@ -647,8 +657,201 @@ public abstract class QACardActivity extends BaseActivity {
     }
     //public List<Card> displayMcCards
     // Important class that display the card using fragment
-    // the showAnswer parameter is handled differently on single
+    // the enableSpellingHint parameter is handled differently on single
     // sided card and double sided card.
+    protected void displaySpellingHint(boolean enableSpellingHint) {
+        final boolean enableSpellingHint_local = enableSpellingHint;
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+        alertDialog.setTitle("Question: " + getCurrentCard().getQuestion());
+        alertDialog.setMessage("Enter your answer in the field below");
+
+        final EditText input = new EditText(this);
+        input.setHint("Try to answer if you can");
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        input.setLayoutParams(lp);
+        alertDialog.setView(input);
+        alertDialog.setPositiveButton("Verify Answer",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        String answer = input.getText().toString();
+                        if (answer.compareTo("") > 0) {
+                            if (getCurrentCard().getAnswer().equals(answer)) {
+                                Toast.makeText(getApplicationContext(),
+                                        "Good Answer!", Toast.LENGTH_SHORT).show();
+
+                                String questionTypeface = setting.getQuestionFont();
+                                String answerTypeface = setting.getAnswerFont();
+
+                                Setting.Align questionAlign = setting.getQuestionTextAlign();
+                                Setting.Align answerAlign = setting.getAnswerTextAlign();
+
+                                String questionTypefaceValue = null;
+                                String answerTypefaceValue = null;
+
+                                CardFragment.Builder questionFragmentBuilder = new CardFragment.Builder(getCurrentCard().getQuestion())
+                                        .setTextAlignment(questionAlign)
+                                        .setTypefaceFromFile(questionTypefaceValue)
+                                        .setTextOnClickListener(onQuestionTextClickListener)
+                                        .setCardOnClickListener(onQuestionViewClickListener)
+                                        .setTextFontSize(setting.getQuestionFontSize())
+                                        .setTypefaceFromFile(setting.getQuestionFont())
+                                        .setDisplayInHtml(setting.getDisplayInHTMLEnum().contains(Setting.CardField.QUESTION))
+                                        .setHtmlLinebreakConversion(setting.getHtmlLineBreakConversion());
+
+
+                                CardFragment.Builder answerFragmentBuilder = new CardFragment.Builder(getCurrentCard().getAnswer())
+                                        .setTextAlignment(answerAlign)
+                                        .setTypefaceFromFile(answerTypefaceValue)
+                                        .setTextOnClickListener(onAnswerTextClickListener)
+                                        .setCardOnClickListener(onAnswerViewClickListener)
+                                        .setTextFontSize(setting.getAnswerFontSize())
+                                        .setTypefaceFromFile(setting.getAnswerFont())
+                                        .setDisplayInHtml(setting.getDisplayInHTMLEnum().contains(Setting.CardField.ANSWER))
+                                        .setHtmlLinebreakConversion(setting.getHtmlLineBreakConversion());
+
+                                CardFragment.Builder showAnswerFragmentBuilder = new CardFragment.Builder("?\n" + getString(R.string.memo_show_answer))
+                                        .setTextAlignment(Setting.Align.CENTER)
+                                        .setTypefaceFromFile(answerTypefaceValue)
+                                        .setTextOnClickListener(onAnswerTextClickListener)
+                                        .setCardOnClickListener(onAnswerViewClickListener)
+                                        .setTextFontSize(setting.getAnswerFontSize())
+                                        .setTypefaceFromFile(setting.getAnswerFont());
+
+                                questionFragmentBuilder
+                                        .setTextColor(setting.getQuestionTextColor())
+                                        .setBackgroundColor(setting.getQuestionBackgroundColor());
+
+                                answerFragmentBuilder
+                                        .setBackgroundColor(setting.getAnswerBackgroundColor())
+                                        .setTextColor(setting.getAnswerTextColor());
+
+                                showAnswerFragmentBuilder
+                                        .setTextColor(setting.getAnswerTextColor())
+                                        .setBackgroundColor(setting.getAnswerBackgroundColor());
+
+
+                                // Note is currently shared some settings with Answer
+                                CardFragment.Builder noteFragmentBuilder = new CardFragment.Builder(getCurrentCard().getNote())
+                                        .setTextAlignment(answerAlign)
+                                        .setTypefaceFromFile(answerTypefaceValue)
+                                        .setCardOnClickListener(onAnswerViewClickListener)
+                                        .setTextFontSize(setting.getAnswerFontSize())
+                                        .setTypefaceFromFile(setting.getAnswerFont())
+                                        .setDisplayInHtml(setting.getDisplayInHTMLEnum().contains(Setting.CardField.ANSWER))
+                                        .setHtmlLinebreakConversion(setting.getHtmlLineBreakConversion());
+
+
+                                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+
+                                if (setting.getCardStyle() == Setting.CardStyle.SINGLE_SIDED) {
+                                    TwoFieldsCardFragment fragment = new TwoFieldsCardFragment();
+                                    Bundle b = new Bundle();
+
+                                    // Handle card field setting.
+                                    List<CardFragment.Builder> builders1List = new ArrayList<CardFragment.Builder>(4);
+                                    if (setting.getQuestionFieldEnum().contains(Setting.CardField.QUESTION)) {
+                                        builders1List.add(questionFragmentBuilder);
+                                    }
+                                    if (setting.getQuestionFieldEnum().contains(Setting.CardField.ANSWER)) {
+                                        builders1List.add(answerFragmentBuilder);
+                                    }
+                                    if (setting.getQuestionFieldEnum().contains(Setting.CardField.NOTE)) {
+                                        builders1List.add(noteFragmentBuilder);
+                                    }
+
+                                    List<CardFragment.Builder> builders2List = new ArrayList<CardFragment.Builder>(4);
+                                    if (!enableSpellingHint_local) {
+                                        builders2List.add(showAnswerFragmentBuilder);
+                                    }
+                                    if (setting.getAnswerFieldEnum().contains(Setting.CardField.QUESTION)) {
+                                        builders2List.add(questionFragmentBuilder);
+                                    }
+                                    if (setting.getAnswerFieldEnum().contains(Setting.CardField.ANSWER)) {
+                                        builders2List.add(answerFragmentBuilder);
+                                    }
+                                    if (setting.getAnswerFieldEnum().contains(Setting.CardField.NOTE)) {
+                                        builders2List.add(noteFragmentBuilder);
+                                    }
+
+                                    CardFragment.Builder[] builders1 = new CardFragment.Builder[builders1List.size()];
+                                    builders1List.toArray(builders1);
+                                    CardFragment.Builder[] builders2 = new CardFragment.Builder[builders2List.size()];
+                                    builders2List.toArray(builders2);
+
+                                    b.putSerializable(TwoFieldsCardFragment.EXTRA_FIELD1_CARD_FRAGMENT_BUILDERS, builders1);
+                                    b.putSerializable(TwoFieldsCardFragment.EXTRA_FIELD2_CARD_FRAGMENT_BUILDERS, builders2);
+                                    if (enableSpellingHint_local) {
+                                        b.putInt(TwoFieldsCardFragment.EXTRA_FIELD2_INITIAL_POSITION, 0);
+                                    } else {
+                                        b.putInt(TwoFieldsCardFragment.EXTRA_FIELD2_INITIAL_POSITION, 0);
+                                    }
+                                    b.putInt(TwoFieldsCardFragment.EXTRA_QA_RATIO, setting.getQaRatio());
+                                    b.putInt(TwoFieldsCardFragment.EXTRA_SEPARATOR_COLOR, setting.getSeparatorColor());
+                                    fragment.setArguments(b);
+
+                                    configCardFragmentTransitionAnimation(ft);
+
+                                    ft.replace(R.id.card_root, fragment);
+                                    ft.commit();
+                                } else if (setting.getCardStyle() == Setting.CardStyle.DOUBLE_SIDED) {
+                                    FlipableCardFragment fragment = new FlipableCardFragment();
+                                    Bundle b = new Bundle(1);
+                                    CardFragment.Builder[] builders = {questionFragmentBuilder, answerFragmentBuilder, noteFragmentBuilder};
+                                    b.putSerializable(FlipableCardFragment.EXTRA_CARD_FRAGMENT_BUILDERS, builders);
+                                    if (enableSpellingHint_local) {
+                                        b.putInt(FlipableCardFragment.EXTRA_INITIAL_POSITION, 1);
+                                    } else {
+                                        b.putInt(FlipableCardFragment.EXTRA_INITIAL_POSITION, 0);
+                                    }
+
+                                    fragment.setArguments(b);
+
+                                    configCardFragmentTransitionAnimation(ft);
+
+                                    ft.replace(R.id.card_root, fragment);
+                                    ft.commit();
+                                } else {
+                                    assert false : "Card logic not implemented for style: " + setting.getCardStyle();
+                                }
+
+                                isAnswerShown = enableSpellingHint_local;
+
+                                // Set up the small title bar
+                                // It is defualt "GONE" so it won't take any space
+                                // if there is no text
+                                smallTitleBar = (TextView) findViewById(R.id.small_title_bar);
+
+                                // Only copy to clipboard if answer is show
+                                // as a feature request:
+                                // http://code.google.com/p/anymemo/issues/detail?id=239
+                                if (enableSpellingHint_local == true) {
+                                    copyToClipboard();
+                                }
+
+                                currentDisplayedCard = getCurrentCard();
+                                onPostDisplayCard();
+
+                            } else {
+                                Toast.makeText(getApplicationContext(),
+                                        "Wrong Answer", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+                });
+
+        alertDialog.setNegativeButton("Cancel",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+        alertDialog.show();
+    }
+
+
     protected void displayCard(boolean showAnswer) {
         // First prepare the text to display
 
@@ -858,7 +1061,7 @@ public abstract class QACardActivity extends BaseActivity {
         onPostDisplayCard();
     }
 
-    protected void displayHintImg(boolean pictureHint){
+    protected void displayPictureHint(boolean enablePictureHint){
         if(getCurrentCard().getImgPath() == null) {
             getCurrentCard().setImgPath("");
         }
@@ -1194,9 +1397,15 @@ public abstract class QACardActivity extends BaseActivity {
         return true;
     }
 
-    protected boolean showHint(int letterHintCounter) {
+    protected boolean showLetterHint(int letterHintCounter) {
         //the method is in the line 206
-        displayCardWithHint(true, letterHintCounter);
+        displayLetterHint(true, letterHintCounter);
+        return true;
+    }
+
+    protected boolean showSpellingHint(){
+        //method used from line
+        displaySpellingHint(true);
         return true;
     }
 
@@ -1206,7 +1415,7 @@ public abstract class QACardActivity extends BaseActivity {
     }
 
     protected boolean showPictureHint(){
-        displayHintImg(true);
+        displayPictureHint(true);
         return true;
     }
 
