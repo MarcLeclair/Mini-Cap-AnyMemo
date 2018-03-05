@@ -244,7 +244,6 @@ public class StudyActivity extends QACardActivity {
                 if(!isAnswerShown())
                 {
                 showSpellingHint();
-               // spellTest();
                 }
                 return true;
             }
@@ -811,7 +810,4 @@ public class StudyActivity extends QACardActivity {
         startActivity(myIntent);
     }
 
-    private void spellCheck(){
-        String answer = getCurrentCard().getAnswer();
-    }
 }

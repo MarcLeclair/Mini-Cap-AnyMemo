@@ -22,19 +22,15 @@ package org.liberty.android.fantastischmemo.ui;
 import android.app.Activity;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.EditText;
-import android.content.Intent;
 
 import com.bumptech.glide.Glide;
 
@@ -62,10 +58,6 @@ public class CardFragment extends BaseFragment {
 
     private ImageView imgView;
 
-    private EditText spellingHintText;
-
-    private Button spellingHintBtn;
-
     private String fontFile = null;
 
     private OnClickListener cardOnClickListener = null;
@@ -90,7 +82,6 @@ public class CardFragment extends BaseFragment {
 
     private boolean pictureHint = false;
 
-    private boolean spellingHint = false;
 
     private CardTextUtil cardTextUtil;
 
@@ -115,12 +106,14 @@ public class CardFragment extends BaseFragment {
         super.onCreate(bundle);
         mCardText = getArguments().getString(EXTRA_CARD_TEXT);
         cardTextUtil = new CardTextUtil(appComponents(), imageSearchPaths);
+
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -129,38 +122,15 @@ public class CardFragment extends BaseFragment {
         View v = inflater.inflate(R.layout.card_layout, container, false);
         cardTextView = (TextView) v.findViewById(R.id.card_text_view);
         imgView = (ImageView) v.findViewById(R.id.img_hint);
+
         rootView = (LinearLayout) v.findViewById(R.id.root);
 
-        //retrieve the edit text and submit button from the view for the spell hint option
-        spellingHintText = (EditText) v.findViewById(R.id.spell_hint_text);
-        spellingHintBtn = (Button) v.findViewById(R.id.spell_hint_btn_id);
 
-        spellingHintBtn.setOnClickListener( new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try{
-                    //TODO
-                    //currently crashing so i put it into commennts
-//                Intent i = new Intent(CardFragment.this.getActivity(), StudyActivity.class);
-//                i.putExtra("spellingHintText", spellingHintText.getText().toString());
-//                startActivity(i);
-                }
-                catch (Exception e){
-                    Log.d(TAG, "onClickError: "+e);
-                }
-            }
-        });
+
 
         if(pictureHint == false) {
             imgView .setVisibility(View.GONE);
             cardTextView.setText(cardTextUtil.getSpannableText(mCardText, displayInHtml, htmlLinebreakConversion));
-        }
-
-        //if the spell option hasnt been clicked, hide this from the view
-        //otherwise this will always show up for every fragment
-        if(!spellingHint) {
-            spellingHintText.setVisibility(View.GONE);
-            spellingHintBtn.setVisibility(View.GONE);
         }
 
 
@@ -299,8 +269,6 @@ public class CardFragment extends BaseFragment {
 
         private boolean pictureHint = false;
 
-        private boolean spellingHint = false;
-
         private String[] imageSearchPaths = {AMEnv.DEFAULT_IMAGE_PATH};
 
         public Builder(String text) {
@@ -372,10 +340,7 @@ public class CardFragment extends BaseFragment {
             return this;
         }
 
-        public Builder setSpellingHint(boolean spellingHint){
-            this.spellingHint = spellingHint;
-            return this;
-        }
+
 
         /*
          * Set up the alignment of the text in the card.
@@ -432,7 +397,6 @@ public class CardFragment extends BaseFragment {
 
             fragment.pictureHint = pictureHint;
 
-            fragment.spellingHint = spellingHint;
 
             fragment.htmlLinebreakConversion = htmlLinebreakConversion;
 

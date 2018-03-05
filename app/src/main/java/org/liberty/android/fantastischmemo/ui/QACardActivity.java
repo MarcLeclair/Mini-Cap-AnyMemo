@@ -38,7 +38,9 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.common.base.Strings;
 
@@ -143,6 +145,8 @@ public abstract class QACardActivity extends BaseActivity {
         super.onCreate(bundle);
         activityComponents().inject(this);
         setContentView(getContentView());
+
+
     }
 
     /**
@@ -194,30 +198,6 @@ public abstract class QACardActivity extends BaseActivity {
 
     protected String getDbName() {
         return dbName;
-    }
-
-
-    public String spellTest(){
-      //  View v = getActivity().getLayoutInflater().inflate(R.layout.study_activity_menu, null, false);
-        EditText userInput = (EditText)findViewById(R.id.spell_test);
-        String answerIn = userInput.getText().toString();
-
-        //inputSpellTest = (EditText) v.findViewById(R.id.spell_test);
-
-        String spell = getCurrentCard().getAnswer();
-        String temporaryLine = "_______";
-        int ctr = 0;
-        while(ctr <= 3) {
-            //boolean correct = false;
-            if (spell.equals(answerIn)) {
-                //correct = true;
-                break;
-            } else {
-                // correct = false;
-                ctr++;
-            }
-        }
-        return temporaryLine;
     }
 
     public String displayLetterHint(int count) {
@@ -679,199 +659,196 @@ public abstract class QACardActivity extends BaseActivity {
     // the enableSpellingHint parameter is handled differently on single
     // sided card and double sided card.
     protected void displaySpellingHint(boolean enableSpellingHint) {
+        final boolean enableSpellingHint_local = enableSpellingHint;
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+        alertDialog.setTitle("ANSWER");
+        alertDialog.setMessage("Enter your answer");
 
-        String questionTypeface = setting.getQuestionFont();
-        String answerTypeface = setting.getAnswerFont();
+        final EditText input = new EditText(this);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        input.setLayoutParams(lp);
+        alertDialog.setView(input);
+        alertDialog.setPositiveButton("Verify Answer",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        String answer = input.getText().toString();
+                        if (answer.compareTo("") > 0) {
+                            if (getCurrentCard().getAnswer().equals(answer)) {
+                                Toast.makeText(getApplicationContext(),
+                                        "Good Answer!", Toast.LENGTH_SHORT).show();
 
-        Setting.Align questionAlign = setting.getQuestionTextAlign();
-        Setting.Align answerAlign = setting.getAnswerTextAlign();
+                                String questionTypeface = setting.getQuestionFont();
+                                String answerTypeface = setting.getAnswerFont();
 
-        String questionTypefaceValue = null;
-        String answerTypefaceValue = null;
-            /* Set the typeface of question and answer */
-        if (!Strings.isNullOrEmpty(questionTypeface)) {
-            questionTypefaceValue = questionTypeface;
+                                Setting.Align questionAlign = setting.getQuestionTextAlign();
+                                Setting.Align answerAlign = setting.getAnswerTextAlign();
 
-        }
-        if (!Strings.isNullOrEmpty(answerTypeface)) {
-            answerTypefaceValue = answerTypeface;
-        }
+                                String questionTypefaceValue = null;
+                                String answerTypefaceValue = null;
 
-        final String[] imageSearchPaths = {
-            /* Relative path */
-                "",
-            /* Relative path with db name */
-                "" + FilenameUtils.getName(dbPath),
-            /* Try the image in /sdcard/anymemo/images/dbname/ */
-                AMEnv.DEFAULT_IMAGE_PATH + FilenameUtils.getName(dbPath),
-            /* Try the image in /sdcard/anymemo/images/ */
-                AMEnv.DEFAULT_IMAGE_PATH,
-        };
-
-        // Buttons view can be null if it is not decleared in the layout XML
-        View buttonsView = findViewById(R.id.buttons_root);
-
-        if (buttonsView != null) {
-            // Make sure the buttons view are also handling the event for the answer view
-            // e. g. clicking on the blank area of the buttons layout to reveal the answer
-            // or flip the card.
-            buttonsView.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    onQuestionViewClickListener.onClick(v);
-                }
-            });
-
-            // Also the buttons should match the color of the view above.
-            // It could be the question if it is the double sided card with only question shown
-            // or answer view's color.
-            if (!setting.isDefaultColor()) {
-                if (setting.getCardStyle() == Setting.CardStyle.DOUBLE_SIDED && !enableSpellingHint && 
-                        setting.getQuestionBackgroundColor() != null) {
-                    buttonsView.setBackgroundColor(setting.getQuestionBackgroundColor());
-                } else if (setting.getAnswerBackgroundColor() != null) {
-                    buttonsView.setBackgroundColor(setting.getAnswerBackgroundColor());
-                }
-            }
-        }
-
-        CardFragment.Builder questionFragmentBuilder = new CardFragment.Builder(getCurrentCard().getQuestion())
-                .setTextAlignment(questionAlign)
-                .setTypefaceFromFile(questionTypefaceValue)
-                .setTextOnClickListener(onQuestionTextClickListener)
-                .setCardOnClickListener(onQuestionViewClickListener)
-                .setTextFontSize(setting.getQuestionFontSize())
-                .setTypefaceFromFile(setting.getQuestionFont())
-                .setDisplayInHtml(setting.getDisplayInHTMLEnum().contains(Setting.CardField.QUESTION))
-                .setHtmlLinebreakConversion(setting.getHtmlLineBreakConversion())
-                .setImageSearchPaths(imageSearchPaths);
+                                CardFragment.Builder questionFragmentBuilder = new CardFragment.Builder(getCurrentCard().getQuestion())
+                                        .setTextAlignment(questionAlign)
+                                        .setTypefaceFromFile(questionTypefaceValue)
+                                        .setTextOnClickListener(onQuestionTextClickListener)
+                                        .setCardOnClickListener(onQuestionViewClickListener)
+                                        .setTextFontSize(setting.getQuestionFontSize())
+                                        .setTypefaceFromFile(setting.getQuestionFont())
+                                        .setDisplayInHtml(setting.getDisplayInHTMLEnum().contains(Setting.CardField.QUESTION))
+                                        .setHtmlLinebreakConversion(setting.getHtmlLineBreakConversion());
 
 
-        CardFragment.Builder answerFragmentBuilder = new CardFragment.Builder("")
-                .setTextAlignment(answerAlign)
-                .setTypefaceFromFile(answerTypefaceValue)
-                .setTextOnClickListener(onAnswerTextClickListener)
-                .setCardOnClickListener(onAnswerViewClickListener)
-                .setTextFontSize(setting.getAnswerFontSize())
-                .setTypefaceFromFile(setting.getAnswerFont())
-                .setDisplayInHtml(setting.getDisplayInHTMLEnum().contains(Setting.CardField.HINT))
-                .setHtmlLinebreakConversion(setting.getHtmlLineBreakConversion())
-                .setImageSearchPaths(imageSearchPaths);
+                                CardFragment.Builder answerFragmentBuilder = new CardFragment.Builder(getCurrentCard().getAnswer())
+                                        .setTextAlignment(answerAlign)
+                                        .setTypefaceFromFile(answerTypefaceValue)
+                                        .setTextOnClickListener(onAnswerTextClickListener)
+                                        .setCardOnClickListener(onAnswerViewClickListener)
+                                        .setTextFontSize(setting.getAnswerFontSize())
+                                        .setTypefaceFromFile(setting.getAnswerFont())
+                                        .setDisplayInHtml(setting.getDisplayInHTMLEnum().contains(Setting.CardField.ANSWER))
+                                        .setHtmlLinebreakConversion(setting.getHtmlLineBreakConversion());
 
-        CardFragment.Builder showAnswerFragmentBuilder = new CardFragment.Builder("?\n" + getString(R.string.memo_show_answer))
-                .setTextAlignment(Setting.Align.CENTER)
-                .setTypefaceFromFile(answerTypefaceValue)
-                .setTextOnClickListener(onAnswerTextClickListener)
-                .setCardOnClickListener(onAnswerViewClickListener)
-                .setTextFontSize(setting.getAnswerFontSize())
-                .setTypefaceFromFile(setting.getAnswerFont());
+                                CardFragment.Builder showAnswerFragmentBuilder = new CardFragment.Builder("?\n" + getString(R.string.memo_show_answer))
+                                        .setTextAlignment(Setting.Align.CENTER)
+                                        .setTypefaceFromFile(answerTypefaceValue)
+                                        .setTextOnClickListener(onAnswerTextClickListener)
+                                        .setCardOnClickListener(onAnswerViewClickListener)
+                                        .setTextFontSize(setting.getAnswerFontSize())
+                                        .setTypefaceFromFile(setting.getAnswerFont());
 
-        questionFragmentBuilder
-                .setTextColor(setting.getQuestionTextColor())
-                .setBackgroundColor(setting.getQuestionBackgroundColor());
+                                questionFragmentBuilder
+                                        .setTextColor(setting.getQuestionTextColor())
+                                        .setBackgroundColor(setting.getQuestionBackgroundColor());
 
-        answerFragmentBuilder
-                .setBackgroundColor(setting.getAnswerBackgroundColor())
-                .setTextColor(setting.getAnswerTextColor());
+                                answerFragmentBuilder
+                                        .setBackgroundColor(setting.getAnswerBackgroundColor())
+                                        .setTextColor(setting.getAnswerTextColor());
 
-        showAnswerFragmentBuilder
-                .setTextColor(setting.getAnswerTextColor())
-                .setBackgroundColor(setting.getAnswerBackgroundColor());
-
-
-        // Note is currently shared some settings with Answer
-        CardFragment.Builder noteFragmentBuilder = new CardFragment.Builder(getCurrentCard().getNote())
-                .setTextAlignment(answerAlign)
-                .setTypefaceFromFile(answerTypefaceValue)
-                .setCardOnClickListener(onAnswerViewClickListener)
-                .setTextFontSize(setting.getAnswerFontSize())
-                .setTypefaceFromFile(setting.getAnswerFont())
-                .setDisplayInHtml(setting.getDisplayInHTMLEnum().contains(Setting.CardField.ANSWER))
-                .setHtmlLinebreakConversion(setting.getHtmlLineBreakConversion())
-                .setImageSearchPaths(imageSearchPaths);
-
-        // Long click to launch image viewer if the card has an image
-        questionFragmentBuilder.setTextOnLongClickListener(
-                generateImageOnLongClickListener(getCurrentCard().getQuestion(), imageSearchPaths));
-        answerFragmentBuilder.setTextOnLongClickListener(
-                generateImageOnLongClickListener(getCurrentCard().getAnswer(), imageSearchPaths));
-
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-
-        if (setting.getCardStyle() == Setting.CardStyle.SINGLE_SIDED) {
-            TwoFieldsCardFragment fragment = new TwoFieldsCardFragment();
-            Bundle b = new Bundle();
-
-            // Handle card field setting.
-            List<CardFragment.Builder> builders1List = new ArrayList<CardFragment.Builder>(4);
-            if (setting.getQuestionFieldEnum().contains(Setting.CardField.QUESTION)) {
-                builders1List.add(questionFragmentBuilder);
-            }
-            if (setting.getQuestionFieldEnum().contains(Setting.CardField.ANSWER)) {
-                builders1List.add(answerFragmentBuilder);
-            }
-            if (setting.getQuestionFieldEnum().contains(Setting.CardField.NOTE)) {
-                builders1List.add(noteFragmentBuilder);
-            }
-
-            List<CardFragment.Builder> builders2List = new ArrayList<CardFragment.Builder>(4);
-
-            if (setting.getAnswerFieldEnum().contains(Setting.CardField.QUESTION)) {
-                builders2List.add(questionFragmentBuilder);
-            }
-            if (setting.getAnswerFieldEnum().contains(Setting.CardField.ANSWER)) {
-                builders2List.add(answerFragmentBuilder);
-            }
-            if (setting.getAnswerFieldEnum().contains(Setting.CardField.NOTE)) {
-                builders2List.add(noteFragmentBuilder);
-            }
+                                showAnswerFragmentBuilder
+                                        .setTextColor(setting.getAnswerTextColor())
+                                        .setBackgroundColor(setting.getAnswerBackgroundColor());
 
 
-            CardFragment.Builder[] builders1 = new CardFragment.Builder[builders1List.size()];
-            builders1List.toArray(builders1);
-            CardFragment.Builder[] builders2 = new CardFragment.Builder[builders2List.size()];
-            builders2List.toArray(builders2);
-
-            b.putSerializable(TwoFieldsCardFragment.EXTRA_FIELD1_CARD_FRAGMENT_BUILDERS, builders1);
-            b.putSerializable(TwoFieldsCardFragment.EXTRA_FIELD2_CARD_FRAGMENT_BUILDERS, builders2);
-            b.putInt(TwoFieldsCardFragment.EXTRA_FIELD2_INITIAL_POSITION, 0);
-
-            b.putInt(TwoFieldsCardFragment.EXTRA_QA_RATIO, setting.getQaRatio());
-            b.putInt(TwoFieldsCardFragment.EXTRA_SEPARATOR_COLOR, setting.getSeparatorColor());
-            fragment.setArguments(b);
-
-            configCardFragmentTransitionAnimation(ft);
-
-            ft.replace(R.id.card_root, fragment);
-            ft.commit();
-        } else if (setting.getCardStyle() == Setting.CardStyle.DOUBLE_SIDED) {
-            FlipableCardFragment fragment = new FlipableCardFragment();
-            Bundle b = new Bundle(1);
-            CardFragment.Builder[] builders = {questionFragmentBuilder, answerFragmentBuilder, noteFragmentBuilder};
-            b.putSerializable(FlipableCardFragment.EXTRA_CARD_FRAGMENT_BUILDERS, builders);
-            b.putInt(FlipableCardFragment.EXTRA_INITIAL_POSITION, 0);
+                                // Note is currently shared some settings with Answer
+                                CardFragment.Builder noteFragmentBuilder = new CardFragment.Builder(getCurrentCard().getNote())
+                                        .setTextAlignment(answerAlign)
+                                        .setTypefaceFromFile(answerTypefaceValue)
+                                        .setCardOnClickListener(onAnswerViewClickListener)
+                                        .setTextFontSize(setting.getAnswerFontSize())
+                                        .setTypefaceFromFile(setting.getAnswerFont())
+                                        .setDisplayInHtml(setting.getDisplayInHTMLEnum().contains(Setting.CardField.ANSWER))
+                                        .setHtmlLinebreakConversion(setting.getHtmlLineBreakConversion());
 
 
-            fragment.setArguments(b);
+                                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
-            configCardFragmentTransitionAnimation(ft);
+                                if (setting.getCardStyle() == Setting.CardStyle.SINGLE_SIDED) {
+                                    TwoFieldsCardFragment fragment = new TwoFieldsCardFragment();
+                                    Bundle b = new Bundle();
 
-            ft.replace(R.id.card_root, fragment);
-            ft.commit();
-        } else {
-            assert false : "Card logic not implemented for style: " + setting.getCardStyle();
-        }
+                                    // Handle card field setting.
+                                    List<CardFragment.Builder> builders1List = new ArrayList<CardFragment.Builder>(4);
+                                    if (setting.getQuestionFieldEnum().contains(Setting.CardField.QUESTION)) {
+                                        builders1List.add(questionFragmentBuilder);
+                                    }
+                                    if (setting.getQuestionFieldEnum().contains(Setting.CardField.ANSWER)) {
+                                        builders1List.add(answerFragmentBuilder);
+                                    }
+                                    if (setting.getQuestionFieldEnum().contains(Setting.CardField.NOTE)) {
+                                        builders1List.add(noteFragmentBuilder);
+                                    }
 
+                                    List<CardFragment.Builder> builders2List = new ArrayList<CardFragment.Builder>(4);
+                                    if (!enableSpellingHint_local) {
+                                        builders2List.add(showAnswerFragmentBuilder);
+                                    }
+                                    if (setting.getAnswerFieldEnum().contains(Setting.CardField.QUESTION)) {
+                                        builders2List.add(questionFragmentBuilder);
+                                    }
+                                    if (setting.getAnswerFieldEnum().contains(Setting.CardField.ANSWER)) {
+                                        builders2List.add(answerFragmentBuilder);
+                                    }
+                                    if (setting.getAnswerFieldEnum().contains(Setting.CardField.NOTE)) {
+                                        builders2List.add(noteFragmentBuilder);
+                                    }
 
-        // Set up the small title bar
-        // It is defualt "GONE" so it won't take any space
-        // if there is no text
-        smallTitleBar = (TextView) findViewById(R.id.small_title_bar);
+                                    CardFragment.Builder[] builders1 = new CardFragment.Builder[builders1List.size()];
+                                    builders1List.toArray(builders1);
+                                    CardFragment.Builder[] builders2 = new CardFragment.Builder[builders2List.size()];
+                                    builders2List.toArray(builders2);
 
+                                    b.putSerializable(TwoFieldsCardFragment.EXTRA_FIELD1_CARD_FRAGMENT_BUILDERS, builders1);
+                                    b.putSerializable(TwoFieldsCardFragment.EXTRA_FIELD2_CARD_FRAGMENT_BUILDERS, builders2);
+                                    if (enableSpellingHint_local) {
+                                        b.putInt(TwoFieldsCardFragment.EXTRA_FIELD2_INITIAL_POSITION, 0);
+                                    } else {
+                                        b.putInt(TwoFieldsCardFragment.EXTRA_FIELD2_INITIAL_POSITION, 0);
+                                    }
+                                    b.putInt(TwoFieldsCardFragment.EXTRA_QA_RATIO, setting.getQaRatio());
+                                    b.putInt(TwoFieldsCardFragment.EXTRA_SEPARATOR_COLOR, setting.getSeparatorColor());
+                                    fragment.setArguments(b);
 
-        currentDisplayedCard = getCurrentCard();
-        onPostDisplayCard();
+                                    configCardFragmentTransitionAnimation(ft);
 
+                                    ft.replace(R.id.card_root, fragment);
+                                    ft.commit();
+                                } else if (setting.getCardStyle() == Setting.CardStyle.DOUBLE_SIDED) {
+                                    FlipableCardFragment fragment = new FlipableCardFragment();
+                                    Bundle b = new Bundle(1);
+                                    CardFragment.Builder[] builders = {questionFragmentBuilder, answerFragmentBuilder, noteFragmentBuilder};
+                                    b.putSerializable(FlipableCardFragment.EXTRA_CARD_FRAGMENT_BUILDERS, builders);
+                                    if (enableSpellingHint_local) {
+                                        b.putInt(FlipableCardFragment.EXTRA_INITIAL_POSITION, 1);
+                                    } else {
+                                        b.putInt(FlipableCardFragment.EXTRA_INITIAL_POSITION, 0);
+                                    }
+
+                                    fragment.setArguments(b);
+
+                                    configCardFragmentTransitionAnimation(ft);
+
+                                    ft.replace(R.id.card_root, fragment);
+                                    ft.commit();
+                                } else {
+                                    assert false : "Card logic not implemented for style: " + setting.getCardStyle();
+                                }
+
+                                isAnswerShown = enableSpellingHint_local;
+
+                                // Set up the small title bar
+                                // It is defualt "GONE" so it won't take any space
+                                // if there is no text
+                                smallTitleBar = (TextView) findViewById(R.id.small_title_bar);
+
+                                // Only copy to clipboard if answer is show
+                                // as a feature request:
+                                // http://code.google.com/p/anymemo/issues/detail?id=239
+                                if (enableSpellingHint_local == true) {
+                                    copyToClipboard();
+                                }
+
+                                currentDisplayedCard = getCurrentCard();
+                                onPostDisplayCard();
+
+                            } else {
+                                Toast.makeText(getApplicationContext(),
+                                        "Wrong Answer", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+                });
+
+        alertDialog.setNegativeButton("Cancel",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+        alertDialog.show();
     }
+
 
     protected void displayCard(boolean showAnswer) {
         // First prepare the text to display
