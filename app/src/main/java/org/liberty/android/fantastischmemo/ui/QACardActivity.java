@@ -662,10 +662,11 @@ public abstract class QACardActivity extends BaseActivity {
     protected void displaySpellingHint(boolean enableSpellingHint) {
         final boolean enableSpellingHint_local = enableSpellingHint;
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-        alertDialog.setTitle("ANSWER");
-        alertDialog.setMessage("Enter your answer");
+        alertDialog.setTitle("Question: " + getCurrentCard().getQuestion());
+        alertDialog.setMessage("Enter your answer in the field below");
 
         final EditText input = new EditText(this);
+        input.setHint("Try to answer if you can");
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT);
