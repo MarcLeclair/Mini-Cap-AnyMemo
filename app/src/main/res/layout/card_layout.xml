@@ -2,8 +2,8 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:editingTool="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:editingTool="http://schemas.android.com/apk/res-auto"
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -20,6 +20,7 @@
             app:layout_aspectRatio="178%"
             app:layout_widthPercent="100%"
             />
+
     </android.support.percent.PercentRelativeLayout>
 
 
@@ -34,18 +35,6 @@
             android:layout_width="match_parent"
             android:autoLink="web"
             android:layout_height="wrap_content"/>
-        <com.andreabaccega.widget.FormEditText
-            editingTool:testType="custom"
-            editingTool:classType="org.liberty.android.fantastischmemo.utils.InputValidator"
-            editingTooltestErrorString="@string/error_programmatic"
-            editingTool:emptyAllowed="false"
-            android:id="@+id/spellHint"
-            android:hint="@+id/hint_programmatic"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:inputType="textMultiLine"
-            android:gravity="top"
-            android:minLines="1"
-            android:layout_weight="1" />
+
     </ScrollView>
 </LinearLayout>
