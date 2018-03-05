@@ -40,6 +40,8 @@ public class favespressotest {
 
     @Test
     public void favespressotest() {
+        final String TAG = "Espresso logger";
+         try {
         ViewInteraction appCompatButton = onView(
                 allOf(withId(android.R.id.button1), withText("OK"),
                         childAtPosition(
@@ -48,7 +50,12 @@ public class favespressotest {
                                         0),
                                 3)));
         appCompatButton.perform(scrollTo(), click());
-
+ } catch (NoMatchingViewException e) {
+            //catch exception if there is no dialogue box with an OK text
+            //sometimes this text will only appear on the first time of running the test
+            Log.d(TAG, "letterHintEspresso() returned: exception, could not find text with OK" );
+        }
+        
         ViewInteraction recyclerView = onView(
                 allOf(withId(org.liberty.android.fantastischmemodev.R.id.recent_open_list),
                         withParent(withId(org.liberty.android.fantastischmemodev.R.id.viewpager))));
