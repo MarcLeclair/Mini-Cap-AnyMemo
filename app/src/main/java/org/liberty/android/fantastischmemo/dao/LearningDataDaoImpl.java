@@ -66,8 +66,7 @@ public class LearningDataDaoImpl extends AbstractHelperDaoImpl<LearningData, Int
     public void markAsFavourite(LearningData ld) {
         ld.setNextLearnDate(new Date(0));
         ld.setFirstLearnDate(new Date());
-        ld.setAcqReps(1);
-        ld.setGrade(5);
+        ld.setFavourite(1);
         update(ld);
     }
 }
