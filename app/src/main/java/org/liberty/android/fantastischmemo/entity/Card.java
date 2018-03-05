@@ -62,7 +62,7 @@ public class Card implements VersionableDomainObject {
         this.id = id;
     }
 
-    public void setLearningDate(Date creationDate) {
+    public void setLearningDate(Date learningDate) {
         this.learningDate = learningDate;
     }
 
