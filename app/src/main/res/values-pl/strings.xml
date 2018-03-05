@@ -469,4 +469,5 @@
     <string name="multiple_choice_hint">wskazówka wielokrotnego wyboru</string>
     <string name="letter_hint">podpowiedź na literę</string>
     <string name="favourite_text" >Oznacz jako ulubione</string>
+    <string name="spell_test">tryb sprawdzania pisowni </string>
 </resources>

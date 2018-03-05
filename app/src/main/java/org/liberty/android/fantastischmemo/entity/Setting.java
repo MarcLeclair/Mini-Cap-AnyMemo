@@ -126,7 +126,8 @@ public class Setting implements Serializable, VersionableDomainObject {
         QUESTION,
         ANSWER,
         NOTE,
-        HINT
+        HINT,
+        SPELL
     }
 
     public Integer getLearningMode() { return learningMode; }

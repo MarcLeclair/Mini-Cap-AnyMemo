@@ -445,4 +445,5 @@
     <string name="multiple_choice_hint">选择题提示</string>
     <string name="letter_hint">字母提示</string>
     <string name="favourite_text">标记为收藏</string>
+    <string name="spell_test">拼写测试模式 </string>
 </resources>

@@ -233,4 +233,5 @@
     <string name="multiple_choice_hint">Indice choix multiples</string>
     <string name="letter_hint">Lndice avec lettres</string>
     <string name="favourite_text" >Marquer comme favori</string>
+    <string name="spell_test">mode test de sort </string>
 </resources>

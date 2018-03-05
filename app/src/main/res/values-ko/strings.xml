@@ -228,4 +228,5 @@
     <string name="multiple_choice_hint">객관식 힌트</string>
     <string name="letter_hint">편지 힌트</string>
     <string name="favourite_text" >즐겨 찾기로 표시</string>
+    <string name="spell_test">맞춤법 검사 모드 </string>
 </resources>

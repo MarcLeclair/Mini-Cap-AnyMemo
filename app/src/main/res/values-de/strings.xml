@@ -455,4 +455,5 @@
     <string name="multiple_choice_hint">Multiple-Choice-Hinweis</string>
     <string name="letter_hint">Briefhinweis</string>
     <string name="favourite_text" >Als Favorit markieren</string>
+    <string name="spell_test">Buchstabiertestmodus </string>
 </resources>
