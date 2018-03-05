@@ -64,7 +64,6 @@ public class LearningDataDaoImpl extends AbstractHelperDaoImpl<LearningData, Int
     }
     // The card will be shown again right away if marked as favourite
     public void markAsFavourite(LearningData ld) {
-        ld.setNextLearnDate(new Date(0));
         ld.setFirstLearnDate(new Date());
         ld.setFavourite(1);
         update(ld);
