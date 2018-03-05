@@ -195,6 +195,15 @@ public class SettingTest extends AbstractExistingDBTest {
         assertEquals("/sdcard/", savedSetting.getAnswerAudioLocation());
     }
 
+    @SmallTest
+    @Test
+    public void testLearningMode() throws Exception {
+        Setting setting = getCurrentSetting();
+        setting.setLearningMode(0);
+        Setting savedSetting = setSetting(setting);
+        assertEquals((Integer) 0, savedSetting.getLearningMode());
+    }
+
     private Setting getCurrentSetting() throws SQLException {
         SettingDao settingDao = helper.getSettingDao();
         return settingDao.queryForId(1);
