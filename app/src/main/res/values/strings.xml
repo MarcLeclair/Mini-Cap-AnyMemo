@@ -473,5 +473,9 @@
     <string name="multiple_choice_hint">Multiple choice hint</string>
     <string name="letter_hint">Letter hint</string>
     <string name="favourite_text">Mark as Favourite</string>
+    <string name="error_programmatic">You should enter \'ciao\' here</string>
+    <string name="spell_hint_text">Spell hint edit text </string>
+    <string name="spell_hint">Type out the answer</string>
     <string name="add_to_study_mode">Add to study mode</string>
+    <string name="spell_hint_btn_text">Verify answer</string>
 </resources>

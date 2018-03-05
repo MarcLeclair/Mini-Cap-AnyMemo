@@ -297,7 +297,6 @@ public class CardListActivity extends BaseActivity {
 
     }
 
-
     private void highlightCardViewAsLearned(View view) {
         // Light green color
         view.setBackgroundColor(LEARNED_CARD_ITEM_COLOR);
