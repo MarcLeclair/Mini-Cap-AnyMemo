@@ -51,6 +51,7 @@ public class Card implements VersionableDomainObject {
     @DatabaseField(format="yyyy-MM-dd HH:mm:ss.SSSSSS", dataType=DataType.DATE_STRING)
     private Date learningDate;
 
+
     public Card() {}
 
 
@@ -125,6 +126,9 @@ public class Card implements VersionableDomainObject {
         }
 
     }
+
+    public String getImgPath(){return imgPath;}
+
     public void setImgPath(String imgPath){
         if(imgPath == null) {
             this.imgPath = "";
@@ -133,7 +137,6 @@ public class Card implements VersionableDomainObject {
         }
     }
 
-    public String getImgPath(){return imgPath;}
 
     public Date getCreationDate() {
         return creationDate;
