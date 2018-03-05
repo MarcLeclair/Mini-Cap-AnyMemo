@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.liberty.android.fantastischmemo.entity.Card;
 import org.liberty.android.fantastischmemo.test.BaseTest;
 import org.liberty.android.fantastischmemo.ui.QuizActivity;
+import org.liberty.android.fantastischmemo.ui.StudyActivity;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
