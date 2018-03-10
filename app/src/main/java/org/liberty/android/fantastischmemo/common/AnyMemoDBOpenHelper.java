@@ -31,7 +31,7 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
 
     private final String dbPath;
 
-    private static final int CURRENT_VERSION = 9;
+    private static final int CURRENT_VERSION = 6;
 
     private CardDao cardDao = null;
 
@@ -174,19 +174,16 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
         if(oldVersion <= 5){
             database.execSQL("alter table settings add column learningMode INTEGER");
             database.execSQL("update settings set learningMode='0'");
-        }
-        if (oldVersion <=6){
+            database.execSQL("alter table learning_data add column favourite INTEGER");
+            database.execSQL("update learning_data set favourite='0'");
             database.execSQL("alter table cards add column imgPath VARCHAR");
             database.execSQL("update cards set imgPath=''");
-        }
-        if (oldVersion <=7){
             database.execSQL("alter table cards add column learningDate VARCHAR");
             database.execSQL("update cards set learningDate='0000-00-00 00:00:00.000000'");
-        }
-        if (oldVersion <= 8){
             database.execSQL("alter table learning_data add column favourite INTEGER");
             database.execSQL("update learning_data set favourite='0'");
         }
+
 
     }
 
