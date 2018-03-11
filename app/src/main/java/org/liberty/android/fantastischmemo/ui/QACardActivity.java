@@ -203,6 +203,45 @@ public abstract class QACardActivity extends BaseActivity {
         return dbName;
     }
 
+    public CardFragment.Builder getDefaultQuestionFragment(Setting.Align questionAlign, String
+            questionTypefaceValue, String [ ] imageSearchPaths ){
+        return new CardFragment.Builder(getCurrentCard().getQuestion())
+                .setTextAlignment(questionAlign)
+                .setTypefaceFromFile(questionTypefaceValue)
+                .setTextOnClickListener(onQuestionTextClickListener)
+                .setCardOnClickListener(onQuestionViewClickListener)
+                .setTextFontSize(setting.getQuestionFontSize())
+                .setTypefaceFromFile(setting.getQuestionFont())
+                .setDisplayInHtml(setting.getDisplayInHTMLEnum().contains(Setting.CardField.QUESTION))
+                .setHtmlLinebreakConversion(setting.getHtmlLineBreakConversion())
+                .setImageSearchPaths(imageSearchPaths)
+                .setCardField(Setting.CardField.QUESTION);
+    }
+
+    public CardFragment.Builder getDefaultNoteFragment(Setting.Align answerAlign, String
+            answerTypefaceValue, String [ ] imageSearchPaths ){
+        return new CardFragment.Builder(getCurrentCard().getNote())
+            .setTextAlignment(answerAlign)
+            .setTypefaceFromFile(answerTypefaceValue)
+            .setCardOnClickListener(onAnswerViewClickListener)
+            .setTextFontSize(setting.getAnswerFontSize())
+            .setTypefaceFromFile(setting.getAnswerFont())
+            .setDisplayInHtml(setting.getDisplayInHTMLEnum().contains(Setting.CardField.ANSWER))
+            .setHtmlLinebreakConversion(setting.getHtmlLineBreakConversion())
+            .setImageSearchPaths(imageSearchPaths)
+            .setCardField(Setting.CardField.NOTE);
+    }
+
+    public CardFragment.Builder getDefaultShowAnswerFragment(String answerTypefaceValue){
+        return new CardFragment.Builder("?\n" + getString(R.string.memo_show_answer))
+                .setTextAlignment(Setting.Align.CENTER)
+                .setTypefaceFromFile(answerTypefaceValue)
+                .setTextOnClickListener(onAnswerTextClickListener)
+                .setCardOnClickListener(onAnswerViewClickListener)
+                .setTextFontSize(setting.getAnswerFontSize())
+                .setTypefaceFromFile(setting.getAnswerFont());
+
+    }
 
     public String displayLetterHint(int count) {
         //this function is called in the displayLetterHint method, line 276
@@ -301,17 +340,8 @@ public abstract class QACardActivity extends BaseActivity {
             }
         }
 
-        CardFragment.Builder questionFragmentBuilder = new CardFragment.Builder(getCurrentCard().getQuestion())
-                .setTextAlignment(questionAlign)
-                .setTypefaceFromFile(questionTypefaceValue)
-                .setTextOnClickListener(onQuestionTextClickListener)
-                .setCardOnClickListener(onQuestionViewClickListener)
-                .setTextFontSize(setting.getQuestionFontSize())
-                .setTypefaceFromFile(setting.getQuestionFont())
-                .setDisplayInHtml(setting.getDisplayInHTMLEnum().contains(Setting.CardField.QUESTION))
-                .setHtmlLinebreakConversion(setting.getHtmlLineBreakConversion())
-                .setImageSearchPaths(imageSearchPaths)
-                .setCardField(Setting.CardField.QUESTION);
+        CardFragment.Builder questionFragmentBuilder = getDefaultQuestionFragment(questionAlign,
+                questionTypefaceValue, imageSearchPaths);
 
 
         CardFragment.Builder answerFragmentBuilder = new CardFragment.Builder("1. " + card1.getAnswer() + "\n2. " + card2.getAnswer() + "\n3. " + card3.getAnswer() + "\n4. " + card4.getAnswer())
@@ -326,13 +356,8 @@ public abstract class QACardActivity extends BaseActivity {
                 .setImageSearchPaths(imageSearchPaths)
                 .setCardField(Setting.CardField.ANSWER);
 
-        CardFragment.Builder showAnswerFragmentBuilder = new CardFragment.Builder("?\n" + getString(R.string.memo_show_answer))
-                .setTextAlignment(Setting.Align.CENTER)
-                .setTypefaceFromFile(answerTypefaceValue)
-                .setTextOnClickListener(onAnswerTextClickListener)
-                .setCardOnClickListener(onAnswerViewClickListener)
-                .setTextFontSize(setting.getAnswerFontSize())
-                .setTypefaceFromFile(setting.getAnswerFont());
+        CardFragment.Builder showAnswerFragmentBuilder = getDefaultShowAnswerFragment
+                (answerTypefaceValue);
 
 
         questionFragmentBuilder
@@ -349,17 +374,8 @@ public abstract class QACardActivity extends BaseActivity {
 
 
         // Note is currently shared some settings with Answer
-        CardFragment.Builder noteFragmentBuilder = new CardFragment.Builder(getCurrentCard().getNote())
-                .setTextAlignment(answerAlign)
-                .setTypefaceFromFile(answerTypefaceValue)
-                .setCardOnClickListener(onAnswerViewClickListener)
-                .setTextFontSize(setting.getAnswerFontSize())
-                .setTypefaceFromFile(setting.getAnswerFont())
-                .setDisplayInHtml(setting.getDisplayInHTMLEnum().contains(Setting.CardField.ANSWER))
-                .setHtmlLinebreakConversion(setting.getHtmlLineBreakConversion())
-                .setImageSearchPaths(imageSearchPaths)
-                .setCardField(Setting.CardField.NOTE);
-
+        CardFragment.Builder noteFragmentBuilder = getDefaultNoteFragment(answerAlign,
+                answerTypefaceValue, imageSearchPaths);
 
         // Long click to launch image viewer if the card has an image
         questionFragmentBuilder.setTextOnLongClickListener(
@@ -375,8 +391,26 @@ public abstract class QACardActivity extends BaseActivity {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
         if (setting.getCardStyle() == Setting.CardStyle.SINGLE_SIDED) {
-            
+
             singleSided(enableMcHint, ft, fragments);
+
+        } else if (setting.getCardStyle() == Setting.CardStyle.DOUBLE_SIDED) {
+            FlipableCardFragment fragment = new FlipableCardFragment();
+            Bundle b = new Bundle(1);
+            CardFragment.Builder[] builders = {questionFragmentBuilder, answerFragmentBuilder, noteFragmentBuilder};
+            b.putSerializable(FlipableCardFragment.EXTRA_CARD_FRAGMENT_BUILDERS, builders);
+            if (enableMcHint) {
+                b.putInt(FlipableCardFragment.EXTRA_INITIAL_POSITION, 1);
+            } else {
+                b.putInt(FlipableCardFragment.EXTRA_INITIAL_POSITION, 0);
+            }
+
+            fragment.setArguments(b);
+
+            configCardFragmentTransitionAnimation(ft);
+
+            ft.replace(R.id.card_root, fragment);
+            ft.commit();
         } else {
             assert false : "Card logic not implemented for style: " + setting.getCardStyle();
         }
@@ -613,16 +647,8 @@ public abstract class QACardActivity extends BaseActivity {
                                 String questionTypefaceValue = null;
                                 String answerTypefaceValue = null;
 
-                                CardFragment.Builder questionFragmentBuilder = new CardFragment.Builder(getCurrentCard().getQuestion())
-                                        .setTextAlignment(questionAlign)
-                                        .setTypefaceFromFile(questionTypefaceValue)
-                                        .setTextOnClickListener(onQuestionTextClickListener)
-                                        .setCardOnClickListener(onQuestionViewClickListener)
-                                        .setTextFontSize(setting.getQuestionFontSize())
-                                        .setTypefaceFromFile(setting.getQuestionFont())
-                                        .setDisplayInHtml(setting.getDisplayInHTMLEnum().contains(Setting.CardField.QUESTION))
-                                        .setHtmlLinebreakConversion(setting.getHtmlLineBreakConversion())
-                                        .setCardField(Setting.CardField.QUESTION);
+                                CardFragment.Builder questionFragmentBuilder = getDefaultQuestionFragment(questionAlign,
+                                        questionTypefaceValue, null);
 
 
                                 CardFragment.Builder answerFragmentBuilder = new CardFragment.Builder(getCurrentCard().getAnswer())
@@ -636,13 +662,8 @@ public abstract class QACardActivity extends BaseActivity {
                                         .setHtmlLinebreakConversion(setting.getHtmlLineBreakConversion())
                                         .setCardField(Setting.CardField.ANSWER);
 
-                                CardFragment.Builder showAnswerFragmentBuilder = new CardFragment.Builder("?\n" + getString(R.string.memo_show_answer))
-                                        .setTextAlignment(Setting.Align.CENTER)
-                                        .setTypefaceFromFile(answerTypefaceValue)
-                                        .setTextOnClickListener(onAnswerTextClickListener)
-                                        .setCardOnClickListener(onAnswerViewClickListener)
-                                        .setTextFontSize(setting.getAnswerFontSize())
-                                        .setTypefaceFromFile(setting.getAnswerFont());
+                                CardFragment.Builder showAnswerFragmentBuilder = getDefaultShowAnswerFragment
+                                        (answerTypefaceValue);
 
                                 questionFragmentBuilder
                                         .setTextColor(setting.getQuestionTextColor())
@@ -658,15 +679,8 @@ public abstract class QACardActivity extends BaseActivity {
 
 
                                 // Note is currently shared some settings with Answer
-                                CardFragment.Builder noteFragmentBuilder = new CardFragment.Builder(getCurrentCard().getNote())
-                                        .setTextAlignment(answerAlign)
-                                        .setTypefaceFromFile(answerTypefaceValue)
-                                        .setCardOnClickListener(onAnswerViewClickListener)
-                                        .setTextFontSize(setting.getAnswerFontSize())
-                                        .setTypefaceFromFile(setting.getAnswerFont())
-                                        .setDisplayInHtml(setting.getDisplayInHTMLEnum().contains(Setting.CardField.ANSWER))
-                                        .setHtmlLinebreakConversion(setting.getHtmlLineBreakConversion())
-                                        .setCardField(Setting.CardField.NOTE);
+                                CardFragment.Builder noteFragmentBuilder = getDefaultNoteFragment(answerAlign,
+                                        answerTypefaceValue, null);
 
                                 fragments.add(answerFragmentBuilder);
                                 fragments.add(questionFragmentBuilder);
@@ -777,16 +791,8 @@ public abstract class QACardActivity extends BaseActivity {
             }
         }
 
-        CardFragment.Builder questionFragmentBuilder = new CardFragment.Builder(getCurrentCard().getQuestion())
-                .setTextAlignment(questionAlign)
-                .setTypefaceFromFile(questionTypefaceValue)
-                .setTextOnClickListener(onQuestionTextClickListener)
-                .setCardOnClickListener(onQuestionViewClickListener)
-                .setTextFontSize(setting.getQuestionFontSize())
-                .setTypefaceFromFile(setting.getQuestionFont())
-                .setDisplayInHtml(setting.getDisplayInHTMLEnum().contains(Setting.CardField.QUESTION))
-                .setHtmlLinebreakConversion(setting.getHtmlLineBreakConversion())
-                .setImageSearchPaths(imageSearchPaths);
+        CardFragment.Builder questionFragmentBuilder = getDefaultQuestionFragment(questionAlign,
+                questionTypefaceValue, imageSearchPaths);
 
 
         CardFragment.Builder answerFragmentBuilder = new CardFragment.Builder(getCurrentCard().getAnswer())
@@ -822,15 +828,8 @@ public abstract class QACardActivity extends BaseActivity {
 
 
         // Note is currently shared some settings with Answer
-        CardFragment.Builder noteFragmentBuilder = new CardFragment.Builder(getCurrentCard().getNote())
-                .setTextAlignment(answerAlign)
-                .setTypefaceFromFile(answerTypefaceValue)
-                .setCardOnClickListener(onAnswerViewClickListener)
-                .setTextFontSize(setting.getAnswerFontSize())
-                .setTypefaceFromFile(setting.getAnswerFont())
-                .setDisplayInHtml(setting.getDisplayInHTMLEnum().contains(Setting.CardField.ANSWER))
-                .setHtmlLinebreakConversion(setting.getHtmlLineBreakConversion())
-                .setImageSearchPaths(imageSearchPaths);
+        CardFragment.Builder noteFragmentBuilder = getDefaultNoteFragment(answerAlign,
+                answerTypefaceValue, imageSearchPaths);
 
         // Long click to launch image viewer if the card has an image
         questionFragmentBuilder.setTextOnLongClickListener(
@@ -1016,17 +1015,8 @@ public abstract class QACardActivity extends BaseActivity {
                 }
             }
 
-            CardFragment.Builder questionFragmentBuilder = new CardFragment.Builder(getCurrentCard().getQuestion())
-                    .setTextAlignment(questionAlign)
-                    .setTypefaceFromFile(questionTypefaceValue)
-                    .setTextOnClickListener(onQuestionTextClickListener)
-                    .setCardOnClickListener(onQuestionViewClickListener)
-                    .setTextFontSize(setting.getQuestionFontSize())
-                    .setTypefaceFromFile(setting.getQuestionFont())
-                    .setDisplayInHtml(setting.getDisplayInHTMLEnum().contains(Setting.CardField.QUESTION))
-                    .setHtmlLinebreakConversion(setting.getHtmlLineBreakConversion())
-                    .setImageSearchPaths(imageSearchPaths)
-                    .setCardField(Setting.CardField.QUESTION);
+            CardFragment.Builder questionFragmentBuilder = getDefaultQuestionFragment(questionAlign,
+                    questionTypefaceValue, imageSearchPaths);
 
 
             CardFragment.Builder answerFragmentBuilder = new CardFragment.Builder(getCurrentCard().getImgPath())
@@ -1041,13 +1031,8 @@ public abstract class QACardActivity extends BaseActivity {
                     .setImageSearchPaths(imageSearchPaths)
                     .setCardField(Setting.CardField.ANSWER);
 
-            CardFragment.Builder showAnswerFragmentBuilder = new CardFragment.Builder("?\n" + getString(R.string.memo_show_answer))
-                    .setTextAlignment(Setting.Align.CENTER)
-                    .setTypefaceFromFile(answerTypefaceValue)
-                    .setTextOnClickListener(onAnswerTextClickListener)
-                    .setCardOnClickListener(onAnswerViewClickListener)
-                    .setTextFontSize(setting.getAnswerFontSize())
-                    .setTypefaceFromFile(setting.getAnswerFont());
+            CardFragment.Builder showAnswerFragmentBuilder = getDefaultShowAnswerFragment
+                    (answerTypefaceValue);
 
             questionFragmentBuilder
                     .setTextColor(setting.getQuestionTextColor())
@@ -1063,16 +1048,8 @@ public abstract class QACardActivity extends BaseActivity {
 
 
             // Note is currently shared some settings with Answer
-            CardFragment.Builder noteFragmentBuilder = new CardFragment.Builder(getCurrentCard().getNote())
-                    .setTextAlignment(answerAlign)
-                    .setTypefaceFromFile(answerTypefaceValue)
-                    .setCardOnClickListener(onAnswerViewClickListener)
-                    .setTextFontSize(setting.getAnswerFontSize())
-                    .setTypefaceFromFile(setting.getAnswerFont())
-                    .setDisplayInHtml(setting.getDisplayInHTMLEnum().contains(Setting.CardField.ANSWER))
-                    .setHtmlLinebreakConversion(setting.getHtmlLineBreakConversion())
-                    .setImageSearchPaths(imageSearchPaths)
-                    .setCardField(Setting.CardField.NOTE);
+            CardFragment.Builder noteFragmentBuilder = getDefaultNoteFragment(answerAlign,
+                    answerTypefaceValue, imageSearchPaths);
 
             // Long click to launch image viewer if the card has an image
             questionFragmentBuilder.setTextOnLongClickListener(
@@ -1089,7 +1066,51 @@ public abstract class QACardActivity extends BaseActivity {
 
             if (setting.getCardStyle() == Setting.CardStyle.SINGLE_SIDED) {
 
-                singleSided(enablePictureHint, ft, fragments);
+               // singleSided(enablePictureHint, ft, fragments);
+                TwoFieldsCardFragment fragment = new TwoFieldsCardFragment();
+                Bundle b = new Bundle();
+
+                // Handle card field setting.
+                List<CardFragment.Builder> builders1List = new ArrayList<CardFragment.Builder>(4);
+                if (setting.getQuestionFieldEnum().contains(Setting.CardField.QUESTION)) {
+                    builders1List.add(questionFragmentBuilder);
+                }
+                if (setting.getQuestionFieldEnum().contains(Setting.CardField.ANSWER)) {
+                    builders1List.add(answerFragmentBuilder);
+                }
+                if (setting.getQuestionFieldEnum().contains(Setting.CardField.NOTE)) {
+                    builders1List.add(noteFragmentBuilder);
+                }
+
+                List<CardFragment.Builder> builders2List = new ArrayList<CardFragment.Builder>(4);
+
+                if (setting.getAnswerFieldEnum().contains(Setting.CardField.QUESTION)) {
+                    builders2List.add(questionFragmentBuilder);
+                }
+                if (setting.getAnswerFieldEnum().contains(Setting.CardField.ANSWER)) {
+                    builders2List.add(answerFragmentBuilder);
+                }
+                if (setting.getAnswerFieldEnum().contains(Setting.CardField.NOTE)) {
+                    builders2List.add(noteFragmentBuilder);
+                }
+
+                CardFragment.Builder[] builders1 = new CardFragment.Builder[builders1List.size()];
+                builders1List.toArray(builders1);
+                CardFragment.Builder[] builders2 = new CardFragment.Builder[builders2List.size()];
+                builders2List.toArray(builders2);
+
+                b.putSerializable(TwoFieldsCardFragment.EXTRA_FIELD1_CARD_FRAGMENT_BUILDERS, builders1);
+                b.putSerializable(TwoFieldsCardFragment.EXTRA_FIELD2_CARD_FRAGMENT_BUILDERS, builders2);
+                b.putInt(TwoFieldsCardFragment.EXTRA_FIELD2_INITIAL_POSITION, 0);
+
+                b.putInt(TwoFieldsCardFragment.EXTRA_QA_RATIO, setting.getQaRatio());
+                b.putInt(TwoFieldsCardFragment.EXTRA_SEPARATOR_COLOR, setting.getSeparatorColor());
+                fragment.setArguments(b);
+
+                configCardFragmentTransitionAnimation(ft);
+
+                ft.replace(R.id.card_root, fragment);
+                ft.commit();
 
             } else if (setting.getCardStyle() == Setting.CardStyle.DOUBLE_SIDED) {
                 FlipableCardFragment fragment = new FlipableCardFragment();
