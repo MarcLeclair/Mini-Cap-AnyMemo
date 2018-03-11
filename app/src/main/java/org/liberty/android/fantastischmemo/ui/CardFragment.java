@@ -263,6 +263,8 @@ public class CardFragment extends BaseFragment {
 
         private Setting.Align textAlignment = Setting.Align.CENTER;
 
+	    private Setting.CardField cardField;
+
         private boolean displayInHtml = true;
 
         private boolean htmlLinebreakConversion = false;
@@ -338,6 +340,15 @@ public class CardFragment extends BaseFragment {
         public Builder setPictureHint(boolean pictureHint){
             this.pictureHint = pictureHint;
             return this;
+        }
+
+        public Builder setCardField(Setting.CardField cardField) {
+            this.cardField = cardField;
+            return this;
+        }
+
+        public Setting.CardField getCardField() {
+            return cardField;
         }
 
 

@@ -62,6 +62,7 @@
             <com.andreabaccega.widget.FormEditText
                 whatever:testType="regexp"
                 whatever:customRegexp="([a-z\-_0-9\/\:\.]*\.(jpg|jpeg|png|gif))"
+                whatever:emptyAllowed="true"
                 whatever:testErrorString="This is not a valid URL"
                 android:id="@+id/edit_imgpath_entry"
                 android:layout_width="fill_parent"
