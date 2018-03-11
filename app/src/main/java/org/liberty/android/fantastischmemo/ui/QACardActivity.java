@@ -204,7 +204,7 @@ public abstract class QACardActivity extends BaseActivity {
     }
 
     public CardFragment.Builder getDefaultQuestionFragment(Setting.Align questionAlign, String
-            questionTypefaceValue, String [ ] imageSearchPaths ){
+            questionTypefaceValue, String [ ] imageSearchPaths){
         return new CardFragment.Builder(getCurrentCard().getQuestion())
                 .setTextAlignment(questionAlign)
                 .setTypefaceFromFile(questionTypefaceValue)
@@ -215,7 +215,9 @@ public abstract class QACardActivity extends BaseActivity {
                 .setDisplayInHtml(setting.getDisplayInHTMLEnum().contains(Setting.CardField.QUESTION))
                 .setHtmlLinebreakConversion(setting.getHtmlLineBreakConversion())
                 .setImageSearchPaths(imageSearchPaths)
-                .setCardField(Setting.CardField.QUESTION);
+                .setCardField(Setting.CardField.QUESTION)
+                .setTextColor(setting.getQuestionTextColor())
+                .setBackgroundColor(setting.getQuestionBackgroundColor());
     }
 
     public CardFragment.Builder getDefaultNoteFragment(Setting.Align answerAlign, String
@@ -239,7 +241,9 @@ public abstract class QACardActivity extends BaseActivity {
                 .setTextOnClickListener(onAnswerTextClickListener)
                 .setCardOnClickListener(onAnswerViewClickListener)
                 .setTextFontSize(setting.getAnswerFontSize())
-                .setTypefaceFromFile(setting.getAnswerFont());
+                .setTypefaceFromFile(setting.getAnswerFont())
+                .setTextColor(setting.getAnswerTextColor())
+                .setBackgroundColor(setting.getAnswerBackgroundColor());
 
     }
 
@@ -359,18 +363,9 @@ public abstract class QACardActivity extends BaseActivity {
         CardFragment.Builder showAnswerFragmentBuilder = getDefaultShowAnswerFragment
                 (answerTypefaceValue);
 
-
-        questionFragmentBuilder
-                .setTextColor(setting.getQuestionTextColor())
-                .setBackgroundColor(setting.getQuestionBackgroundColor());
-
         answerFragmentBuilder
                 .setBackgroundColor(setting.getAnswerBackgroundColor())
                 .setTextColor(setting.getAnswerTextColor());
-
-        showAnswerFragmentBuilder
-                .setTextColor(setting.getAnswerTextColor())
-                .setBackgroundColor(setting.getAnswerBackgroundColor());
 
 
         // Note is currently shared some settings with Answer
@@ -521,27 +516,15 @@ public abstract class QACardActivity extends BaseActivity {
         fragments.add(showHintFragmentBuilder);
 
 
-        CardFragment.Builder showAnswerFragmentBuilder = new CardFragment.Builder("?\n" + getString(R.string.memo_show_answer))
-                .setTextAlignment(Setting.Align.CENTER)
-                .setTypefaceFromFile(answerTypefaceValue)
-                .setTextOnClickListener(onAnswerTextClickListener)
-                .setCardOnClickListener(onAnswerViewClickListener)
-                .setTextFontSize(setting.getAnswerFontSize())
-                .setTypefaceFromFile(setting.getAnswerFont());
-        fragments.add(showAnswerFragmentBuilder);
+        CardFragment.Builder showAnswerFragmentBuilder = getDefaultShowAnswerFragment
+                (answerTypefaceValue);
 
 
-        questionFragmentBuilder
-                .setTextColor(setting.getQuestionTextColor())
-                .setBackgroundColor(setting.getQuestionBackgroundColor());
 
         showHintFragmentBuilder
                 .setBackgroundColor(setting.getAnswerBackgroundColor())
                 .setTextColor(setting.getAnswerTextColor());
 
-        showAnswerFragmentBuilder
-                .setTextColor(setting.getAnswerTextColor())
-                .setBackgroundColor(setting.getAnswerBackgroundColor());
 
         // Note is currently shared some settings with Answer
         CardFragment.Builder noteFragmentBuilder = new CardFragment.Builder(getCurrentCard().getNote())
@@ -665,18 +648,9 @@ public abstract class QACardActivity extends BaseActivity {
                                 CardFragment.Builder showAnswerFragmentBuilder = getDefaultShowAnswerFragment
                                         (answerTypefaceValue);
 
-                                questionFragmentBuilder
-                                        .setTextColor(setting.getQuestionTextColor())
-                                        .setBackgroundColor(setting.getQuestionBackgroundColor());
-
                                 answerFragmentBuilder
                                         .setBackgroundColor(setting.getAnswerBackgroundColor())
                                         .setTextColor(setting.getAnswerTextColor());
-
-                                showAnswerFragmentBuilder
-                                        .setTextColor(setting.getAnswerTextColor())
-                                        .setBackgroundColor(setting.getAnswerBackgroundColor());
-
 
                                 // Note is currently shared some settings with Answer
                                 CardFragment.Builder noteFragmentBuilder = getDefaultNoteFragment(answerAlign,
@@ -806,26 +780,13 @@ public abstract class QACardActivity extends BaseActivity {
                 .setHtmlLinebreakConversion(setting.getHtmlLineBreakConversion())
                 .setImageSearchPaths(imageSearchPaths);
 
-        CardFragment.Builder showAnswerFragmentBuilder = new CardFragment.Builder("?\n" + getString(R.string.memo_show_answer))
-                .setTextAlignment(Setting.Align.CENTER)
-                .setTypefaceFromFile(answerTypefaceValue)
-                .setTextOnClickListener(onAnswerTextClickListener)
-                .setCardOnClickListener(onAnswerViewClickListener)
-                .setTextFontSize(setting.getAnswerFontSize())
-                .setTypefaceFromFile(setting.getAnswerFont());
+        CardFragment.Builder showAnswerFragmentBuilder = getDefaultShowAnswerFragment
+                (answerTypefaceValue);
 
-        questionFragmentBuilder
-                .setTextColor(setting.getQuestionTextColor())
-                .setBackgroundColor(setting.getQuestionBackgroundColor());
 
         answerFragmentBuilder
                 .setBackgroundColor(setting.getAnswerBackgroundColor())
                 .setTextColor(setting.getAnswerTextColor());
-
-        showAnswerFragmentBuilder
-                .setTextColor(setting.getAnswerTextColor())
-                .setBackgroundColor(setting.getAnswerBackgroundColor());
-
 
         // Note is currently shared some settings with Answer
         CardFragment.Builder noteFragmentBuilder = getDefaultNoteFragment(answerAlign,
@@ -1034,18 +995,9 @@ public abstract class QACardActivity extends BaseActivity {
             CardFragment.Builder showAnswerFragmentBuilder = getDefaultShowAnswerFragment
                     (answerTypefaceValue);
 
-            questionFragmentBuilder
-                    .setTextColor(setting.getQuestionTextColor())
-                    .setBackgroundColor(setting.getQuestionBackgroundColor());
-
             answerFragmentBuilder
                     .setBackgroundColor(setting.getAnswerBackgroundColor())
                     .setTextColor(setting.getAnswerTextColor());
-
-            showAnswerFragmentBuilder
-                    .setTextColor(setting.getAnswerTextColor())
-                    .setBackgroundColor(setting.getAnswerBackgroundColor());
-
 
             // Note is currently shared some settings with Answer
             CardFragment.Builder noteFragmentBuilder = getDefaultNoteFragment(answerAlign,
