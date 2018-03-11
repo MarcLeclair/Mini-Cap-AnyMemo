@@ -571,10 +571,10 @@ public abstract class QACardActivity extends BaseActivity {
 
     //public List<Card> displayMcCards
     // Important class that display the card using fragment
-    // the enableSpellingHint parameter is handled differently on single
+    // the enableSpellingTest parameter is handled differently on single
     // sided card and double sided card.
-    protected void displaySpellingHint(boolean enableSpellingHint) {
-        final boolean enableSpellingHint_local = enableSpellingHint;
+    protected void displaySpellingTest(boolean enableSpellingTest) {
+        final boolean enableSpellingTest_local = enableSpellingTest;
         final List<CardFragment.Builder> fragments = new ArrayList<>(4);
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
         alertDialog.setTitle("Question: " + getCurrentCard().getQuestion());
@@ -678,13 +678,13 @@ public abstract class QACardActivity extends BaseActivity {
 
                                 if (setting.getCardStyle() == Setting.CardStyle.SINGLE_SIDED) {
 
-                                    singleSided(enableSpellingHint_local, ft, fragments);
+                                    singleSided(enableSpellingTest_local, ft, fragments);
 
                                 } else {
                                     assert false : "Card logic not implemented for style: " + setting.getCardStyle();
                                 }
 
-                                isAnswerShown = enableSpellingHint_local;
+                                isAnswerShown = enableSpellingTest_local;
 
                                 // Set up the small title bar
                                 // It is defualt "GONE" so it won't take any space
@@ -694,7 +694,7 @@ public abstract class QACardActivity extends BaseActivity {
                                 // Only copy to clipboard if answer is show
                                 // as a feature request:
                                 // http://code.google.com/p/anymemo/issues/detail?id=239
-                                if (enableSpellingHint_local == true) {
+                                if (enableSpellingTest_local == true) {
                                     copyToClipboard();
                                 }
 
@@ -1241,9 +1241,9 @@ public abstract class QACardActivity extends BaseActivity {
         return true;
     }
 
-    protected boolean showSpellingHint() {
+    protected boolean showSpellingTest() {
         //method used from line
-        displaySpellingHint(true);
+        displaySpellingTest(true);
         return true;
     }
 
