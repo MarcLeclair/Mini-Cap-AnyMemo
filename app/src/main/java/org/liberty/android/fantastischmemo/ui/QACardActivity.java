@@ -60,6 +60,7 @@ import org.liberty.android.fantastischmemo.ui.loader.SettingLoader;
 import org.liberty.android.fantastischmemo.utils.AMFileUtil;
 import org.liberty.android.fantastischmemo.utils.AMStringUtils;
 import org.liberty.android.fantastischmemo.utils.CardTTSUtil;
+import org.liberty.android.fantastischmemo.utils.HintUtil;
 import org.liberty.android.fantastischmemo.widget.AnyMemoWidgetProvider;
 
 import java.io.File;
@@ -115,6 +116,8 @@ public abstract class QACardActivity extends BaseActivity {
 
     String TAG = "spellingHint";
 
+    private HintUtil hintUtil;
+
     /**
      * This needs to be defined before onCreate so in onCreate, all loaders will
      * be registered with the right manager.
@@ -148,6 +151,7 @@ public abstract class QACardActivity extends BaseActivity {
         super.onCreate(bundle);
         activityComponents().inject(this);
         setContentView(getContentView());
+        hintUtil = new HintUtil();
 
 
     }
@@ -204,7 +208,7 @@ public abstract class QACardActivity extends BaseActivity {
     }
 
     public CardFragment.Builder getDefaultQuestionFragment(Setting.Align questionAlign, String
-            questionTypefaceValue, String [ ] imageSearchPaths){
+            questionTypefaceValue, String[] imageSearchPaths) {
         return new CardFragment.Builder(getCurrentCard().getQuestion())
                 .setTextAlignment(questionAlign)
                 .setTypefaceFromFile(questionTypefaceValue)
@@ -221,20 +225,20 @@ public abstract class QACardActivity extends BaseActivity {
     }
 
     public CardFragment.Builder getDefaultNoteFragment(Setting.Align answerAlign, String
-            answerTypefaceValue, String [ ] imageSearchPaths ){
+            answerTypefaceValue, String[] imageSearchPaths) {
         return new CardFragment.Builder(getCurrentCard().getNote())
-            .setTextAlignment(answerAlign)
-            .setTypefaceFromFile(answerTypefaceValue)
-            .setCardOnClickListener(onAnswerViewClickListener)
-            .setTextFontSize(setting.getAnswerFontSize())
-            .setTypefaceFromFile(setting.getAnswerFont())
-            .setDisplayInHtml(setting.getDisplayInHTMLEnum().contains(Setting.CardField.ANSWER))
-            .setHtmlLinebreakConversion(setting.getHtmlLineBreakConversion())
-            .setImageSearchPaths(imageSearchPaths)
-            .setCardField(Setting.CardField.NOTE);
+                .setTextAlignment(answerAlign)
+                .setTypefaceFromFile(answerTypefaceValue)
+                .setCardOnClickListener(onAnswerViewClickListener)
+                .setTextFontSize(setting.getAnswerFontSize())
+                .setTypefaceFromFile(setting.getAnswerFont())
+                .setDisplayInHtml(setting.getDisplayInHTMLEnum().contains(Setting.CardField.ANSWER))
+                .setHtmlLinebreakConversion(setting.getHtmlLineBreakConversion())
+                .setImageSearchPaths(imageSearchPaths)
+                .setCardField(Setting.CardField.NOTE);
     }
 
-    public CardFragment.Builder getDefaultShowAnswerFragment(String answerTypefaceValue){
+    public CardFragment.Builder getDefaultShowAnswerFragment(String answerTypefaceValue) {
         return new CardFragment.Builder("?\n" + getString(R.string.memo_show_answer))
                 .setTextAlignment(Setting.Align.CENTER)
                 .setTypefaceFromFile(answerTypefaceValue)
@@ -247,41 +251,11 @@ public abstract class QACardActivity extends BaseActivity {
 
     }
 
-    public String displayLetterHint(int count) {
-        //this function is called in the displayLetterHint method, line 276
-        String word = getCurrentCard().getAnswer();
-        String StringBuilder = "";
-        for (int i = 0; i < word.length(); i++) {
-            if (i <= count - 1) { //show letters up to the number of clicks for hint
-                if (word.charAt(i) == ' ') {
-                    StringBuilder += " ";
-                }
-                StringBuilder += word.charAt(i);
-            } else {
-                StringBuilder += " _";
-            }
-        }
-        return StringBuilder;
-    }
-
-    public List<Card> shuffleHintDeck(List<Card> deck) {
-        //Using Yates shuffle algorithm
-        int n = deck.size();
-        SecureRandom random = new SecureRandom();
-        for (int i = 0; i < deck.size(); i++) {
-            int randomValue = i + random.nextInt(n - i);
-            Card randomElement = deck.get(randomValue);
-            deck.set(randomValue, deck.get(i));
-            deck.set(i, randomElement);
-        }
-        return deck;
-    }
-
     protected void displayMcHint(boolean enableMcHint, List<Card> list) {
 
         list.add(getCurrentCard());
 
-        List<Card> shuffled = shuffleHintDeck(list);
+        List<Card> shuffled = hintUtil.shuffleHintDeck(list);
 
         Card card1 = shuffled.get(0);
         Card card2 = shuffled.get(1);
@@ -348,7 +322,9 @@ public abstract class QACardActivity extends BaseActivity {
                 questionTypefaceValue, imageSearchPaths);
 
 
-        CardFragment.Builder answerFragmentBuilder = new CardFragment.Builder("1. " + card1.getAnswer() + "\n2. " + card2.getAnswer() + "\n3. " + card3.getAnswer() + "\n4. " + card4.getAnswer())
+        CardFragment.Builder answerFragmentBuilder = new CardFragment.Builder(
+                "1. " + card1.getAnswer() + "\n2. " + card2.getAnswer() +
+                        "\n3. " + card3.getAnswer() + "\n4. " + card4.getAnswer())
                 .setTextAlignment(answerAlign)
                 .setTypefaceFromFile(answerTypefaceValue)
                 .setTextOnClickListener(onAnswerTextClickListener)
@@ -358,15 +334,9 @@ public abstract class QACardActivity extends BaseActivity {
                 .setDisplayInHtml(setting.getDisplayInHTMLEnum().contains(Setting.CardField.ANSWER))
                 .setHtmlLinebreakConversion(setting.getHtmlLineBreakConversion())
                 .setImageSearchPaths(imageSearchPaths)
-                .setCardField(Setting.CardField.ANSWER);
-
-        CardFragment.Builder showAnswerFragmentBuilder = getDefaultShowAnswerFragment
-                (answerTypefaceValue);
-
-        answerFragmentBuilder
+                .setCardField(Setting.CardField.ANSWER)
                 .setBackgroundColor(setting.getAnswerBackgroundColor())
                 .setTextColor(setting.getAnswerTextColor());
-
 
         // Note is currently shared some settings with Answer
         CardFragment.Builder noteFragmentBuilder = getDefaultNoteFragment(answerAlign,
@@ -380,7 +350,6 @@ public abstract class QACardActivity extends BaseActivity {
 
         fragments.add(questionFragmentBuilder);
         fragments.add(answerFragmentBuilder);
-        fragments.add(showAnswerFragmentBuilder);
         fragments.add(noteFragmentBuilder);
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -413,7 +382,7 @@ public abstract class QACardActivity extends BaseActivity {
         isAnswerShown = false;
 
         // Set up the small title bar
-        // It is defualt "GONE" so it won't take any space
+        // It is default "GONE" so it won't take any space
         // if there is no text
         smallTitleBar = (TextView) findViewById(R.id.small_title_bar);
 
@@ -440,7 +409,7 @@ public abstract class QACardActivity extends BaseActivity {
 
         String questionTypefaceValue = null;
         String answerTypefaceValue = null;
-        List<CardFragment.Builder> fragments = new ArrayList<CardFragment.Builder>(4);
+        List<CardFragment.Builder> fragments = new ArrayList<>(4);
 
         /* Set the typeface of question and answer */
         if (!Strings.isNullOrEmpty(questionTypeface)) {
@@ -488,21 +457,11 @@ public abstract class QACardActivity extends BaseActivity {
             }
         }
 
-        CardFragment.Builder questionFragmentBuilder = new CardFragment.Builder(getCurrentCard().getQuestion())
-                .setTextAlignment(questionAlign)
-                .setTypefaceFromFile(questionTypefaceValue)
-                .setTextOnClickListener(onQuestionTextClickListener)
-                .setCardOnClickListener(onQuestionViewClickListener)
-                .setTextFontSize(setting.getQuestionFontSize())
-                .setTypefaceFromFile(setting.getQuestionFont())
-                .setDisplayInHtml(setting.getDisplayInHTMLEnum().contains(Setting.CardField.QUESTION))
-                .setHtmlLinebreakConversion(setting.getHtmlLineBreakConversion())
-                .setImageSearchPaths(imageSearchPaths)
-                .setCardField(Setting.CardField.QUESTION);
-        fragments.add(questionFragmentBuilder);
+        CardFragment.Builder questionFragmentBuilder = getDefaultQuestionFragment(questionAlign,
+                questionTypefaceValue, imageSearchPaths);
 
-
-        CardFragment.Builder showHintFragmentBuilder = new CardFragment.Builder(displayLetterHint(letterHintCounter))
+        CardFragment.Builder showHintFragmentBuilder = new CardFragment.Builder
+                (hintUtil.generateLetterHint(letterHintCounter, getCurrentCard().getAnswer()))
                 .setTextAlignment(answerAlign)
                 .setTypefaceFromFile(answerTypefaceValue)
                 .setTextOnClickListener(onAnswerTextClickListener)
@@ -512,33 +471,13 @@ public abstract class QACardActivity extends BaseActivity {
                 .setDisplayInHtml(setting.getDisplayInHTMLEnum().contains(Setting.CardField.HINT))
                 .setHtmlLinebreakConversion(setting.getHtmlLineBreakConversion())
                 .setImageSearchPaths(imageSearchPaths)
-                .setCardField(Setting.CardField.ANSWER);
-        fragments.add(showHintFragmentBuilder);
-
-
-        CardFragment.Builder showAnswerFragmentBuilder = getDefaultShowAnswerFragment
-                (answerTypefaceValue);
-
-
-
-        showHintFragmentBuilder
+                .setCardField(Setting.CardField.ANSWER)
                 .setBackgroundColor(setting.getAnswerBackgroundColor())
                 .setTextColor(setting.getAnswerTextColor());
 
-
         // Note is currently shared some settings with Answer
-        CardFragment.Builder noteFragmentBuilder = new CardFragment.Builder(getCurrentCard().getNote())
-                .setTextAlignment(answerAlign)
-                .setTypefaceFromFile(answerTypefaceValue)
-                .setCardOnClickListener(onAnswerViewClickListener)
-                .setTextFontSize(setting.getAnswerFontSize())
-                .setTypefaceFromFile(setting.getAnswerFont())
-                .setDisplayInHtml(setting.getDisplayInHTMLEnum().contains(Setting.CardField.ANSWER))
-                .setHtmlLinebreakConversion(setting.getHtmlLineBreakConversion())
-                .setImageSearchPaths(imageSearchPaths)
-                .setCardField(Setting.CardField.NOTE);
-        fragments.add(noteFragmentBuilder);
-
+        CardFragment.Builder noteFragmentBuilder = getDefaultNoteFragment(answerAlign,
+                answerTypefaceValue, null);
 
         // Long click to launch image viewer if the card has an image
         questionFragmentBuilder.setTextOnLongClickListener(
@@ -546,8 +485,14 @@ public abstract class QACardActivity extends BaseActivity {
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
+        fragments.add(showHintFragmentBuilder);
+        fragments.add(questionFragmentBuilder);
+        fragments.add(noteFragmentBuilder);
+
         if (setting.getCardStyle() == Setting.CardStyle.SINGLE_SIDED) {
+
             singleSided(enableLetterHint, ft, fragments);
+
         } else if (setting.getCardStyle() == Setting.CardStyle.DOUBLE_SIDED) {
             FlipableCardFragment fragment = new FlipableCardFragment();
             Bundle b = new Bundle(1);
@@ -613,10 +558,10 @@ public abstract class QACardActivity extends BaseActivity {
                             Toast.makeText(getApplicationContext(),
                                     "Empty field, enter an answer!", Toast.LENGTH_SHORT).show();
                         }
-			//if the user enters at least 1 character
+                        //if the user enters at least 1 character
                         else if (answer.compareTo("") > 0) {
 
-			//if the user enters the right answer
+                            //if the user enters the right answer
                             if (getCurrentCard().getAnswer().equals(answer)) {
                                 Toast.makeText(getApplicationContext(),
                                         "Good Answer!", Toast.LENGTH_SHORT).show();
@@ -643,12 +588,7 @@ public abstract class QACardActivity extends BaseActivity {
                                         .setTypefaceFromFile(setting.getAnswerFont())
                                         .setDisplayInHtml(setting.getDisplayInHTMLEnum().contains(Setting.CardField.ANSWER))
                                         .setHtmlLinebreakConversion(setting.getHtmlLineBreakConversion())
-                                        .setCardField(Setting.CardField.ANSWER);
-
-                                CardFragment.Builder showAnswerFragmentBuilder = getDefaultShowAnswerFragment
-                                        (answerTypefaceValue);
-
-                                answerFragmentBuilder
+                                        .setCardField(Setting.CardField.ANSWER)
                                         .setBackgroundColor(setting.getAnswerBackgroundColor())
                                         .setTextColor(setting.getAnswerTextColor());
 
@@ -659,7 +599,6 @@ public abstract class QACardActivity extends BaseActivity {
                                 fragments.add(answerFragmentBuilder);
                                 fragments.add(questionFragmentBuilder);
                                 fragments.add(noteFragmentBuilder);
-                                fragments.add(showAnswerFragmentBuilder);
 
 
                                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -979,7 +918,6 @@ public abstract class QACardActivity extends BaseActivity {
             CardFragment.Builder questionFragmentBuilder = getDefaultQuestionFragment(questionAlign,
                     questionTypefaceValue, imageSearchPaths);
 
-
             CardFragment.Builder answerFragmentBuilder = new CardFragment.Builder(getCurrentCard().getImgPath())
                     .setTextAlignment(answerAlign)
                     .setTypefaceFromFile(answerTypefaceValue)
@@ -990,12 +928,7 @@ public abstract class QACardActivity extends BaseActivity {
                     .setPictureHint(true)
                     .setHtmlLinebreakConversion(setting.getHtmlLineBreakConversion())
                     .setImageSearchPaths(imageSearchPaths)
-                    .setCardField(Setting.CardField.ANSWER);
-
-            CardFragment.Builder showAnswerFragmentBuilder = getDefaultShowAnswerFragment
-                    (answerTypefaceValue);
-
-            answerFragmentBuilder
+                    .setCardField(Setting.CardField.ANSWER)
                     .setBackgroundColor(setting.getAnswerBackgroundColor())
                     .setTextColor(setting.getAnswerTextColor());
 
@@ -1012,14 +945,13 @@ public abstract class QACardActivity extends BaseActivity {
             fragments.add(answerFragmentBuilder);
             fragments.add(noteFragmentBuilder);
             fragments.add(questionFragmentBuilder);
-            fragments.add(showAnswerFragmentBuilder);
 
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
             if (setting.getCardStyle() == Setting.CardStyle.SINGLE_SIDED) {
 
-               singleSided(enablePictureHint, ft, fragments);
-                
+                singleSided(enablePictureHint, ft, fragments);
+
             } else if (setting.getCardStyle() == Setting.CardStyle.DOUBLE_SIDED) {
                 FlipableCardFragment fragment = new FlipableCardFragment();
                 Bundle b = new Bundle(1);
@@ -1451,7 +1383,7 @@ public abstract class QACardActivity extends BaseActivity {
 
             //this is for the answer part, which is the bottom part of the screen. We need
             // another if else statement for that
-            if (!hint && each .getCardField() == null) {
+            if (!hint && each.getCardField() == null) {
                 builders2List.add(each);
             } else if (setting.getAnswerFieldEnum().contains(Setting.CardField.QUESTION) && each
                     .getCardField() == Setting.CardField.QUESTION) {
