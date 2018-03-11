@@ -312,7 +312,6 @@ public abstract class QACardActivity extends BaseActivity {
                 .setHtmlLinebreakConversion(setting.getHtmlLineBreakConversion())
                 .setImageSearchPaths(imageSearchPaths)
                 .setCardField(Setting.CardField.QUESTION);
-        fragments.add(questionFragmentBuilder);
 
 
         CardFragment.Builder answerFragmentBuilder = new CardFragment.Builder("1. " + card1.getAnswer() + "\n2. " + card2.getAnswer() + "\n3. " + card3.getAnswer() + "\n4. " + card4.getAnswer())
@@ -326,7 +325,6 @@ public abstract class QACardActivity extends BaseActivity {
                 .setHtmlLinebreakConversion(setting.getHtmlLineBreakConversion())
                 .setImageSearchPaths(imageSearchPaths)
                 .setCardField(Setting.CardField.ANSWER);
-        fragments.add(answerFragmentBuilder);
 
         CardFragment.Builder showAnswerFragmentBuilder = new CardFragment.Builder("?\n" + getString(R.string.memo_show_answer))
                 .setTextAlignment(Setting.Align.CENTER)
@@ -335,7 +333,6 @@ public abstract class QACardActivity extends BaseActivity {
                 .setCardOnClickListener(onAnswerViewClickListener)
                 .setTextFontSize(setting.getAnswerFontSize())
                 .setTypefaceFromFile(setting.getAnswerFont());
-        fragments.add(showAnswerFragmentBuilder);
 
 
         questionFragmentBuilder
@@ -361,8 +358,7 @@ public abstract class QACardActivity extends BaseActivity {
                 .setDisplayInHtml(setting.getDisplayInHTMLEnum().contains(Setting.CardField.ANSWER))
                 .setHtmlLinebreakConversion(setting.getHtmlLineBreakConversion())
                 .setImageSearchPaths(imageSearchPaths)
-                .setCardField(Setting.CardField.ANSWER);
-        fragments.add(noteFragmentBuilder);
+                .setCardField(Setting.CardField.NOTE);
 
 
         // Long click to launch image viewer if the card has an image
@@ -371,75 +367,16 @@ public abstract class QACardActivity extends BaseActivity {
         answerFragmentBuilder.setTextOnLongClickListener(
                 generateImageOnLongClickListener(card1.getAnswer(), imageSearchPaths));
 
+        fragments.add(questionFragmentBuilder);
+        fragments.add(answerFragmentBuilder);
+        fragments.add(showAnswerFragmentBuilder);
+        fragments.add(noteFragmentBuilder);
+
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
         if (setting.getCardStyle() == Setting.CardStyle.SINGLE_SIDED) {
-            TwoFieldsCardFragment fragment = new TwoFieldsCardFragment();
-            Bundle b = new Bundle();
-
-            // Handle card field setting.
-            List<CardFragment.Builder> builders1List = new ArrayList<CardFragment.Builder>(4);
-            if (setting.getQuestionFieldEnum().contains(Setting.CardField.QUESTION)) {
-                builders1List.add(questionFragmentBuilder);
-            }
-            if (setting.getQuestionFieldEnum().contains(Setting.CardField.ANSWER)) {
-                builders1List.add(answerFragmentBuilder);
-            }
-            if (setting.getQuestionFieldEnum().contains(Setting.CardField.NOTE)) {
-                builders1List.add(noteFragmentBuilder);
-            }
-
-            List<CardFragment.Builder> builders2List = new ArrayList<CardFragment.Builder>(4);
-            if (!enableMcHint) {
-                builders2List.add(showAnswerFragmentBuilder);
-            }
-            if (setting.getAnswerFieldEnum().contains(Setting.CardField.QUESTION)) {
-                builders2List.add(questionFragmentBuilder);
-            }
-            if (setting.getAnswerFieldEnum().contains(Setting.CardField.ANSWER)) {
-                builders2List.add(answerFragmentBuilder);
-            }
-            if (setting.getAnswerFieldEnum().contains(Setting.CardField.NOTE)) {
-                builders2List.add(noteFragmentBuilder);
-            }
-
-            CardFragment.Builder[] builders1 = new CardFragment.Builder[builders1List.size()];
-            builders1List.toArray(builders1);
-            CardFragment.Builder[] builders2 = new CardFragment.Builder[builders2List.size()];
-            builders2List.toArray(builders2);
-
-            b.putSerializable(TwoFieldsCardFragment.EXTRA_FIELD1_CARD_FRAGMENT_BUILDERS, builders1);
-            b.putSerializable(TwoFieldsCardFragment.EXTRA_FIELD2_CARD_FRAGMENT_BUILDERS, builders2);
-            if (enableMcHint) {
-                b.putInt(TwoFieldsCardFragment.EXTRA_FIELD2_INITIAL_POSITION, 0);
-            } else {
-                b.putInt(TwoFieldsCardFragment.EXTRA_FIELD2_INITIAL_POSITION, 0);
-            }
-            b.putInt(TwoFieldsCardFragment.EXTRA_QA_RATIO, setting.getQaRatio());
-            b.putInt(TwoFieldsCardFragment.EXTRA_SEPARATOR_COLOR, setting.getSeparatorColor());
-            fragment.setArguments(b);
-
-            configCardFragmentTransitionAnimation(ft);
-
-            ft.replace(R.id.card_root, fragment);
-            ft.commit();
-        } else if (setting.getCardStyle() == Setting.CardStyle.DOUBLE_SIDED) {
-            FlipableCardFragment fragment = new FlipableCardFragment();
-            Bundle b = new Bundle(1);
-            CardFragment.Builder[] builders = {questionFragmentBuilder, answerFragmentBuilder, noteFragmentBuilder};
-            b.putSerializable(FlipableCardFragment.EXTRA_CARD_FRAGMENT_BUILDERS, builders);
-            if (enableMcHint) {
-                b.putInt(FlipableCardFragment.EXTRA_INITIAL_POSITION, 1);
-            } else {
-                b.putInt(FlipableCardFragment.EXTRA_INITIAL_POSITION, 0);
-            }
-
-            fragment.setArguments(b);
-
-            configCardFragmentTransitionAnimation(ft);
-
-            ft.replace(R.id.card_root, fragment);
-            ft.commit();
+            
+            singleSided(enableMcHint, ft, fragments);
         } else {
             assert false : "Card logic not implemented for style: " + setting.getCardStyle();
         }
@@ -546,7 +483,7 @@ public abstract class QACardActivity extends BaseActivity {
                 .setDisplayInHtml(setting.getDisplayInHTMLEnum().contains(Setting.CardField.HINT))
                 .setHtmlLinebreakConversion(setting.getHtmlLineBreakConversion())
                 .setImageSearchPaths(imageSearchPaths)
-                .setCardField(Setting.CardField.HINT);
+                .setCardField(Setting.CardField.ANSWER);
         fragments.add(showHintFragmentBuilder);
 
 
@@ -1665,14 +1602,13 @@ public abstract class QACardActivity extends BaseActivity {
 
             //this is for the answer part, which is the bottom part of the screen. We need
             // another if else statement for that
-            if (!hint && each
-                    .getCardField() == null) {
+            if (!hint && each .getCardField() == null) {
                 builders2List.add(each);
             } else if (setting.getAnswerFieldEnum().contains(Setting.CardField.QUESTION) && each
                     .getCardField() == Setting.CardField.QUESTION) {
                 builders2List.add(each);
             } else if (setting.getAnswerFieldEnum().contains(Setting.CardField.ANSWER) && each
-                    .getCardField() == Setting.CardField.HINT) {
+                    .getCardField() == Setting.CardField.ANSWER) {
                 builders2List.add(each);
             } else if (setting.getAnswerFieldEnum().contains(Setting.CardField.NOTE) && each
                     .getCardField() == Setting.CardField.NOTE) {
