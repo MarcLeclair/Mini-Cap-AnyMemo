@@ -1018,52 +1018,8 @@ public abstract class QACardActivity extends BaseActivity {
 
             if (setting.getCardStyle() == Setting.CardStyle.SINGLE_SIDED) {
 
-               // singleSided(enablePictureHint, ft, fragments);
-                TwoFieldsCardFragment fragment = new TwoFieldsCardFragment();
-                Bundle b = new Bundle();
-
-                // Handle card field setting.
-                List<CardFragment.Builder> builders1List = new ArrayList<CardFragment.Builder>(4);
-                if (setting.getQuestionFieldEnum().contains(Setting.CardField.QUESTION)) {
-                    builders1List.add(questionFragmentBuilder);
-                }
-                if (setting.getQuestionFieldEnum().contains(Setting.CardField.ANSWER)) {
-                    builders1List.add(answerFragmentBuilder);
-                }
-                if (setting.getQuestionFieldEnum().contains(Setting.CardField.NOTE)) {
-                    builders1List.add(noteFragmentBuilder);
-                }
-
-                List<CardFragment.Builder> builders2List = new ArrayList<CardFragment.Builder>(4);
-
-                if (setting.getAnswerFieldEnum().contains(Setting.CardField.QUESTION)) {
-                    builders2List.add(questionFragmentBuilder);
-                }
-                if (setting.getAnswerFieldEnum().contains(Setting.CardField.ANSWER)) {
-                    builders2List.add(answerFragmentBuilder);
-                }
-                if (setting.getAnswerFieldEnum().contains(Setting.CardField.NOTE)) {
-                    builders2List.add(noteFragmentBuilder);
-                }
-
-                CardFragment.Builder[] builders1 = new CardFragment.Builder[builders1List.size()];
-                builders1List.toArray(builders1);
-                CardFragment.Builder[] builders2 = new CardFragment.Builder[builders2List.size()];
-                builders2List.toArray(builders2);
-
-                b.putSerializable(TwoFieldsCardFragment.EXTRA_FIELD1_CARD_FRAGMENT_BUILDERS, builders1);
-                b.putSerializable(TwoFieldsCardFragment.EXTRA_FIELD2_CARD_FRAGMENT_BUILDERS, builders2);
-                b.putInt(TwoFieldsCardFragment.EXTRA_FIELD2_INITIAL_POSITION, 0);
-
-                b.putInt(TwoFieldsCardFragment.EXTRA_QA_RATIO, setting.getQaRatio());
-                b.putInt(TwoFieldsCardFragment.EXTRA_SEPARATOR_COLOR, setting.getSeparatorColor());
-                fragment.setArguments(b);
-
-                configCardFragmentTransitionAnimation(ft);
-
-                ft.replace(R.id.card_root, fragment);
-                ft.commit();
-
+               singleSided(enablePictureHint, ft, fragments);
+                
             } else if (setting.getCardStyle() == Setting.CardStyle.DOUBLE_SIDED) {
                 FlipableCardFragment fragment = new FlipableCardFragment();
                 Bundle b = new Bundle(1);
