@@ -575,6 +575,7 @@ public abstract class QACardActivity extends BaseActivity {
     // sided card and double sided card.
     protected void displaySpellingHint(boolean enableSpellingHint) {
         final boolean enableSpellingHint_local = enableSpellingHint;
+        final List<CardFragment.Builder> fragments = new ArrayList<>(4);
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
         alertDialog.setTitle("Question: " + getCurrentCard().getQuestion());
         alertDialog.setMessage("Enter your answer in the field below");
@@ -590,11 +591,15 @@ public abstract class QACardActivity extends BaseActivity {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         String answer = input.getText().toString();
+                        //if user leaves an empty field, warn them
                         if (answer.compareTo("") == 0) {
                             Toast.makeText(getApplicationContext(),
                                     "Empty field, enter an answer!", Toast.LENGTH_SHORT).show();
                         }
-                        if (answer.compareTo("") > 0) {
+			//if the user enters at least 1 character
+                        else if (answer.compareTo("") > 0) {
+
+			//if the user enters the right answer
                             if (getCurrentCard().getAnswer().equals(answer)) {
                                 Toast.makeText(getApplicationContext(),
                                         "Good Answer!", Toast.LENGTH_SHORT).show();
@@ -616,7 +621,8 @@ public abstract class QACardActivity extends BaseActivity {
                                         .setTextFontSize(setting.getQuestionFontSize())
                                         .setTypefaceFromFile(setting.getQuestionFont())
                                         .setDisplayInHtml(setting.getDisplayInHTMLEnum().contains(Setting.CardField.QUESTION))
-                                        .setHtmlLinebreakConversion(setting.getHtmlLineBreakConversion());
+                                        .setHtmlLinebreakConversion(setting.getHtmlLineBreakConversion())
+                                        .setCardField(Setting.CardField.QUESTION);
 
 
                                 CardFragment.Builder answerFragmentBuilder = new CardFragment.Builder(getCurrentCard().getAnswer())
@@ -627,7 +633,8 @@ public abstract class QACardActivity extends BaseActivity {
                                         .setTextFontSize(setting.getAnswerFontSize())
                                         .setTypefaceFromFile(setting.getAnswerFont())
                                         .setDisplayInHtml(setting.getDisplayInHTMLEnum().contains(Setting.CardField.ANSWER))
-                                        .setHtmlLinebreakConversion(setting.getHtmlLineBreakConversion());
+                                        .setHtmlLinebreakConversion(setting.getHtmlLineBreakConversion())
+                                        .setCardField(Setting.CardField.ANSWER);
 
                                 CardFragment.Builder showAnswerFragmentBuilder = new CardFragment.Builder("?\n" + getString(R.string.memo_show_answer))
                                         .setTextAlignment(Setting.Align.CENTER)
@@ -658,78 +665,21 @@ public abstract class QACardActivity extends BaseActivity {
                                         .setTextFontSize(setting.getAnswerFontSize())
                                         .setTypefaceFromFile(setting.getAnswerFont())
                                         .setDisplayInHtml(setting.getDisplayInHTMLEnum().contains(Setting.CardField.ANSWER))
-                                        .setHtmlLinebreakConversion(setting.getHtmlLineBreakConversion());
+                                        .setHtmlLinebreakConversion(setting.getHtmlLineBreakConversion())
+                                        .setCardField(Setting.CardField.NOTE);
+
+                                fragments.add(answerFragmentBuilder);
+                                fragments.add(questionFragmentBuilder);
+                                fragments.add(noteFragmentBuilder);
+                                fragments.add(showAnswerFragmentBuilder);
 
 
                                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
                                 if (setting.getCardStyle() == Setting.CardStyle.SINGLE_SIDED) {
-                                    TwoFieldsCardFragment fragment = new TwoFieldsCardFragment();
-                                    Bundle b = new Bundle();
 
-                                    // Handle card field setting.
-                                    List<CardFragment.Builder> builders1List = new ArrayList<CardFragment.Builder>(4);
-                                    if (setting.getQuestionFieldEnum().contains(Setting.CardField.QUESTION)) {
-                                        builders1List.add(questionFragmentBuilder);
-                                    }
-                                    if (setting.getQuestionFieldEnum().contains(Setting.CardField.ANSWER)) {
-                                        builders1List.add(answerFragmentBuilder);
-                                    }
-                                    if (setting.getQuestionFieldEnum().contains(Setting.CardField.NOTE)) {
-                                        builders1List.add(noteFragmentBuilder);
-                                    }
+                                    singleSided(enableSpellingHint_local, ft, fragments);
 
-                                    List<CardFragment.Builder> builders2List = new ArrayList<CardFragment.Builder>(4);
-                                    if (!enableSpellingHint_local) {
-                                        builders2List.add(showAnswerFragmentBuilder);
-                                    }
-                                    if (setting.getAnswerFieldEnum().contains(Setting.CardField.QUESTION)) {
-                                        builders2List.add(questionFragmentBuilder);
-                                    }
-                                    if (setting.getAnswerFieldEnum().contains(Setting.CardField.ANSWER)) {
-                                        builders2List.add(answerFragmentBuilder);
-                                    }
-                                    if (setting.getAnswerFieldEnum().contains(Setting.CardField.NOTE)) {
-                                        builders2List.add(noteFragmentBuilder);
-                                    }
-
-                                    CardFragment.Builder[] builders1 = new CardFragment.Builder[builders1List.size()];
-                                    builders1List.toArray(builders1);
-                                    CardFragment.Builder[] builders2 = new CardFragment.Builder[builders2List.size()];
-                                    builders2List.toArray(builders2);
-
-                                    b.putSerializable(TwoFieldsCardFragment.EXTRA_FIELD1_CARD_FRAGMENT_BUILDERS, builders1);
-                                    b.putSerializable(TwoFieldsCardFragment.EXTRA_FIELD2_CARD_FRAGMENT_BUILDERS, builders2);
-                                    if (enableSpellingHint_local) {
-                                        b.putInt(TwoFieldsCardFragment.EXTRA_FIELD2_INITIAL_POSITION, 0);
-                                    } else {
-                                        b.putInt(TwoFieldsCardFragment.EXTRA_FIELD2_INITIAL_POSITION, 0);
-                                    }
-                                    b.putInt(TwoFieldsCardFragment.EXTRA_QA_RATIO, setting.getQaRatio());
-                                    b.putInt(TwoFieldsCardFragment.EXTRA_SEPARATOR_COLOR, setting.getSeparatorColor());
-                                    fragment.setArguments(b);
-
-                                    configCardFragmentTransitionAnimation(ft);
-
-                                    ft.replace(R.id.card_root, fragment);
-                                    ft.commit();
-                                } else if (setting.getCardStyle() == Setting.CardStyle.DOUBLE_SIDED) {
-                                    FlipableCardFragment fragment = new FlipableCardFragment();
-                                    Bundle b = new Bundle(1);
-                                    CardFragment.Builder[] builders = {questionFragmentBuilder, answerFragmentBuilder, noteFragmentBuilder};
-                                    b.putSerializable(FlipableCardFragment.EXTRA_CARD_FRAGMENT_BUILDERS, builders);
-                                    if (enableSpellingHint_local) {
-                                        b.putInt(FlipableCardFragment.EXTRA_INITIAL_POSITION, 1);
-                                    } else {
-                                        b.putInt(FlipableCardFragment.EXTRA_INITIAL_POSITION, 0);
-                                    }
-
-                                    fragment.setArguments(b);
-
-                                    configCardFragmentTransitionAnimation(ft);
-
-                                    ft.replace(R.id.card_root, fragment);
-                                    ft.commit();
                                 } else {
                                     assert false : "Card logic not implemented for style: " + setting.getCardStyle();
                                 }
