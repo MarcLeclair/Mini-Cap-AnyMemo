@@ -478,4 +478,5 @@
     <string name="spell_hint">Type out the answer</string>
     <string name="add_to_study_mode">Add to study mode</string>
     <string name="spell_hint_btn_text">Verify answer</string>
+    <string name="workout_text">Workout Mode</string>
 </resources>
