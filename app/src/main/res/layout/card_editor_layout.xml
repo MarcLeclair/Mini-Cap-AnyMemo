@@ -2,7 +2,7 @@
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:whatever="http://schemas.android.com/apk/res-auto"
+    xmlns:customValidation="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:id="@+id/edit_dialog_root"
@@ -60,9 +60,10 @@
                 android:layout_height="wrap_content"
                 android:padding="3dip"/>
             <com.andreabaccega.widget.FormEditText
-                whatever:testType="regexp"
-                whatever:customRegexp="([a-z\-_0-9\/\:\.]*\.(jpg|jpeg|png|gif))"
-                whatever:testErrorString="This is not a valid URL"
+                customValidation:testType="regexp"
+                customValidation:customRegexp="([a-z\-_0-9\/\:\.]*\.(jpg|jpeg|png|gif))"
+                customValidation:emptyAllowed="true"
+                customValidation:testErrorString="This is not a valid URL"
                 android:id="@+id/edit_imgpath_entry"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"

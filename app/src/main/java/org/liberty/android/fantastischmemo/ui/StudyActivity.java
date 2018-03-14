@@ -238,12 +238,12 @@ public class StudyActivity extends QACardActivity {
                 return true;
             }
 
-            case R.id.spell_hint:
+            case R.id.spelling_test:
             {
                 //if the person hasn't clicked to get the answer, let them type it in
                 if(!isAnswerShown())
                 {
-                showSpellingHint();
+                showSpellingTest();
                 }
                 return true;
             }
