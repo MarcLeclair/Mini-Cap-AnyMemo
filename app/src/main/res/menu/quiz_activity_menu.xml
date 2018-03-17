@@ -1,38 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:anymemo="http://schemas.android.com/apk/res-auto" >
-
-    <item android:id="@+id/menu_lookup"
-        anymemo:showAsAction="ifRoom"
-  	    android:icon="@android:drawable/ic_menu_search"
-        android:title="@string/look_up_text" />
-    <item android:id="@+id/menu_paint"
-        android:title="@string/paint_text" />
-    <item android:id="@+id/menu_speak_question"
-  		  android:icon="@drawable/speak_q_48"
-          android:title="@string/speak_question_menu_text" />
-    <item android:id="@+id/menu_speak_answer"
-  		  android:icon="@drawable/speak_a_48"
-          android:title="@string/speak_answer_menu_text" />
-
-    <Button
-        android:id = "@+id/hint_options"
-        anymemo:showAsAction="ifRoom"
-        android:title="@string/hint_options">
-
         <item
-            android:id="@+id/picture_hint"
-            android:title="@string/picture_hint" />
+            android:id="@+id/menu_lookup"
+            anymemo:showAsAction="ifRoom"
+            android:icon="@android:drawable/ic_menu_search"
+            android:title="@string/look_up_text" />
         <item
-            android:id="@+id/multiple_choice_hint"
-            android:title="@string/multiple_choice_hint" />
-
+            android:id="@+id/menu_paint"
+            android:title="@string/paint_text" />
         <item
-            android:id="@+id/letter_hint"
-            android:title="@string/letter_hint" />
-
-    </Button>
-
-
+            android:id="@+id/menu_speak_question"
+            android:icon="@drawable/speak_q_48"
+            android:title="@string/speak_question_menu_text" />
+        <item
+            android:id="@+id/menu_speak_answer"
+            android:icon="@drawable/speak_a_48"
+            android:title="@string/speak_answer_menu_text" />
+        <item
+            android:id="@+id/hint_option"
+            android:title="@string/display_hint_option"/>
 
 </menu>

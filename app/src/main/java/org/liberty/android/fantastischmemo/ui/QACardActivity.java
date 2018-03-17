@@ -207,6 +207,8 @@ public abstract class QACardActivity extends BaseActivity {
         return dbName;
     }
 
+    private boolean hintView = true;
+
     public CardFragment.Builder getDefaultQuestionFragment(Setting.Align questionAlign, String
             questionTypefaceValue, String[] imageSearchPaths) {
         return new CardFragment.Builder(getCurrentCard().getQuestion())
@@ -400,6 +402,7 @@ public abstract class QACardActivity extends BaseActivity {
     protected void displayLetterHint(boolean enableLetterHint, int letterHintCounter) {
 
         // First prepare the text to display
+
 
         String questionTypeface = setting.getQuestionFont();
         String answerTypeface = setting.getAnswerFont();
@@ -829,6 +832,7 @@ public abstract class QACardActivity extends BaseActivity {
     }
 
     protected void displayPictureHint(boolean enablePictureHint) {
+       // hintView = false;
         if (getCurrentCard().getImgPath() == null) {
             getCurrentCard().setImgPath("");
         }
@@ -982,6 +986,16 @@ public abstract class QACardActivity extends BaseActivity {
         }
     }
 
+    protected void displayHintOptions(){
+
+        if (hintView == false){
+
+
+        }
+       // displayLetterHint(boolean enableLetterHint, int letterHintCounter);
+      //  displayPictureHint(boolean enablePictureHint) = true;
+    }
+
     protected boolean isAnswerShown() {
         return isAnswerShown;
     }
@@ -1094,11 +1108,6 @@ public abstract class QACardActivity extends BaseActivity {
     protected boolean speakAnswer() {
         cardTTSUtil.speakCardAnswer(getCurrentCard());
         return true;
-    }
-
-    protected boolean showHintOptions(){
-        //
-        displayHintOptions(showLetterHint(int letterHintCounter), showSpellingTest(), showMcHint(List<Card> deck));
     }
 
     protected boolean showLetterHint(int letterHintCounter) {

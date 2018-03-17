@@ -152,29 +152,8 @@ public class QuizActivity extends QACardActivity {
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.quiz_activity_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_lookup: {
-                dictionaryUtil.showLookupListDialog("" + getCurrentCard().getQuestion() + " " +
-                        getCurrentCard().getAnswer());
-                break;
-            }
-            case R.id.menu_speak_question: {
-                speakQuestion();
-                break;
-            }
-            case R.id.menu_speak_answer: {
-                speakAnswer();
-                break;
-            }
+    public boolean displayHintOptions(MenuItem item){
+        switch  (item.getItemId()){
             case R.id.picture_hint: {
                 if (!isAnswerShown()) {
                     showPictureHint();
@@ -216,6 +195,37 @@ public class QuizActivity extends QACardActivity {
                     letterHintCounter = 0;
                 }
                 break;
+            }
+
+        }
+        return false;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.quiz_activity_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_lookup: {
+                dictionaryUtil.showLookupListDialog("" + getCurrentCard().getQuestion() + " " +
+                        getCurrentCard().getAnswer());
+                break;
+            }
+            case R.id.menu_speak_question: {
+                speakQuestion();
+                break;
+            }
+            case R.id.menu_speak_answer: {
+                speakAnswer();
+                break;
+            }
+            case R.id.hint_option:{
+                //Method that allows the user to view the available hint options
             }
 
             case R.id.menu_paint: {
