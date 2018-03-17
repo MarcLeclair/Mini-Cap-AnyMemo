@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:focusable="true"    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="1pt"
+        android:paddingBottom="1pt"
+        android:paddingLeft="1pt"
+        android:paddingStart="1pt">
+
+        <Button
+            android:id="@+id/picture_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/picture_hint"
+            android:visibility="invisible"/>
+
+        <Button
+            android:id="@+id/multiple_choice_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/multiple_choice_hint"
+            android:visibility="invisible"/>
+
+        <Button
+            android:id="@+id/letter_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/letter_hint"
+            android:visibility="invisible"/>
+
+
+    </LinearLayout>
+</FrameLayout>

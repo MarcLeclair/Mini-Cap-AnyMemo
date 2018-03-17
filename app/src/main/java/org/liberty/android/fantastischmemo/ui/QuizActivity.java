@@ -152,8 +152,14 @@ public class QuizActivity extends QACardActivity {
         }
     }
 
-    public boolean displayHintOptions(MenuItem item){
-        switch  (item.getItemId()){
+    public boolean onCreateHintOptions(MenuItem item ){
+
+        //Button pictureHint = (Button) findViewById(R.id.picture_hint);
+        switch  (item.getItemId()){/*
+            if (R.id.picture_hint | R.id.multiple_choice_hint | R.id.letter_hint){
+                return true;
+            }*/
+
             case R.id.picture_hint: {
                 if (!isAnswerShown()) {
                     showPictureHint();
@@ -163,7 +169,9 @@ public class QuizActivity extends QACardActivity {
                 break;
             }
             case R.id.multiple_choice_hint: {
+
                 List<Card> mcCards = new ArrayList<>();
+
                 //find random index for array
                 for (int i = 0; i < 3; i++) {
                     int randomNumb = random.nextInt(queueManager.getAllCards().size());
@@ -226,6 +234,8 @@ public class QuizActivity extends QACardActivity {
             }
             case R.id.hint_option:{
                 //Method that allows the user to view the available hint options
+                displayHintOptions(Bundle savedInstanceState);
+
             }
 
             case R.id.menu_paint: {
