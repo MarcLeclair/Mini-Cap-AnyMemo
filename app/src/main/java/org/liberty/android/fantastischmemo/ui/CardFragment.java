@@ -56,7 +56,6 @@ public class CardFragment extends BaseFragment {
 
     private TextView cardTextView;
 
-
     private ImageView imgView;
 
     private String fontFile = null;
@@ -83,9 +82,12 @@ public class CardFragment extends BaseFragment {
 
     private boolean pictureHint = false;
 
+
     private CardTextUtil cardTextUtil;
 
     private String[] imageSearchPaths = {AMEnv.DEFAULT_IMAGE_PATH};
+
+    String TAG = "CardFragment.java";
 
     // The dummy animation is used to handle the nested fragment animation disappearing bug
     // See solution here:
@@ -104,12 +106,14 @@ public class CardFragment extends BaseFragment {
         super.onCreate(bundle);
         mCardText = getArguments().getString(EXTRA_CARD_TEXT);
         cardTextUtil = new CardTextUtil(appComponents(), imageSearchPaths);
+
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -118,13 +122,18 @@ public class CardFragment extends BaseFragment {
         View v = inflater.inflate(R.layout.card_layout, container, false);
         cardTextView = (TextView) v.findViewById(R.id.card_text_view);
         imgView = (ImageView) v.findViewById(R.id.img_hint);
+
         rootView = (LinearLayout) v.findViewById(R.id.root);
+
+
 
 
         if(pictureHint == false) {
             imgView .setVisibility(View.GONE);
             cardTextView.setText(cardTextUtil.getSpannableText(mCardText, displayInHtml, htmlLinebreakConversion));
         }
+
+
 
         // Uncomment the line below for the text field to handle links.
         // The line is commented out because it is not well tested.
@@ -230,9 +239,6 @@ public class CardFragment extends BaseFragment {
         // No definitions, inherrited void onClick(View v)
     }
 
-
-
-
     public static class Builder implements Serializable {
 
         private static final long serialVersionUID = -3698059438530591747L;
@@ -256,6 +262,8 @@ public class CardFragment extends BaseFragment {
         private String fontFile = null;
 
         private Setting.Align textAlignment = Setting.Align.CENTER;
+
+	    private Setting.CardField cardField;
 
         private boolean displayInHtml = true;
 
@@ -334,6 +342,17 @@ public class CardFragment extends BaseFragment {
             return this;
         }
 
+        public Builder setCardField(Setting.CardField cardField) {
+            this.cardField = cardField;
+            return this;
+        }
+
+        public Setting.CardField getCardField() {
+            return cardField;
+        }
+
+
+
         /*
          * Set up the alignment of the text in the card.
          * The parameter gravity is from Gravity.*
@@ -388,6 +407,7 @@ public class CardFragment extends BaseFragment {
             }
 
             fragment.pictureHint = pictureHint;
+
 
             fragment.htmlLinebreakConversion = htmlLinebreakConversion;
 

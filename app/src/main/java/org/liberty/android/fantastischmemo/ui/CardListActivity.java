@@ -80,8 +80,8 @@ public class CardListActivity extends BaseActivity {
     private static final int CARD_WRAPPER_LOADER_ID = 0;
 
     private static final int LEARNED_CARD_ITEM_COLOR = 0x4F00FF00;
-    private static final int REVIEW_CARD_ITEM_COLOR = 0xFFE4B5CC;
-    private static final int FAVOURITE_CARD_ITEM_COLOR = 0x4FFFFF00;
+    private static final int REVIEW_CARD_ITEM_COLOR = 0x4FFFFF00;
+    private static final int FAVOURITE_CARD_ITEM_COLOR = 0xFFE4B5CC;
 
     private String dbPath;
 
@@ -297,7 +297,6 @@ public class CardListActivity extends BaseActivity {
 
     }
 
-
     private void highlightCardViewAsLearned(View view) {
         // Light green color
         view.setBackgroundColor(LEARNED_CARD_ITEM_COLOR);
@@ -500,6 +499,12 @@ public class CardListActivity extends BaseActivity {
 
             answerView.setText(cardTextUtil.getSpannableText(card.getAnswer(), true, false));
 
+            if (scheduler.isCardFavourite(card.getLearningData())){
+                idView.setTextColor(FAVOURITE_CARD_ITEM_COLOR);
+                questionView.setTextColor(FAVOURITE_CARD_ITEM_COLOR);
+                answerView.setTextColor(FAVOURITE_CARD_ITEM_COLOR);
+            }
+
             if (scheduler.isCardNew(card.getLearningData())) {
                 highlightCardViewAsNew(convertView);
             } else if (scheduler.isCardForReview(card.getLearningData())) {
@@ -507,9 +512,6 @@ public class CardListActivity extends BaseActivity {
             }
             else if (scheduler.isCardLearned(card.getLearningData())){
                 highlightCardViewAsLearned(convertView);
-            }
-            else if (scheduler.isCardFavourite(card.getLearningData())){
-                highlightCardViewAsFavourite(convertView);
             }
 
 

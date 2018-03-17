@@ -238,6 +238,16 @@ public class StudyActivity extends QACardActivity {
                 return true;
             }
 
+            case R.id.spelling_test:
+            {
+                //if the person hasn't clicked to get the answer, let them type it in
+                if(!isAnswerShown())
+                {
+                showSpellingTest();
+                }
+                return true;
+            }
+
         }
 
         return false;
@@ -799,4 +809,5 @@ public class StudyActivity extends QACardActivity {
         myIntent.setData(Uri.parse(WEBSITE_HELP_MEMO));
         startActivity(myIntent);
     }
+
 }

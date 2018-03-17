@@ -31,7 +31,7 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
 
     private final String dbPath;
 
-    private static final int CURRENT_VERSION = 5;
+    private static final int CURRENT_VERSION = 6;
 
     private CardDao cardDao = null;
 
@@ -99,28 +99,28 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
 
             // copy learning data
             database.execSQL("update cards set learningData_id = ("
-                + " select _id as learningData_id"
-                + " from learn_tbl where learn_tbl._id = cards.id)");
+                    + " select _id as learningData_id"
+                    + " from learn_tbl where learn_tbl._id = cards.id)");
             database.execSQL("insert into learning_data (acqReps, acqRepsSinceLapse, easiness,"
-                + " grade, lapses, lastLearnDate, nextLearnDate, retReps, "
-                + " retRepsSinceLapse)"
-                + " select acq_reps as acqReps , acq_reps_since_lapse as acqRepsSinceLapse,"
-                + " easiness, grade, lapses,"
-                + " date_learn || ' 00:00:00.000000' as lastLearnDate,"
-                + " datetime(julianday(date_learn) + interval) || '.000000' as nextLearnDate,"
-                + " ret_reps as retReps, ret_reps_since_lapse as retRepsSinceLapse"
-                + " from learn_tbl");
+                    + " grade, lapses, lastLearnDate, nextLearnDate, retReps, "
+                    + " retRepsSinceLapse)"
+                    + " select acq_reps as acqReps , acq_reps_since_lapse as acqRepsSinceLapse,"
+                    + " easiness, grade, lapses,"
+                    + " date_learn || ' 00:00:00.000000' as lastLearnDate,"
+                    + " datetime(julianday(date_learn) + interval) || '.000000' as nextLearnDate,"
+                    + " ret_reps as retReps, ret_reps_since_lapse as retRepsSinceLapse"
+                    + " from learn_tbl");
 
 
             // copy categories
             database.execSQL("insert into categories (name)"
-                + " select category as name from dict_tbl where category != ''"
-                + " and category is not null"
-                + " group by category");
+                    + " select category as name from dict_tbl where category != ''"
+                    + " and category is not null"
+                    + " group by category");
             database.execSQL("update cards set category_id = ("
-                + " select id as category_id from categories as cat"
-                + " join dict_tbl as dic on dic.category = cat.name"
-                + " where cards.id = dic._id)");
+                    + " select id as category_id from categories as cat"
+                    + " join dict_tbl as dic on dic.category = cat.name"
+                    + " where cards.id = dic._id)");
 
             // Update category if the category is null
             database.execSQL("update cards "
@@ -134,7 +134,7 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
 
             // Set unused fields
             database.execSQL("update cards"
-                + " set cardType = 0");
+                    + " set cardType = 0");
 
 
         }
@@ -159,10 +159,29 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
             try {
                 database.execSQL("alter table learning_data add column firstLearnDate VARCHAR");
                 database.execSQL("update learning_data set firstLearnDate='2010-01-01 00:00:00.000000'");
+                database.execSQL("alter table settings add column learningMode INTEGER");
+                database.execSQL("update settings set learningMode='0'");
+                Log.d(TAG, "Adding  new column called learningMode for db version " + oldVersion);
+                database.execSQL("alter table cards add column imgPath VARCHAR");
+                database.execSQL("update cards set imgPath=''");
+                Log.d(TAG, "Adding  new column called imgPath for db version " + oldVersion);
+                database.execSQL("alter table cards add column learningDate VARCHAR");
+                database.execSQL("update cards set learningDate='0000-00-00 00:00:00.000000'");
+                Log.d(TAG, "Adding  new column called learningDate for db version " + oldVersion);
             } catch (android.database.SQLException e) {
                 Log.e(TAG, "Upgrading failed, the column firstLearnData might already exists.", e);
+                Log.e(TAG, "Upgrading failed, the column learningMode might already exists.", e);
+                Log.e(TAG, "Upgrading failed, the column imgPath might already exists.", e);
+                Log.e(TAG, "Upgrading failed, the column learningDate might already exists.", e);
             }
         }
+        if(oldVersion <= 5){
+            database.execSQL("alter table learning_data add column favourite INTEGER");
+            database.execSQL("update learning_data set favourite='0'");
+            Log.d(TAG, "Adding  new column called favourite for db version " + oldVersion);
+        }
+
+
     }
 
     @Override
