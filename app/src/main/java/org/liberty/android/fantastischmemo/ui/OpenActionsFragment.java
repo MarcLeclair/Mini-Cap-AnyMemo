@@ -160,12 +160,11 @@ public class OpenActionsFragment extends BaseDialogFragment {
             }
 
             if (v == workoutModeItem) {
-                // custom dialog
+
                 final Dialog dialog = new Dialog(mActivity);
                 dialog.setContentView(R.layout.workout_mode_dialogue);
                 dialog.setTitle("Title...");
 
-                // set the custom dialog components - text, image and button
                 TextView workoutModeMessage = (TextView) dialog.findViewById(R.id.workout_mode_message);
                 workoutModeMessage.setText("By adding this deck to workout mode, you will be able to study a number of cards every workout.");
 
@@ -195,10 +194,19 @@ public class OpenActionsFragment extends BaseDialogFragment {
                     public void onClick(View v) {
                         int numDays = 5;
                         try {
-                            Log.d(TAG, "Date as string " + startDateMessage.getText()
-                                    .toString());
+			//retrieving the date as a string, and putting it an an array
+			// converting that array to a date stored in the variable startDate	
+                            String dateAsString = startDateMessage.getText().toString();
+                            String [] dateAsArray;
+                            Log.d(TAG, "Date as string is "+ dateAsString );
+                            dateAsArray = dateAsString.split("/");
+                            Date startDate = DateUtil.getDate(
+                                    Integer.parseInt(dateAsArray[0]),
+                                    Integer.parseInt(dateAsArray[1]),
+                                    Integer.parseInt(dateAsArray[2]));
+
                             setWorkoutModeDates(AnyMemoDBOpenHelperManager.getHelper
-                                    (mActivity, dbPath), numDays);
+                                    (mActivity, dbPath), numDays, startDate);
                         } catch (Exception e) {
                             Log.e(TAG, "Recent list throws exception  (Usually can " +
                                     "be safely ignored)", e);
@@ -287,7 +295,7 @@ public class OpenActionsFragment extends BaseDialogFragment {
         }
     };
 
-    private boolean setWorkoutModeDates(AnyMemoDBOpenHelper helper, int numDays) {
+    private boolean setWorkoutModeDates(AnyMemoDBOpenHelper helper, int numDays, Date startDate) {
 
         CardDao cardDao = helper.getCardDao();
         List<Card> cards = cardDao.getAllCards(null);
@@ -300,10 +308,9 @@ public class OpenActionsFragment extends BaseDialogFragment {
         Log.d(TAG, "card numbers " + nbCardsPerWorkout);
 
         int count = 0;
-        int addDays = 1;
+        int addDays = -1;
 
         Log.d(TAG, "before setting the date");
-        Date startDate = new Date();
         Date learningDate;
 
         for (Card card : cards) {
