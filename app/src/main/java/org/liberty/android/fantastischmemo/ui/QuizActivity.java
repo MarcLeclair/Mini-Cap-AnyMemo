@@ -226,6 +226,9 @@ public class QuizActivity extends QACardActivity {
         return false;
     }
 
+
+
+
     @Override
     protected boolean onClickQuestionText() {
         if ((option.getSpeakingType() == Option.SpeakingType.AUTOTAP

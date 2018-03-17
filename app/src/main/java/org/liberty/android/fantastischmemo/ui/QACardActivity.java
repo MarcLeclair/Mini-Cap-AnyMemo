@@ -1096,6 +1096,11 @@ public abstract class QACardActivity extends BaseActivity {
         return true;
     }
 
+    protected boolean showHintOptions(){
+        //
+        displayHintOptions(showLetterHint(int letterHintCounter), showSpellingTest(), showMcHint(List<Card> deck));
+    }
+
     protected boolean showLetterHint(int letterHintCounter) {
         //the method is in the line 206
         displayLetterHint(true, letterHintCounter);
