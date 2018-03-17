@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 package org.liberty.android.fantastischmemo.ui;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -29,6 +30,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
 import org.liberty.android.fantastischmemo.R;
 import org.liberty.android.fantastischmemo.common.AMPrefKeys;
@@ -45,9 +48,10 @@ import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelperManager;
 import org.liberty.android.fantastischmemo.dao.CardDao;
 import org.liberty.android.fantastischmemo.utils.DatabaseUtil;
 
+import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
+import java.util.TimeZone;
 
 import javax.inject.Inject;
 
@@ -152,14 +156,37 @@ public class OpenActionsFragment extends BaseDialogFragment {
             }
 
             if (v == workoutModeItem) {
-                new AlertDialog.Builder(mActivity)
-                        .setTitle(getString(R.string.add_to_workout_mode))
-                        .setMessage(getString(R.string.add_to_workout_mode_message))
-                        .setPositiveButton(getString(R.string.add_to_workout_mode), new DialogInterface
-                                .OnClickListener(){
-                            @Override
-                            public void onClick(DialogInterface dialog, int which ){
-                                int numDays = 5;
+                // custom dialog
+                final Dialog dialog = new Dialog(mActivity);
+                dialog.setContentView(R.layout.workout_mode_dialogue);
+                dialog.setTitle("Title...");
+
+                // set the custom dialog components - text, image and button
+                TextView workoutModeMessage = (TextView) dialog.findViewById(R.id.workout_mode_message);
+                workoutModeMessage.setText("By adding this deck to workout mode, you will be able to study a number of cards every workout.");
+
+                final TextView setStartDateMessage = (TextView) dialog.findViewById(R.id.set_start_date_message);
+                setStartDateMessage.setText("Your chosen date will show up here");
+                Button pickStartDateButton = (Button) dialog.findViewById(R.id.pick_start_date_button);
+                pickStartDateButton.setOnClickListener(new View.OnClickListener(){
+
+                    @Override
+                    public void onClick(View v){
+
+                        PickStartDateFragment newFragment = new PickStartDateFragment();
+                        newFragment.setText(setStartDateMessage);
+                        newFragment.show(mActivity.getSupportFragmentManager(), "DatePicker");
+                    }
+                });
+                pickStartDateButton.setText("Pick the start date");
+
+                Button positiveButton = (Button) dialog.findViewById(R.id.button_ok);
+                positiveButton.setText("Add to workout mode");
+                // if button is clicked, close the custom dialog
+                positiveButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int numDays = 5;
                                     try {
                                         setWorkoutModeDates(AnyMemoDBOpenHelperManager.getHelper
                                                 (mActivity, dbPath), numDays);
@@ -168,12 +195,12 @@ public class OpenActionsFragment extends BaseDialogFragment {
                                     }
                             /* Refresh the list */
                                 mActivity.restartActivity();
-                            }
-                        })
-                        .setNegativeButton(getString(R.string.cancel_text), null)
-                        .create()
-                        .show();
 
+                        dialog.dismiss();
+                    }
+                });
+
+                dialog.show();
             }
 
             if (v == editItem) {
@@ -288,3 +315,31 @@ public class OpenActionsFragment extends BaseDialogFragment {
     }
 }
 
+
+
+
+
+               // new AlertDialog.Builder(mActivity)
+
+//                        .setTitle(getString(R.string.add_to_workout_mode))
+//                        .setMessage(getString(R.string.add_to_workout_mode_message))
+//                        .setPositiveButton(getString(R.string.add_to_workout_mode), new DialogInterface
+//                                .OnClickListener(){
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which ){
+//                                int numDays = 5;
+//                                    try {
+//                                        setWorkoutModeDates(AnyMemoDBOpenHelperManager.getHelper
+//                                                (mActivity, dbPath), numDays);
+//                                    } catch (Exception e) {
+//                                        Log.e(TAG, "Recent list throws exception (Usually can be safely ignored)", e);
+//                                    }
+//                            /* Refresh the list */
+//                                mActivity.restartActivity();
+//                            }
+//                        })
+//                        .setNegativeButton(getString(R.string.cancel_text), null)
+//                        .create()
+//                        .show();
+
+          //  }
