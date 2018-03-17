@@ -25,6 +25,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,21 +34,37 @@ import org.liberty.android.fantastischmemo.R;
 import org.liberty.android.fantastischmemo.common.AMPrefKeys;
 import org.liberty.android.fantastischmemo.common.BaseActivity;
 import org.liberty.android.fantastischmemo.common.BaseDialogFragment;
+import org.liberty.android.fantastischmemo.entity.Card;
 import org.liberty.android.fantastischmemo.utils.AMFileUtil;
 import org.liberty.android.fantastischmemo.utils.AMPrefUtil;
+import org.liberty.android.fantastischmemo.utils.DateUtil;
 import org.liberty.android.fantastischmemo.utils.RecentListUtil;
 import org.liberty.android.fantastischmemo.utils.ShareUtil;
+import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelper;
+import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelperManager;
+import org.liberty.android.fantastischmemo.dao.CardDao;
+import org.liberty.android.fantastischmemo.utils.DatabaseUtil;
+
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.inject.Inject;
 
+
+
 public class OpenActionsFragment extends BaseDialogFragment {
+
+    @Inject DatabaseUtil databaseUtil;
+
     public static String EXTRA_DBPATH = "dbpath";
+    static String TAG = OpenActionsFragment.class.getSimpleName();
     private BaseActivity mActivity;
 
     private String dbPath;
 
     private View studyItem;
-    private View studyModeItem;
+    private View workoutModeItem;
     private View editItem;
     private View listItem;
     private View quizItem;
@@ -56,6 +73,7 @@ public class OpenActionsFragment extends BaseDialogFragment {
     private View statisticsItem;
     private View shareItem;
     private View deleteItem;
+    Context context;
 
     @Inject AMFileUtil amFileUtil;
 
@@ -65,6 +83,7 @@ public class OpenActionsFragment extends BaseDialogFragment {
 
     @Inject AMPrefUtil amPrefUtil;
 
+    AnyMemoDBOpenHelper helper;
 
     public OpenActionsFragment() { }
 
@@ -72,6 +91,7 @@ public class OpenActionsFragment extends BaseDialogFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         mActivity = (BaseActivity) context;
+
     }
     @Override
     public void onCreate(Bundle bundle) {
@@ -80,6 +100,7 @@ public class OpenActionsFragment extends BaseDialogFragment {
         Bundle args = this.getArguments();
         dbPath = args.getString(EXTRA_DBPATH);
         setStyle(DialogFragment.STYLE_NO_TITLE, 0);
+
     }
 
     @Override
@@ -90,8 +111,8 @@ public class OpenActionsFragment extends BaseDialogFragment {
         studyItem = v.findViewById(R.id.study);
         studyItem.setOnClickListener(buttonClickListener);
 
-        studyModeItem = v.findViewById(R.id.study_mode);
-        studyModeItem.setOnClickListener(buttonClickListener);
+        workoutModeItem = v.findViewById(R.id.study_mode);
+        workoutModeItem.setOnClickListener(buttonClickListener);
 
         editItem = v.findViewById(R.id.edit);
         editItem.setOnClickListener(buttonClickListener);
@@ -130,8 +151,28 @@ public class OpenActionsFragment extends BaseDialogFragment {
                 recentListUtil.addToRecentList(dbPath);
             }
 
-            if (v == studyModeItem) {
-    //TODO
+            if (v == workoutModeItem) {
+                new AlertDialog.Builder(mActivity)
+                        .setTitle(getString(R.string.add_to_workout_mode))
+                        .setMessage(getString(R.string.add_to_workout_mode_message))
+                        .setPositiveButton(getString(R.string.add_to_workout_mode), new DialogInterface
+                                .OnClickListener(){
+                            @Override
+                            public void onClick(DialogInterface dialog, int which ){
+                                int numDays = 5;
+                                    try {
+                                        setWorkoutModeDates(AnyMemoDBOpenHelperManager.getHelper
+                                                (mActivity, dbPath), numDays);
+                                    } catch (Exception e) {
+                                        Log.e(TAG, "Recent list throws exception (Usually can be safely ignored)", e);
+                                    }
+                            /* Refresh the list */
+                                mActivity.restartActivity();
+                            }
+                        })
+                        .setNegativeButton(getString(R.string.cancel_text), null)
+                        .create()
+                        .show();
 
             }
 
@@ -208,5 +249,42 @@ public class OpenActionsFragment extends BaseDialogFragment {
             dismiss();
         }
     };
+
+    private boolean setWorkoutModeDates(AnyMemoDBOpenHelper helper, int numDays) {
+
+        CardDao cardDao = helper.getCardDao();
+        List<Card> cards = cardDao.getAllCards(null);
+        Log.d(TAG, "card numbers " + cards.size());
+        if (cards.size() == 0) {
+            //if the deck size is equal to 0, skip the logic below
+            return false;
+        }
+        int nbCardsPerWorkout = cards.size() / numDays;
+        Log.d(TAG, "card numbers " + nbCardsPerWorkout);
+
+        int count = 0;
+        int addDays = 1;
+
+        Log.d(TAG, "before setting the date");
+        Date startDate = new Date();
+        Date learningDate;
+
+        for (Card card : cards) {
+            if (count == nbCardsPerWorkout) {
+                count = 0;
+                addDays++;
+            }
+            learningDate = DateUtil.addDays(startDate,
+                    addDays);
+            card.setLearningDate(learningDate);
+            cardDao.update(card);
+            Log.d(TAG, "date is set to : " + card.getLearningDate
+                    ());
+            count++;
+        }
+        AnyMemoDBOpenHelperManager.releaseHelper(helper);
+        //if the deck size is not equal to 0, return true
+        return false;
+    }
 }
 
