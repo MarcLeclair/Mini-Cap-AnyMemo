@@ -48,18 +48,16 @@ import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelperManager;
 import org.liberty.android.fantastischmemo.dao.CardDao;
 import org.liberty.android.fantastischmemo.utils.DatabaseUtil;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 import javax.inject.Inject;
 
 
-
 public class OpenActionsFragment extends BaseDialogFragment {
 
-    @Inject DatabaseUtil databaseUtil;
+    @Inject
+    DatabaseUtil databaseUtil;
 
     public static String EXTRA_DBPATH = "dbpath";
     static String TAG = OpenActionsFragment.class.getSimpleName();
@@ -79,17 +77,22 @@ public class OpenActionsFragment extends BaseDialogFragment {
     private View deleteItem;
     Context context;
 
-    @Inject AMFileUtil amFileUtil;
+    @Inject
+    AMFileUtil amFileUtil;
 
-    @Inject RecentListUtil recentListUtil;
+    @Inject
+    RecentListUtil recentListUtil;
 
-    @Inject ShareUtil shareUtil;
+    @Inject
+    ShareUtil shareUtil;
 
-    @Inject AMPrefUtil amPrefUtil;
+    @Inject
+    AMPrefUtil amPrefUtil;
 
     AnyMemoDBOpenHelper helper;
 
-    public OpenActionsFragment() { }
+    public OpenActionsFragment() {
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -97,6 +100,7 @@ public class OpenActionsFragment extends BaseDialogFragment {
         mActivity = (BaseActivity) context;
 
     }
+
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
@@ -109,7 +113,7 @@ public class OpenActionsFragment extends BaseDialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
         getDialog().setCanceledOnTouchOutside(true);
         View v = inflater.inflate(R.layout.open_actions_layout, container, false);
         studyItem = v.findViewById(R.id.study);
@@ -165,36 +169,42 @@ public class OpenActionsFragment extends BaseDialogFragment {
                 TextView workoutModeMessage = (TextView) dialog.findViewById(R.id.workout_mode_message);
                 workoutModeMessage.setText("By adding this deck to workout mode, you will be able to study a number of cards every workout.");
 
-                final TextView setStartDateMessage = (TextView) dialog.findViewById(R.id.set_start_date_message);
-                setStartDateMessage.setText("Your chosen date will show up here");
-                Button pickStartDateButton = (Button) dialog.findViewById(R.id.pick_start_date_button);
-                pickStartDateButton.setOnClickListener(new View.OnClickListener(){
+                final TextView startDateMessage = (TextView) dialog.findViewById(R.id.start_date_message);
+                startDateMessage.setText("Your chosen date will show up here");
+
+                final Button startDateButton = (Button) dialog.findViewById(R.id.start_date_button);
+                startDateButton.setOnClickListener(new View.OnClickListener() {
 
                     @Override
-                    public void onClick(View v){
+                    public void onClick(View v) {
 
-                        PickStartDateFragment newFragment = new PickStartDateFragment();
-                        newFragment.setText(setStartDateMessage);
-                        newFragment.show(mActivity.getSupportFragmentManager(), "DatePicker");
+                        PickStartDateFragment pickStartDateFragment = new PickStartDateFragment();
+                        pickStartDateFragment.setText(startDateMessage);
+                        pickStartDateFragment.show(mActivity.getSupportFragmentManager(), "DatePicker");
+
                     }
                 });
-                pickStartDateButton.setText("Pick the start date");
+                startDateButton.setText("Pick the start date");
 
                 Button positiveButton = (Button) dialog.findViewById(R.id.button_ok);
                 positiveButton.setText("Add to workout mode");
-                // if button is clicked, close the custom dialog
+
+                // if button is clicked, set the new workout dates for each cards within the deck
                 positiveButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         int numDays = 5;
-                                    try {
-                                        setWorkoutModeDates(AnyMemoDBOpenHelperManager.getHelper
-                                                (mActivity, dbPath), numDays);
-                                    } catch (Exception e) {
-                                        Log.e(TAG, "Recent list throws exception (Usually can be safely ignored)", e);
-                                    }
+                        try {
+                            Log.d(TAG, "Date as string " + startDateMessage.getText()
+                                    .toString());
+                            setWorkoutModeDates(AnyMemoDBOpenHelperManager.getHelper
+                                    (mActivity, dbPath), numDays);
+                        } catch (Exception e) {
+                            Log.e(TAG, "Recent list throws exception  (Usually can " +
+                                    "be safely ignored)", e);
+                        }
                             /* Refresh the list */
-                                mActivity.restartActivity();
+                        mActivity.restartActivity();
 
                         dialog.dismiss();
                     }
@@ -250,20 +260,20 @@ public class OpenActionsFragment extends BaseDialogFragment {
 
             if (v == deleteItem) {
                 new AlertDialog.Builder(mActivity)
-                    .setTitle(getString(R.string.delete_text))
-                    .setMessage(getString(R.string.fb_delete_message))
-                    .setPositiveButton(getString(R.string.delete_text), new DialogInterface.OnClickListener(){
-                        @Override
-                        public void onClick(DialogInterface dialog, int which ){
-                            amFileUtil.deleteDbSafe(dbPath);
-                            recentListUtil.deleteFromRecentList(dbPath);
+                        .setTitle(getString(R.string.delete_text))
+                        .setMessage(getString(R.string.fb_delete_message))
+                        .setPositiveButton(getString(R.string.delete_text), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                amFileUtil.deleteDbSafe(dbPath);
+                                recentListUtil.deleteFromRecentList(dbPath);
                             /* Refresh the list */
-                            mActivity.restartActivity();
-                        }
-                    })
-                    .setNegativeButton(getString(R.string.cancel_text), null)
-                    .create()
-                    .show();
+                                mActivity.restartActivity();
+                            }
+                        })
+                        .setNegativeButton(getString(R.string.cancel_text), null)
+                        .create()
+                        .show();
             }
 
             if (v == cardPlayerItem) {
@@ -314,32 +324,3 @@ public class OpenActionsFragment extends BaseDialogFragment {
         return false;
     }
 }
-
-
-
-
-
-               // new AlertDialog.Builder(mActivity)
-
-//                        .setTitle(getString(R.string.add_to_workout_mode))
-//                        .setMessage(getString(R.string.add_to_workout_mode_message))
-//                        .setPositiveButton(getString(R.string.add_to_workout_mode), new DialogInterface
-//                                .OnClickListener(){
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which ){
-//                                int numDays = 5;
-//                                    try {
-//                                        setWorkoutModeDates(AnyMemoDBOpenHelperManager.getHelper
-//                                                (mActivity, dbPath), numDays);
-//                                    } catch (Exception e) {
-//                                        Log.e(TAG, "Recent list throws exception (Usually can be safely ignored)", e);
-//                                    }
-//                            /* Refresh the list */
-//                                mActivity.restartActivity();
-//                            }
-//                        })
-//                        .setNegativeButton(getString(R.string.cancel_text), null)
-//                        .create()
-//                        .show();
-
-          //  }

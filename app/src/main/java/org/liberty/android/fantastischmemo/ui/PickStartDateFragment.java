@@ -2,13 +2,9 @@ package org.liberty.android.fantastischmemo.ui;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.os.Bundle;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.TextView;
-
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -20,9 +16,6 @@ https://stackoverflow.com/questions/27225815/android-how-to-show-datepicker-in-f
 public class PickStartDateFragment extends android.support.v4.app.DialogFragment implements DatePickerDialog.OnDateSetListener {
 
     TextView text;
-    int year;
-    int month;
-    int day;
     String returnedString;
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -37,37 +30,28 @@ public class PickStartDateFragment extends android.support.v4.app.DialogFragment
         this.text = text;
     }
 
-//    public Date convertStringToDate(){
-//        SimpleDateFormat date= new SimpleDateFormat("dd-MM-yyyy");
-//        Date date = date.parse(returnedString);
-//    }
-
-    public void setYear(int year){
-        this.year = year;
-    }
-
-    public void setMonth(int month){
-        this.month = month;
-    }
-
-    public void setDay(int day){
-        this.day = day;
+    public static Date getDate(int year, int month, int day) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, year);
+        cal.set(Calendar.MONTH, month);
+        cal.set(Calendar.DAY_OF_MONTH, day);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal.getTime();
     }
 
     public void setReturnedString(String input){
         returnedString = input;
     }
 
-
-    public void onDateSet(DatePicker view, int yy, int mm, int dd) {
-        populateSetDate(yy, mm+1, dd);
-        setYear(yy);
-        setMonth(mm);
-        setDay(dd);
-        }
-    public void populateSetDate(int year, int month, int day) {
-        setReturnedString(month+"/"+day+"/"+year);
-        text.setText(returnedString);
+    public void onDateSet(DatePicker view, int yyyy, int mm, int dd) {
+        populateSetDate(yyyy, mm+1, dd);
     }
 
+    public void populateSetDate(int year, int month, int day) {
+        setReturnedString(day+"/"+month+"/"+year);
+        text.setText(returnedString);
+    }
 }
