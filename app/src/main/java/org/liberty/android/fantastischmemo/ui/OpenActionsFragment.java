@@ -334,7 +334,7 @@ public class OpenActionsFragment extends BaseDialogFragment {
         }
     };
 
-    private boolean setWorkoutModeDates(AnyMemoDBOpenHelper helper, int numDays, Date startDate) {
+    public boolean setWorkoutModeDates(AnyMemoDBOpenHelper helper, int numDays, Date startDate) {
 
         CardDao cardDao = helper.getCardDao();
         List<Card> cards = cardDao.getAllCards(null);
@@ -347,12 +347,13 @@ public class OpenActionsFragment extends BaseDialogFragment {
         Log.d(TAG, "card numbers " + nbCardsPerWorkout);
 
         int count = 0;
-        int addDays = -1;
+        int addDays = 0;
 
         Log.d(TAG, "before setting the date");
         Date learningDate;
 
         for (Card card : cards) {
+
             if (count == nbCardsPerWorkout) {
                 count = 0;
                 addDays++;
@@ -367,6 +368,6 @@ public class OpenActionsFragment extends BaseDialogFragment {
         }
         AnyMemoDBOpenHelperManager.releaseHelper(helper);
         //if the deck size is not equal to 0, return true
-        return false;
+        return true;
     }
 }
