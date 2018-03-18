@@ -20,7 +20,6 @@ import static org.junit.Assert.assertEquals;
 public class CardTest {
 
     private final Card card = new Card();
-    private static final boolean[] TRUE_AND_FALSE = {true, false};
 
     String TAG = "CardTest.java";
 
