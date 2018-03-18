@@ -68,6 +68,7 @@ import org.liberty.android.fantastischmemo.utils.AboutUtil;
 import org.liberty.android.fantastischmemo.utils.DatabaseUtil;
 import org.liberty.android.fantastischmemo.utils.RecentListActionModeUtil;
 import org.liberty.android.fantastischmemo.utils.RecentListUtil;
+import org.liberty.android.fantastischmemo.utils.WorkOutListUtil;
 import org.liberty.android.fantastischmemo.widget.AnyMemoWidgetProvider;
 
 import java.io.File;
@@ -92,6 +93,8 @@ public class AnyMemo extends BaseActivity {
     @Inject AMFileUtil amFileUtil;
 
     @Inject RecentListUtil recentListUtil;
+
+    @Inject WorkOutListUtil workoutListUtil;
 
     @Inject DatabaseUtil databaseUtil;
 
@@ -176,10 +179,10 @@ public class AnyMemo extends BaseActivity {
         tabLayout.getTabAt(1).setIcon(R.drawable.cabinet);
         tabLayout.getTabAt(2).setIcon(R.drawable.download_tab);
         tabLayout.getTabAt(3).setIcon(R.drawable.misc);
-
-        TabLayout.Tab tab  = tabLayout.newTab();
-        tab.setIcon(R.drawable.learning_mode);
-        tabLayout.addTab(tab,4);
+        tabLayout.getTabAt(4).setIcon(R.drawable.learning_mode);
+        //TabLayout.Tab tab  = tabLayout.newTab();
+        //tab.setIcon(R.drawable.learning_mode);
+        //tabLayout.addTab(tab,4);
         //tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.learning_mode));
         final NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 
@@ -465,7 +468,7 @@ public class AnyMemo extends BaseActivity {
             }
 
             recentListUtil.addToRecentList(newFile.getAbsolutePath());
-
+            workoutListUtil.addToRecentList(newFile.getAbsolutePath());
             Intent intent = new Intent();
             intent.setClass(AnyMemo.this, PreviewEditActivity.class);
             intent.putExtra(PreviewEditActivity.EXTRA_DBPATH, newFile.getAbsolutePath());
@@ -485,7 +488,8 @@ public class AnyMemo extends BaseActivity {
                 new RecentListFragment(),
                 new OpenTabFragment(),
                 new DownloadTabFragment(),
-                new MiscTabFragment()
+                new MiscTabFragment(),
+                new WorkoutTabFragment()
         };
 
         public MainPagerAdapter(FragmentManager fm) {

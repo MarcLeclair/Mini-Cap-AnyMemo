@@ -132,6 +132,13 @@ public class OpenActionsFragment extends BaseDialogFragment {
 
             if (v == studyModeItem) {
     //TODO
+                /* Open dialog
+                  1.ask number of card / day or # of days
+                  2. Save to db
+                  3.Set daily alarm @ x time
+                  4. Save to WorkoutListUtil --> need to have workoutlistutil.java class set up
+                  5. Set up RecentListActionModeUtil
+                 */
 
             }
 
