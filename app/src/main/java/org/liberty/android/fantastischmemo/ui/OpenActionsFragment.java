@@ -25,13 +25,18 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.liberty.android.fantastischmemo.R;
 import org.liberty.android.fantastischmemo.common.AMPrefKeys;
@@ -47,6 +52,7 @@ import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelper;
 import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelperManager;
 import org.liberty.android.fantastischmemo.dao.CardDao;
 import org.liberty.android.fantastischmemo.utils.DatabaseUtil;
+import org.w3c.dom.Text;
 
 import java.util.Date;
 import java.util.List;
@@ -162,14 +168,12 @@ public class OpenActionsFragment extends BaseDialogFragment {
             if (v == workoutModeItem) {
 
                 final Dialog dialog = new Dialog(mActivity);
-                dialog.setContentView(R.layout.workout_mode_dialogue);
-                dialog.setTitle("Title...");
+                dialog.setContentView(R.layout.workout);
+                dialog.show();
 
                 TextView workoutModeMessage = (TextView) dialog.findViewById(R.id.workout_mode_message);
-                workoutModeMessage.setText("By adding this deck to workout mode, you will be able to study a number of cards every workout.");
 
                 final TextView startDateMessage = (TextView) dialog.findViewById(R.id.start_date_message);
-                startDateMessage.setText("Your chosen date will show up here");
 
                 final Button startDateButton = (Button) dialog.findViewById(R.id.start_date_button);
                 startDateButton.setOnClickListener(new View.OnClickListener() {
@@ -183,37 +187,72 @@ public class OpenActionsFragment extends BaseDialogFragment {
 
                     }
                 });
-                startDateButton.setText("Pick the start date");
 
                 Button positiveButton = (Button) dialog.findViewById(R.id.button_ok);
-                positiveButton.setText("Add to workout mode");
+                Button negativeButton = (Button) dialog.findViewById(R.id.button_cancel);
+
+                final EditText num_days_input = (EditText) dialog.findViewById(R.id.num_days_input);
+                final TextInputLayout numDaysInputWrapper = (TextInputLayout) dialog.findViewById
+                        (R.id.num_days_input_wrapper);
 
                 // if button is clicked, set the new workout dates for each cards within the deck
                 positiveButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        int numDays = 5;
+                        final String numDaysInput = numDaysInputWrapper.getEditText().getText()
+                                .toString();
+                        int numDays;
+
+                        int maxNumCards = AnyMemoDBOpenHelperManager.getHelper(mActivity, dbPath)
+                                .getCardDao().getAllCards(null).size();
+                        String dateAsString = startDateMessage.getText().toString();
                         try {
-			//retrieving the date as a string, and putting it an an array
-			// converting that array to a date stored in the variable startDate	
-                            String dateAsString = startDateMessage.getText().toString();
-                            String [] dateAsArray;
-                            Log.d(TAG, "Date as string is "+ dateAsString );
-                            dateAsArray = dateAsString.split("/");
-                            Date startDate = DateUtil.getDate(
-                                    Integer.parseInt(dateAsArray[0]),
-                                    Integer.parseInt(dateAsArray[1]),
-                                    Integer.parseInt(dateAsArray[2]));
+                            if (dateAsString.equals("")) {
+                                numDaysInputWrapper.setErrorEnabled(true);
+                                numDaysInputWrapper.setError("Must chose a start date ");
+                            } else {
+                                numDaysInputWrapper.setErrorEnabled(false);
 
-                            setWorkoutModeDates(AnyMemoDBOpenHelperManager.getHelper
-                                    (mActivity, dbPath), numDays, startDate);
+                                String[] dateAsArray;
+                                Log.d(TAG, "Date as string is " + dateAsString);
+                                dateAsArray = dateAsString.split("/");
+                                Date startDate = DateUtil.getDate(
+                                        Integer.parseInt(dateAsArray[0]),
+                                        Integer.parseInt(dateAsArray[1]),
+                                        Integer.parseInt(dateAsArray[2]));
+
+                                if (!numDaysInput.equals("")) {
+                                    numDays = Integer.parseInt(numDaysInput);
+                                } else {
+                                    numDays = 0;
+                                }
+                                if (numDays > maxNumCards || numDays == 0 || numDaysInput.equals("")) {
+                                    numDaysInputWrapper.setErrorEnabled(true);
+                                    numDaysInputWrapper.setError("Must enter a number between 1 and " +
+                                            maxNumCards);
+                                } else {
+                                    numDaysInputWrapper.setErrorEnabled(false);
+
+                                    //retrieving the date as a string, and putting it an an array
+                                    // converting that array to a date stored in the variable startDate
+                                    setWorkoutModeDates(AnyMemoDBOpenHelperManager.getHelper
+                                            (mActivity, dbPath), numDays, startDate);
+                                    dialog.dismiss();
+                                    Toast.makeText(mActivity, "Successfully added deck to study " +
+                                            "mode!", Toast
+                                            .LENGTH_LONG).show();
+                                }
+                            }
                         } catch (Exception e) {
-                            Log.e(TAG, "Recent list throws exception  (Usually can " +
-                                    "be safely ignored)", e);
+                            Log.e(TAG, "Workout mode throws an exception ", e);
                         }
-                            /* Refresh the list */
-                        mActivity.restartActivity();
+                    }
+                });
 
+                negativeButton.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
                         dialog.dismiss();
                     }
                 });
