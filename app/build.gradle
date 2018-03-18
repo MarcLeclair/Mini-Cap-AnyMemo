@@ -138,6 +138,8 @@ dependencies {
 
     annotationProcessor 'com.google.dagger:dagger-compiler:2.8'
     testCompile 'junit:junit:4.12'
+    testCompile 'org.testng:testng:6.9.6'
+    testCompile 'org.robolectric:robolectric:3.0'
 }
 
 static def getBuildString () {
