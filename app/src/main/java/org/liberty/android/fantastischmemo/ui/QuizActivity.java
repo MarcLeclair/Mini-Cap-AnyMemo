@@ -36,6 +36,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Button;
 
 import com.google.common.base.Strings;
 
@@ -154,7 +155,14 @@ public class QuizActivity extends QACardActivity {
 
     public boolean onCreateHintOptions(MenuItem item ){
 
-        //Button pictureHint = (Button) findViewById(R.id.picture_hint);
+        Button letterButton = (Button) findViewById(R.id.letter_hint);
+        Button pictureButton = (Button) findViewById(R.id.picture_hint);
+        Button choiceButton = (Button) findViewById(R.id.multiple_choice_hint);
+
+        letterButton.setVisibility(View.VISIBLE);
+        pictureButton.setVisibility(View.VISIBLE);
+        choiceButton.setVisibility(View.VISIBLE);
+        showHintOption();
         switch  (item.getItemId()){/*
             if (R.id.picture_hint | R.id.multiple_choice_hint | R.id.letter_hint){
                 return true;
@@ -234,7 +242,8 @@ public class QuizActivity extends QACardActivity {
             }
             case R.id.hint_option:{
                 //Method that allows the user to view the available hint options
-                displayHintOptions(Bundle savedInstanceState);
+                showHintOption();
+                break;
 
             }
 

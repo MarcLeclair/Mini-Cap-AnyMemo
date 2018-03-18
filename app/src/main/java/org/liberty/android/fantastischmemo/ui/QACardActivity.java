@@ -995,21 +995,17 @@ public abstract class QACardActivity extends BaseActivity {
 
 
 
-        Button letterButton = (Button) findViewById(R.id.letter_hint);
-        letterButton.setVisibility(View.VISIBLE);
 
-        Button pictureButton = (Button) findViewById(R.id.picture_hint);
-        pictureButton.setVisibility(View.VISIBLE);
-
-        Button choiceButton = (Button) findViewById(R.id.multiple_choice_hint);
-        choiceButton.setVisibility(View.VISIBLE);
 
         if (hintView == true){
+            Button letterButton = (Button) findViewById(R.id.letter_hint);
+            letterButton.setVisibility(View.VISIBLE);
 
+            Button pictureButton = (Button) findViewById(R.id.picture_hint);
+            pictureButton.setVisibility(View.VISIBLE);
 
-
-
-          //  displayLetterHint(boolean enableLetterHint, int letterHintCounter);
+            Button choiceButton = (Button) findViewById(R.id.multiple_choice_hint);
+            choiceButton.setVisibility(View.VISIBLE);
 
 
         }
@@ -1153,6 +1149,11 @@ public abstract class QACardActivity extends BaseActivity {
 
     protected boolean showPictureHint() {
         displayPictureHint(true);
+        return true;
+    }
+
+    protected boolean showHintOption(){
+        //displayHintOptions(Bundle savedInstanceState); Needs to be fixed
         return true;
     }
 
