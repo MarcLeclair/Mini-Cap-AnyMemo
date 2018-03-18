@@ -113,6 +113,9 @@ public class OpenActionFragmentTest {
         Mockito.when(helper.getCardDao()).thenReturn(dao);
         Mockito.when(dao.getAllCards(null)).thenReturn(realCards);
         oaf.setWorkoutModeDates(helper, numDays, date);
+        //the size that the dao's deck of cards returns a value that should be equal to the size of
+        // cards
+        Assert.assertEquals(dao.getAllCards(null).size(), cards.size());
         //since we have 3 cards, and the numDays is 3, this means 1 card is studied per day,
         // starting on the date assigned to the variable "date"
         //each card is studied on a consecutive day
