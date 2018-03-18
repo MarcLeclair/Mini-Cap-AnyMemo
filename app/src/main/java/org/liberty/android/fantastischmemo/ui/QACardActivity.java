@@ -989,8 +989,8 @@ public abstract class QACardActivity extends BaseActivity {
         }
     }
 
-    protected void displayHintOptions(Bundle savedInstanceState){
-        super.onCreate(savedInstanceState);
+    protected void displayHintOptions(List<Card> list){
+        //super.onCreate(savedInstanceState);
         setContentView(R.layout.hint_option);
 
 
@@ -1153,7 +1153,7 @@ public abstract class QACardActivity extends BaseActivity {
     }
 
     protected boolean showHintOption(){
-        //displayHintOptions(Bundle savedInstanceState); Needs to be fixed
+        //displayHintOptions(Bundle.); //Needs to be fixed
         return true;
     }
 
