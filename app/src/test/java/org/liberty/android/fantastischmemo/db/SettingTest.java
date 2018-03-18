@@ -14,7 +14,6 @@ import static org.junit.Assert.assertEquals;
 @RunWith(RobolectricTestRunner.class)
 public class SettingTest {
     private final Setting setting = new Setting();
-    private static final boolean[] TRUE_AND_FALSE = {true, false};
 
     String TAG = "SettingTest.java";
 
