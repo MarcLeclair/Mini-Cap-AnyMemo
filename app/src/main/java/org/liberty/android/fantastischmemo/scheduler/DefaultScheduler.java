@@ -63,6 +63,7 @@ public class DefaultScheduler implements Scheduler {
         int newRetReps = oldData.getRetReps();
         int newAcqRepsSinceLapse = oldData.getAcqRepsSinceLapse();
         int newRetRepsSinceLapse = oldData.getRetRepsSinceLapse();
+        int newFavourites = oldData.getFavourite();
         float newEasiness = oldData.getEasiness();
         Date newFirstLearnDate = oldData.getFirstLearnDate();
 
@@ -145,6 +146,7 @@ public class DefaultScheduler implements Scheduler {
         newData.setRetReps(newRetReps);
         newData.setRetRepsSinceLapse(newRetRepsSinceLapse);
         newData.setFirstLearnDate(newFirstLearnDate);
+        newData.setFavourite(newFavourites);
         return newData;
     }
 
