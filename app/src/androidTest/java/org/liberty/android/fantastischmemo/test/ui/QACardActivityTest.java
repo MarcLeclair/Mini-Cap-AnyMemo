@@ -49,10 +49,10 @@ public class QACardActivityTest extends BaseTest {
         Mockito.when(spyQuizActivity.getCurrentCard()).thenReturn(mockCard);
 
         //compare returned values from displayLetterHint with values that should be displayed
-        Log.d(TAG, "displayLetterHintTest!!!:" + spyQuizActivity.displayLetterHint(20) + "!");
-        if (spyQuizActivity.displayLetterHint(1).equals("l _ _ _ _ _ _") &&
-                spyQuizActivity.displayLetterHint(middleHintCounter).equals("la   _ _ _ _") &&
-                spyQuizActivity.displayLetterHint(pastLastCharacterHintCounter).equals("la  " +
+        Log.d(TAG, "displayLetterHintTest!!!:" + spyQuizActivity.displayLetterHint(true, 20) + "!" + d);
+        if (spyQuizActivity.displayLetterHint(true, 1).equals("l _ _ _ _ _ _") &&
+                spyQuizActivity.displayLetterHint(true, middleHintCounter).equals("la   _ _ _ _") &&
+                spyQuizActivity.displayLetterHint(true, pastLastCharacterHintCounter).equals("la  " +
                         "tête")) {
             valid = true;
 

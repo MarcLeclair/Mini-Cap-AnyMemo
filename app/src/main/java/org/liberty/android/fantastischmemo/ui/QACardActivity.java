@@ -397,7 +397,7 @@ public abstract class QACardActivity extends BaseActivity {
         onPostDisplayCard();
     }
 
-    protected void displayLetterHint(boolean enableLetterHint, int letterHintCounter) {
+    public void displayLetterHint(boolean enableLetterHint, int letterHintCounter) {
 
         // First prepare the text to display
 
