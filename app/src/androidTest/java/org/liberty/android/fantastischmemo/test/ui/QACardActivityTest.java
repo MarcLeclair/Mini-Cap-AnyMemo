@@ -65,7 +65,7 @@ public class QACardActivityTest extends BaseTest {
     public void showMcHintTest() {
         boolean sameOrder = true;
 
-        QuizActivity spyQuizActivity = spy(QuizActivity.class);
+        HintUtil spyHintUtil = spy(HintUtil.class);
 
         Card mockCard1 = Mockito.mock(Card.class);
         Card mockCard2 = Mockito.mock(Card.class);
@@ -93,7 +93,7 @@ public class QACardActivityTest extends BaseTest {
                     .getId());
         }
 
-        List<Card> deckShuffled = spyQuizActivity.shuffleHintDeck(deckNotShuffled);
+        List<Card> deckShuffled = spyHintUtil.shuffleHintDeck(deckNotShuffled);
         for (int i = 0; i < deckNotShuffled.size(); i++) {
             Log.d(TAG, "showMcHintTest: " + " shuffled card id " + deckNotShuffled.get(i).getId());
             if (copyOfDeckNotShuffled.get(i).getId() != deckShuffled.get(i).getId()) {
