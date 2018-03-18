@@ -1,4 +1,3 @@
-
 package org.liberty.android.fantastischmemo.test.ui;
 
 import android.support.test.filters.SmallTest;
@@ -10,6 +9,7 @@ import org.junit.Test;
 import org.liberty.android.fantastischmemo.entity.Card;
 import org.liberty.android.fantastischmemo.test.BaseTest;
 import org.liberty.android.fantastischmemo.ui.QuizActivity;
+import org.liberty.android.fantastischmemo.utils.HintUtil;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
