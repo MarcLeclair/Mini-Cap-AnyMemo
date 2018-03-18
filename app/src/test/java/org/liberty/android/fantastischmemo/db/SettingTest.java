@@ -1,0 +1,33 @@
+package org.liberty.android.fantastischmemo.db;
+
+/**
+ * Created by Wei on 3/18/2018.
+ */
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.liberty.android.fantastischmemo.entity.Setting;
+import org.robolectric.RobolectricTestRunner;
+
+import static org.junit.Assert.assertEquals;
+
+
+@RunWith(RobolectricTestRunner.class)
+public class SettingTest {
+    private final Setting setting = new Setting();
+    private static final boolean[] TRUE_AND_FALSE = {true, false};
+
+    String TAG = "SettingTest.java";
+
+
+    @Test
+    public void testDefaults() {
+        assertEquals(setting.getLearningMode(),(Integer)0);
+    }
+
+    @Test
+    public void testLearningMode() throws Exception {
+        setting.setLearningMode(0);
+        assertEquals((Integer) 0, setting.getLearningMode());
+    }
+
+}
