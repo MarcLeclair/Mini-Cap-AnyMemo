@@ -148,6 +148,8 @@ dependencies {
     testCompile 'org.powermock:powermock-module-junit4-rule-agent:1.6.1'
     testCompile 'org.powermock:powermock-module-junit4-rule:1.6.1'
     testCompile 'org.powermock:powermock-module-junit4:1.6.1'
+    testCompile 'org.testng:testng:6.9.6'
+    testCompile 'org.robolectric:robolectric:3.0'
 }
 
 static def getBuildString () {
