@@ -5,6 +5,8 @@ package org.liberty.android.fantastischmemo.db;
  */
 //import android.support.test.filters.SmallTest;
 
+import android.test.suitebuilder.annotation.SmallTest;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.liberty.android.fantastischmemo.entity.Card;
@@ -23,12 +25,13 @@ public class CardTest {
 
     String TAG = "CardTest.java";
 
-
+    @SmallTest
     @Test
     public void testDefaults() {
         assertEquals(card.getLearningDate(),null);
     }
 
+    @SmallTest
     @Test
     public void testSetLearningDate() throws Exception {
         String date ="2002-11-30 00:00:00.000000";
