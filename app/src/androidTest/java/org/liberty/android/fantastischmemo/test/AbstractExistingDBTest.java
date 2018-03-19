@@ -12,7 +12,6 @@ import org.liberty.android.fantastischmemo.integrationtest.TestHelper;
 
 import java.io.File;
 import java.io.InputStream;
-
 public class AbstractExistingDBTest extends BaseTest {
 
     protected AnyMemoDBOpenHelper helper;
