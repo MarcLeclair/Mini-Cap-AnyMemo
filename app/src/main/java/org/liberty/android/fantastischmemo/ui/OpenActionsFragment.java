@@ -67,6 +67,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 
 import javax.inject.Inject;
 
@@ -391,39 +392,41 @@ public class OpenActionsFragment extends BaseDialogFragment {
 
     //schedule notifications
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void addNotificationScheduler(Date startDate, int numDays) throws ParseException {
+    private boolean addNotificationScheduler(Date startDate, int numDays) throws ParseException {
 
-        // DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
-        //   DateTime notificationDate = formatter.parseDateTime(dateAsString);
-        //   DateTime now = new DateTime();
         DateUtil dt= new DateUtil();
-       // Date now = new Date();
+
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         String dateString =formatter.format(startDate);
-       // Date notificationDate = formatter.parse(dateAsString);
-         // DateUtil dt= new DateUtil();
+
         int days = DateUtil.getDateDifference(startDate);
         int duration=Math.abs(days*24);
+
         final int periodicity = (int) TimeUnit.HOURS.toSeconds(duration);
         final int toleranceInterval = (int) TimeUnit.HOURS.toSeconds(1);
-
-        //  DateTime tomorrow = now.plusDays(0).withTimeAtStartOfDay().plusMinutes(1);
-        //  int windowStart = Hours.hoursBetween(now, tomorrow).getHours() * 60 * 60;
 
         Bundle bundle = new Bundle();
         bundle.putString("startdate", dateString);
         bundle.putString("numDays", Integer.toString(numDays));
 
         FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(mActivity));
-        dispatcher.schedule(dispatcher.newJobBuilder()
+        int result =
+                dispatcher.schedule(dispatcher.newJobBuilder()
                 .setService(NotificationService.class)
                 .setTag("First day of your work out")
-                .setTrigger(Trigger.executionWindow(periodicity, periodicity + toleranceInterval))//.setInitialDelay(DAYS.toSeconds(1))
+                .setTrigger(Trigger.executionWindow(periodicity, periodicity + toleranceInterval))
                 .setReplaceCurrent(true)
                 .setRecurring(false)
                 .setConstraints(Constraint.ON_UNMETERED_NETWORK)
                 .setExtras(bundle)
                 .build()
         );
+        if (result == FirebaseJobDispatcher.SCHEDULE_RESULT_SUCCESS) {
+            Log.d(TAG, "Job scheduled");
+            return true;
+        } else {
+            Log.d(TAG, "Job not scheduled");
+            return false;
+        }
     }
 }
