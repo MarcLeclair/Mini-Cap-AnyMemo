@@ -41,6 +41,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Button;
 
 import com.google.common.base.Strings;
 
@@ -117,6 +118,8 @@ public abstract class QACardActivity extends BaseActivity {
     String TAG = "spellingHint";
 
     private HintUtil hintUtil;
+
+    Button btn;
 
     /**
      * This needs to be defined before onCreate so in onCreate, all loaders will
@@ -206,6 +209,8 @@ public abstract class QACardActivity extends BaseActivity {
     protected String getDbName() {
         return dbName;
     }
+
+    private boolean hintView = true;
 
     public CardFragment.Builder getDefaultQuestionFragment(Setting.Align questionAlign, String
             questionTypefaceValue, String[] imageSearchPaths) {
@@ -400,6 +405,7 @@ public abstract class QACardActivity extends BaseActivity {
     protected void displayLetterHint(boolean enableLetterHint, int letterHintCounter) {
 
         // First prepare the text to display
+
 
         String questionTypeface = setting.getQuestionFont();
         String answerTypeface = setting.getAnswerFont();
@@ -829,6 +835,7 @@ public abstract class QACardActivity extends BaseActivity {
     }
 
     protected void displayPictureHint(boolean enablePictureHint) {
+       // hintView = false;
         if (getCurrentCard().getImgPath() == null) {
             getCurrentCard().setImgPath("");
         }
@@ -982,6 +989,33 @@ public abstract class QACardActivity extends BaseActivity {
         }
     }
 
+    protected void displayHintOptions(List<Card> list){
+        //super.onCreate(savedInstanceState);
+        setContentView(R.layout.hint_option);
+
+
+
+
+
+        if (hintView == true){
+            Button letterButton = (Button) findViewById(R.id.letter_hint);
+            letterButton.setVisibility(View.VISIBLE);
+
+            Button pictureButton = (Button) findViewById(R.id.picture_hint);
+            pictureButton.setVisibility(View.VISIBLE);
+
+            Button choiceButton = (Button) findViewById(R.id.multiple_choice_hint);
+            choiceButton.setVisibility(View.VISIBLE);
+
+
+        }
+        else{
+           hintView = false;
+        }
+       // displayLetterHint(boolean enableLetterHint, int letterHintCounter);
+      //  displayPictureHint(boolean enablePictureHint) = true;
+    }
+
     protected boolean isAnswerShown() {
         return isAnswerShown;
     }
@@ -1115,6 +1149,11 @@ public abstract class QACardActivity extends BaseActivity {
 
     protected boolean showPictureHint() {
         displayPictureHint(true);
+        return true;
+    }
+
+    protected boolean showHintOption(){
+        //displayHintOptions(Bundle.); //Needs to be fixed
         return true;
     }
 
