@@ -184,5 +184,12 @@
             android:authorities="${packageName}.databasesprovider"
             android:exported="true"
             android:multiprocess="true" />
+        <service
+            android:exported="false"
+            android:name=".service.NotificationService">
+            <intent-filter>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>
+            </intent-filter>
+        </service>
     </application>
 </manifest> 
