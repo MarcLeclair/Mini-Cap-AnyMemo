@@ -45,7 +45,7 @@ public class WorkOutListUtil {
     public String[] getAllRecentDBPath() {
         // TODO: Reload the recentLength from user option.
         // FIXME: temp hack, need re-write, don't need to get it again.
-        recentLength = 7;//option.getWorkoutCount();
+        recentLength = option.getWorkoutCount();
 
         String[] ret = new String[recentLength];
 

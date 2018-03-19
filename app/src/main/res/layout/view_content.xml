@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/workout_day"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:background="#c0392b"/>
+
+    <TextView
+        android:layout_below="@+id/workout_day"
+        android:id="@+id/workout_frequency"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:background="#c0392b"/>
+
+    <TextView
+        android:layout_below="@+id/workout_frequency"
+        android:id="@+id/cards_left"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:background="#c0392b"/>
+
+    <Button
+        android:layout_below="@+id/cards_left"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="START WORKOUT!"/>
+
+</RelativeLayout>

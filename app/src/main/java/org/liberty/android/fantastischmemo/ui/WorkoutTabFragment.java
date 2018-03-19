@@ -1,10 +1,14 @@
 package org.liberty.android.fantastischmemo.ui;
 
+import android.animation.ObjectAnimator;
+import android.animation.TimeInterpolator;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -16,9 +20,11 @@ import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,7 +32,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import org.apache.commons.io.FilenameUtils;
 import org.liberty.android.fantastischmemo.R;
 import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelper;
@@ -38,8 +47,24 @@ import org.liberty.android.fantastischmemo.utils.DatabaseUtil;
 import org.liberty.android.fantastischmemo.utils.RecentListActionModeUtil;
 import org.liberty.android.fantastischmemo.utils.WorkOutListUtil;
 
+
+
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
+import com.daimajia.swipe.SimpleSwipeListener;
+import com.daimajia.swipe.SwipeLayout;
+import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
+import com.github.aakira.expandablelayout.ExpandableLayout;
+import com.github.aakira.expandablelayout.ExpandableLayoutListenerAdapter;
+import com.github.aakira.expandablelayout.ExpandableLinearLayout;
+import com.github.aakira.expandablelayout.Utils;
+
+
+
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.inject.Inject;
@@ -54,9 +79,11 @@ public class WorkoutTabFragment extends BaseFragment {
 
     private final AtomicInteger workoutListVersion = new AtomicInteger(0);
     private final static String TAG = WorkoutTabFragment.class.getSimpleName();
+    private Set<String> dbAdded = new HashSet<>();
+    private List<WorkoutItem> woList = new ArrayList();
+    String[] colors;
 
-    private WorkoutListAdapter woAdapter;
-
+    WorkoutListAdapter woAdapter;
     @Inject WorkOutListUtil workoutList;
 
     @Inject DatabaseUtil databaseUtil;
@@ -65,19 +92,6 @@ public class WorkoutTabFragment extends BaseFragment {
 
 
 
-    private BroadcastReceiver mRemoveSelectedReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            woAdapter.removeSelected();
-        }
-    };
-
-    private BroadcastReceiver mClearSelectionReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            woAdapter.deselectAll();
-        }
-    };
 
     public WorkoutTabFragment() {
     }
@@ -112,22 +126,23 @@ public class WorkoutTabFragment extends BaseFragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
 
-        if (woAdapter != null && !isVisibleToUser) {
-            woAdapter.stopActionMode();
-        }
+       // if (woAdapter != null && !isVisibleToUser) {
+           // woAdapter.stopActionMode();
+       // }
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.recent_list, container, false);
+
+       colors = getContext().getResources().getStringArray(R.array.color_materials);
+
         recentListRecyclerView = (RecyclerView) v.findViewById(R.id.recent_open_list);
-        //RecyclerView.ItemDecoration dividerItemDecoration = new DividerItemDecoration(v.getContext());
-        //recentListRecyclerView.addItemDecoration(dividerItemDecoration);
+        recentListRecyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
 
         recentListRecyclerView.setLayoutManager(new LinearLayoutManager(recentListRecyclerView.getContext()));
+        woAdapter = new WorkoutListAdapter(woList,workoutList);
 
-        /* pre loading stat */
-        woAdapter = new WorkoutListAdapter(getContext(), workoutList, recentListActionModeUtil);
 
         recentListRecyclerView.setAdapter(woAdapter);
 
@@ -161,7 +176,7 @@ public class WorkoutTabFragment extends BaseFragment {
         @Override
         public void onLoadFinished(Loader<List<WorkoutItem>> loader, List<WorkoutItem> ril) {
             if (workoutListVersion.get() == loadedVersion) {
-                woAdapter.setItems(ril);
+               // woAdapter.setItems(ril);
             }
         }
 
@@ -192,7 +207,7 @@ public class WorkoutTabFragment extends BaseFragment {
             // Make sure the recentListVersion is updated so the previous running loadRecentItemsWithNames will fail.
             // Also if multiple loadRecentItemsWithDetails, only one succeeded
             if (workoutListVersion.get() == loadedVersion) {
-                woAdapter.setItems(ril);
+               // woAdapter.setItems(ril);
             }
         }
 
@@ -206,6 +221,9 @@ public class WorkoutTabFragment extends BaseFragment {
         public String dbPath;
         public String dbInfo;
         public int index;
+        public int colorId1;
+        public int colorId2;
+        public TimeInterpolator interpolator;
     }
 
 
@@ -222,12 +240,25 @@ public class WorkoutTabFragment extends BaseFragment {
                 workoutList.deleteFromWorkoutList(allPath[i]);
                 continue;
             }
-
-            ri.dbInfo = getContext().getString(R.string.loading_database);
-            ri.index = index++;
-            ril.add(ri);
-            ri.dbPath = allPath[i];
-            ri.dbName = FilenameUtils.getName(allPath[i]);
+            if(!dbAdded.contains(FilenameUtils.getName(allPath[i]))) {
+                ri.dbInfo = getContext().getString(R.string.loading_database);
+                ri.index = index++;
+                ril.add(ri);
+                ri.dbPath = allPath[i];
+                ri.dbName = FilenameUtils.getName(allPath[i]);
+                if(i > colors.length){
+                    int newIndex = i - colors.length;
+                    ri.colorId1 =  Color.parseColor(colors[i]);
+                    ri.colorId2 = Color.parseColor(colors[i+1]);
+                }
+                else {
+                    ri.colorId1 = Color.parseColor(colors[i]);
+                    ri.colorId2 = Color.parseColor(colors[i+1]);
+                }
+                ri.interpolator = Utils.createInterpolator(Utils.ACCELERATE_DECELERATE_INTERPOLATOR);
+                woList.add(ri);
+                dbAdded.add(FilenameUtils.getName(allPath[i]));
+            }
         }
         return ril;
     }
@@ -255,50 +286,75 @@ public class WorkoutTabFragment extends BaseFragment {
         return ril;
     }
 
-    private static class WorkoutListAdapter extends SelectableAdapter<WorkoutListAdapter.ViewHolder> {
+    public void clearMap(String dpPath){  dbAdded.remove(dpPath);   }
+    private  class WorkoutListAdapter extends RecyclerSwipeAdapter<WorkoutListAdapter.ViewHolder> {
 
-        private List<WorkoutItem> workout =new ArrayList<>();
+        private List<WorkoutItem> workout;
 
-        private RecentListActionModeUtil recentListActionModeUtil;
-        private final Context context;
+        private  Context context;
+        private SparseBooleanArray expandState = new SparseBooleanArray();
+        private WorkOutListUtil woUtil;
 
-        private final WorkOutListUtil workoutUtil;
+       // private final WorkOutListUtil workoutUtil;
 
-        public static class ViewHolder extends RecyclerView.ViewHolder {
+
+        public WorkoutListAdapter(final List<WorkoutItem> data, WorkOutListUtil woUtil) {
+            workout = data;
+            for (int i = 0; i < data.size(); i++) {
+                expandState.append(i, false);
+
+            }
+            this.woUtil = woUtil;
+        }
+        public  class ViewHolder extends RecyclerView.ViewHolder {
+
             private TextView filenameView;
-            private TextView infoView;
-            private TextView dayStudy;
-            private Button moreButton;
-            private View selectedOverlay;
+            private TextView insideView;
+            public RelativeLayout buttonLayout;
+            public ExpandableLinearLayout expandableLayout;
+
+            SwipeLayout swipeLayout;
+            TextView textViewPos;
+            TextView textViewData;
+            Button buttonDelete;
+
 
             public ViewHolder(View view) {
                 super(view);
-                filenameView = (TextView) view.findViewById(R.id.workout_db_name);
-                dayStudy = (TextView) view.findViewById(R.id.workout_day);
-                infoView = (TextView) view.findViewById(R.id.statistcs);
-                moreButton = (Button) view.findViewById(R.id.recent_item_more_button);
-                selectedOverlay = (View) view.findViewById(R.id.selected_overlay);
+
+                filenameView = (TextView) view.findViewById(R.id.textView);
+                buttonLayout = (RelativeLayout) view.findViewById(R.id.button);
+                insideView = (TextView) view.findViewById(R.id.insideView);
+                expandableLayout = (ExpandableLinearLayout) view.findViewById(R.id.expandableLayout);
+
+                swipeLayout = (SwipeLayout) itemView.findViewById(R.id.swipe);
+                //textViewPos = (TextView) itemView.findViewById(R.id.position);
+                //textViewData = (TextView) itemView.findViewById(R.id.text_data);
+                buttonDelete = (Button) itemView.findViewById(R.id.delete);
+
+               /* view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Log.d(getClass().getSimpleName(), "onItemSelected: " + textViewData.getText().toString());
+                        Toast.makeText(view.getContext(), "onItemSelected: " + textViewData.getText().toString(), Toast.LENGTH_SHORT).show();
+
+                    }
+
+                });*/
             }
 
             public void setItem(WorkoutItem item) {
-                filenameView.setText(item.dbName);
-                infoView.setText(item.dbInfo);
-            }
-        }
+                //filenameView.setText(item.dbName);
 
-        public WorkoutListAdapter(Context context,
-                                 WorkOutListUtil workoutListUtil, RecentListActionModeUtil recentListActionModeUtil) {
-            this.context = context;
-            this.workoutUtil = workoutListUtil;
-            this.recentListActionModeUtil = recentListActionModeUtil;
+            }
         }
 
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
+            this.context = parent.getContext();
             LayoutInflater li = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View v = li.inflate(R.layout.workout_item, parent, false);
+            View v = li.inflate(R.layout.recycler_view_list_row, parent, false);
 
 
             return new ViewHolder(v);
@@ -306,79 +362,106 @@ public class WorkoutTabFragment extends BaseFragment {
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, final int position) {
-            final WorkoutItem currentItem = workout.get(position);
-            holder.setItem(currentItem);
+            final WorkoutItem item = workout.get(position);
 
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
+            //holder.swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
+            holder.swipeLayout.addSwipeListener(new SimpleSwipeListener() {
+            @Override
+            public void onClose(SwipeLayout layout) {
+                holder.filenameView.setVisibility(View.VISIBLE);
+                YoYo.with(Techniques.Tada).duration(500).delay(100).playOn(layout.findViewById(R.id.trash));
+            }
+            @Override
+            public void onOpen(SwipeLayout layout) {
+                holder.filenameView.setVisibility(View.INVISIBLE);
+                YoYo.with(Techniques.Tada).duration(500).delay(100).playOn(layout.findViewById(R.id.trash));
+            }
+        });
+             holder.swipeLayout.setOnDoubleClickListener(new SwipeLayout.DoubleClickListener() {
+            @Override
+            public void onDoubleClick(SwipeLayout layout, boolean surface) {
+                Toast.makeText(context, "DoubleClick", Toast.LENGTH_SHORT).show();
+            }
+        });
+        holder.buttonDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mItemManger.removeShownLayouts(holder.swipeLayout);
+                String dbName = workout.get(position).dbPath;
+                WorkoutTabFragment.this.clearMap(dbName);
+                woUtil.deleteFromWorkoutList(dbName);
+                workout.remove(position);
+
+                notifyDataSetChanged();
+
+                notifyItemRemoved(position);
+                notifyItemRangeChanged(position, workout.size());
+                mItemManger.closeAllItems();
+                Toast.makeText(view.getContext(), "Deleted " + dbName + "!", Toast.LENGTH_SHORT).show();
+            }
+        });
+       // holder.textViewPos.setText((position + 1) + ".");
+        mItemManger.bindView(holder.itemView, position);
+
+            holder.setIsRecyclable(false);
+            holder.filenameView.setText(item.dbName);
+            holder.insideView.setText("DbInfo " + item.dbInfo + "\n DbPath " + item.dbPath );
+            holder.itemView.setBackgroundColor(item.colorId1);
+            holder.expandableLayout.setInRecyclerView(true);
+            holder.expandableLayout.setBackgroundColor(item.colorId2);
+            holder.expandableLayout.setInterpolator(item.interpolator);
+            holder.expandableLayout.setExpanded(expandState.get(position));
+            holder.expandableLayout.setListener(new ExpandableLayoutListenerAdapter() {
                 @Override
-                public void onClick(View v) {
-                    if (getSelectedItemCount() == 0) {
-                        Intent myIntent = new Intent();
-                        myIntent.setClass(context, StudyActivity.class);
-                        String dbPath = currentItem.dbPath;
-                        myIntent.putExtra(StudyActivity.EXTRA_DBPATH, dbPath);
-                        workoutUtil.addToRecentList(dbPath);
-                        context.startActivity(myIntent);
-                    } else {
-                        toggleSelection(position);
-                    }
-                   //TODO recentListActionModeUtil.updateActionMode(getSelectedItemCount());
+                public void onPreOpen() {
+                    createRotateAnimator(holder.buttonLayout, 0f, 180f).start();
+                    expandState.put(position, true);
+                }
+
+                @Override
+                public void onPreClose() {
+                    createRotateAnimator(holder.buttonLayout, 180f, 0f).start();
+                    expandState.put(position, false);
                 }
             });
 
-            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            holder.buttonLayout.setRotation(expandState.get(position) ? 180f : 0f);
+            holder.buttonLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public boolean onLongClick(View v) {
-                    if (getSelectedItemCount() == 0) {
-                        //TODO recentListActionModeUtil.startActionMode();
-                    }
-                    toggleSelection(position);
-                   //TODO recentListActionModeUtil.updateActionMode(getSelectedItemCount());
-                    return true;
+                public void onClick(final View v) {
+                    onClickButton(holder.expandableLayout);
                 }
             });
 
-            holder.moreButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String dbPath = currentItem.dbPath;
-                    DialogFragment df = new OpenActionsFragment();
-                    Bundle b = new Bundle();
-                    b.putString(OpenActionsFragment.EXTRA_DBPATH, dbPath);
-                    df.setArguments(b);
-                    df.show(((FragmentActivity) context).getSupportFragmentManager(), "OpenActions");
-                }
-            });
-
-            holder.selectedOverlay.setVisibility(isSelected(position) ? View.VISIBLE : View.INVISIBLE);
         }
-        @Override public int getItemCount() {
-            return workout.size();
-        }
 
+        private void onClickButton(final ExpandableLayout expandableLayout) {
+            expandableLayout.toggle();
+        }
         public synchronized void setItems(List<WorkoutItem> items) {
             this.workout.clear();
             this.workout.addAll(items);
             this.notifyDataSetChanged();
         }
 
-       public void stopActionMode() {
-            recentListActionModeUtil.stopActionMode();
+        @Override
+        public int getItemCount() {
+            return workout.size();
         }
 
-        public void removeSelected() {
-            final List<Integer> indices = getSelectedItems();
-            final List<WorkoutItem> itemsToRemove = new ArrayList<>();
-            for (Integer i:indices) {
-                final WorkoutItem currentItem = this.workout.get(i);
-                workoutUtil.deleteFromWorkoutList(currentItem.dbPath);
-                itemsToRemove.add(currentItem);
-            }
-            this.workout.removeAll(itemsToRemove);
-
-            this.notifyDataSetChanged();
+        public ObjectAnimator createRotateAnimator(final View target, final float from, final float to) {
+            ObjectAnimator animator = ObjectAnimator.ofFloat(target, "rotation", from, to);
+            animator.setDuration(300);
+            animator.setInterpolator(Utils.createInterpolator(Utils.LINEAR_INTERPOLATOR));
+            return animator;
         }
 
+        @Override
+
+        public int getSwipeLayoutResourceId(int position) {
+            return R.id.swipe;
+        }
 
     }
+
 }

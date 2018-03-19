@@ -37,6 +37,7 @@ import org.liberty.android.fantastischmemo.utils.AMFileUtil;
 import org.liberty.android.fantastischmemo.utils.AMPrefUtil;
 import org.liberty.android.fantastischmemo.utils.RecentListUtil;
 import org.liberty.android.fantastischmemo.utils.ShareUtil;
+import org.liberty.android.fantastischmemo.utils.WorkOutListUtil;
 
 import javax.inject.Inject;
 
@@ -64,6 +65,8 @@ public class OpenActionsFragment extends BaseDialogFragment {
     @Inject ShareUtil shareUtil;
 
     @Inject AMPrefUtil amPrefUtil;
+
+    @Inject WorkOutListUtil workoutListUtil;
 
 
     public OpenActionsFragment() { }
@@ -128,6 +131,7 @@ public class OpenActionsFragment extends BaseDialogFragment {
                 myIntent.putExtra(StudyActivity.EXTRA_DBPATH, dbPath);
                 startActivity(myIntent);
                 recentListUtil.addToRecentList(dbPath);
+                workoutListUtil.addToRecentList(dbPath);
             }
 
             if (v == studyModeItem) {

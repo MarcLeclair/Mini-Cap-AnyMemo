@@ -58,6 +58,11 @@
             android:maxLines="4"
             tools:text="This is a sample content This is a sample content This is a sample content This is a sample content This is a sample content This is a sample content This is a sample content This is a sample content This is a sample content " />
 
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Button" />
+
     </LinearLayout>
     <View
         android:id="@+id/selected_overlay"
