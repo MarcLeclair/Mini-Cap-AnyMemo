@@ -189,7 +189,7 @@ public class FavouriteEspressoTest {
 
             //sometimes this text will only appear on the first time of running the test
 
-            Log.d(TAG, "letterHintEspresso() returned: exception, could not find text with OK" );
+            Log.d(TAG, "FavouriteEspresso() returned: exception, could not find text with OK" );
 
         }
 
