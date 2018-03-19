@@ -1,5 +1,6 @@
 package org.liberty.android.fantastischmemo.utils;
 
+import android.test.suitebuilder.annotation.SmallTest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,6 +28,7 @@ public class DateUtilTest {
         cal = null;
     }
 
+    @SmallTest
     @Test
     public void addDaysTest() {
         //these tests are used to verify that the current date + x days, equals to the
@@ -46,6 +48,7 @@ public class DateUtilTest {
         assertTrue(DateUtil.addDays(date, -1).equals(date3));
     }
 
+    @SmallTest
     @Test
     public void getDateTest() {
         cal.set(Calendar.DAY_OF_MONTH, 12);
