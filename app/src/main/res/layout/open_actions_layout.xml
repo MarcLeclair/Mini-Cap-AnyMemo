@@ -49,7 +49,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="@string/add_to_study_mode"
+                android:text="@string/add_to_workout_mode"
                 android:textSize="24dp"
                 android:clickable="false"
                 android:focusable="false"
