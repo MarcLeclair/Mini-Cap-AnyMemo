@@ -3,7 +3,6 @@ package org.liberty.android.fantastischmemo.db;
 /**
  * Created by Wei on 3/17/2018.
  */
-
 import android.test.suitebuilder.annotation.SmallTest;
 import org.junit.After;
 import org.junit.Before;

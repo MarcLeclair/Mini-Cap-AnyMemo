@@ -49,6 +49,5 @@ public class FavouriteTest {
         ld.setFavourite(1);
         card.setLearningData(ld);
         assertEquals(ld.getFavourite(), card.getLearningData().getFavourite());
-        tearDown();
     }
 }
