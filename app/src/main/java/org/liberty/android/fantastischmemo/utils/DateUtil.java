@@ -1,7 +1,13 @@
 package org.liberty.android.fantastischmemo.utils;
 
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+
 import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
+
+import static java.lang.Math.toIntExact;
 
 /**
  * Created by melid on 2018-03-16.
@@ -15,7 +21,6 @@ public class DateUtil {
         cal.add(Calendar.DATE, days); // use -days to get a previous day
         return cal.getTime();
     }
-
     public static Date getDate(int day, int month, int year) {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, year);
@@ -26,5 +31,15 @@ public class DateUtil {
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
         return cal.getTime();
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public static int getDateDifference(Date date){
+        Date now = new Date();
+        long diffInMillies = date.getTime() - now.getTime();
+        long convertedDifference = TimeUnit.DAYS.convert(diffInMillies,TimeUnit.MILLISECONDS);
+        int delayDays = toIntExact(convertedDifference) ;
+        return delayDays;
     }
 }

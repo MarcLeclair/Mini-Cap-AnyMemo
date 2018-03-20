@@ -24,7 +24,9 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
@@ -38,11 +40,17 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.jobdispatcher.Constraint;
+import com.firebase.jobdispatcher.FirebaseJobDispatcher;
+import com.firebase.jobdispatcher.GooglePlayDriver;
+import com.firebase.jobdispatcher.Trigger;
+
 import org.liberty.android.fantastischmemo.R;
 import org.liberty.android.fantastischmemo.common.AMPrefKeys;
 import org.liberty.android.fantastischmemo.common.BaseActivity;
 import org.liberty.android.fantastischmemo.common.BaseDialogFragment;
 import org.liberty.android.fantastischmemo.entity.Card;
+import org.liberty.android.fantastischmemo.service.NotificationService;
 import org.liberty.android.fantastischmemo.utils.AMFileUtil;
 import org.liberty.android.fantastischmemo.utils.AMPrefUtil;
 import org.liberty.android.fantastischmemo.utils.DateUtil;
@@ -54,10 +62,16 @@ import org.liberty.android.fantastischmemo.dao.CardDao;
 import org.liberty.android.fantastischmemo.utils.DatabaseUtil;
 import org.w3c.dom.Text;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 
 import javax.inject.Inject;
+
+import static java.lang.Math.toIntExact;
 
 
 public class OpenActionsFragment extends BaseDialogFragment {
@@ -206,6 +220,7 @@ public class OpenActionsFragment extends BaseDialogFragment {
 
                 // if button is clicked, set the new workout dates for each cards within the deck
                 positiveButton.setOnClickListener(new View.OnClickListener() {
+                   @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
                     public void onClick(View v) {
                         final String numDaysInput = numDaysInputWrapper.getEditText().getText()
@@ -252,6 +267,10 @@ public class OpenActionsFragment extends BaseDialogFragment {
                                             " " +
                                             "mode!", Toast
                                             .LENGTH_LONG).show();
+                                    //schedule notification
+                                    addNotificationScheduler(startDate, numDays);
+
+
                                 }
                             }
                         } catch (Exception e) {
@@ -386,5 +405,45 @@ public class OpenActionsFragment extends BaseDialogFragment {
         AnyMemoDBOpenHelperManager.releaseHelper(helper);
         //if the deck size is not equal to 0, return true
         return true;
+    }
+
+    //schedule notifications
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private boolean addNotificationScheduler(Date startDate, int numDays) throws ParseException {
+
+        DateUtil dt= new DateUtil();
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String dateString =formatter.format(startDate);
+
+        int days = DateUtil.getDateDifference(startDate);
+        int duration=Math.abs(days*24);
+
+        final int periodicity = (int) TimeUnit.HOURS.toSeconds(duration);
+        final int toleranceInterval = (int) TimeUnit.HOURS.toSeconds(1);
+
+        Bundle bundle = new Bundle();
+        bundle.putString("startdate", dateString);
+        bundle.putString("numDays", Integer.toString(numDays));
+
+        FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(mActivity));
+        int result =
+                dispatcher.schedule(dispatcher.newJobBuilder()
+                .setService(NotificationService.class)
+                .setTag("First day of your work out")
+                .setTrigger(Trigger.executionWindow(periodicity, periodicity + toleranceInterval))
+                .setReplaceCurrent(true)
+                .setRecurring(false)
+                .setConstraints(Constraint.ON_UNMETERED_NETWORK)
+                .setExtras(bundle)
+                .build()
+        );
+        if (result == FirebaseJobDispatcher.SCHEDULE_RESULT_SUCCESS) {
+            Log.d(TAG, "Job scheduled");
+            return true;
+        } else {
+            Log.d(TAG, "Job not scheduled");
+            return false;
+        }
     }
 }
