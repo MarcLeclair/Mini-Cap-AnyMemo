@@ -22,7 +22,6 @@ public class DateUtil {
         return cal.getTime();
     }
 
-
     public static Date getDate(int day, int month, int year) {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, year);
