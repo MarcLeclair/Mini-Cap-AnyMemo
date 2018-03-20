@@ -158,44 +158,31 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
         if (oldVersion <= 4) {
             try {
                 database.execSQL("alter table learning_data add column firstLearnDate VARCHAR");
-                database.execSQL("update learning_data set firstLearnDate='2010-01-01 00:00:00.000000'");
-
-
-
-
-                Log.d(TAG, "Adding  new column called favourite for db version " + oldVersion);
-
+                database.execSQL("update learning_data set firstLearnDate='2010-01-01 00:00:00.000000'")
+        
+                database.execSQL("alter table settings add column learningMode INTEGER");
+                database.execSQL("update settings set learningMode='0'");
+                Log.d(TAG, "Adding  new column called learningMode for db version " + oldVersion);
+                database.execSQL("alter table cards add column imgPath VARCHAR");
+                database.execSQL("update cards set imgPath=''");
+                Log.d(TAG, "Adding  new column called imgPath for db version " + oldVersion);
+                database.execSQL("alter table cards add column learningDate VARCHAR");
+                database.execSQL("update cards set learningDate='0000-00-00 00:00:00.000000'");
+                Log.d(TAG, "Adding  new column called learningDate for db version " + oldVersion);
 
             } catch (android.database.SQLException e) {
                 Log.e(TAG, "Upgrading failed, the column firstLearnData might already exists.", e);
+                Log.e(TAG, "Upgrading failed, the column learningMode might already exists.", e);
+                Log.e(TAG, "Upgrading failed, the column imgPath might already exists.", e);
+                Log.e(TAG, "Upgrading failed, the column learningDate might already exists.", e);
             }
         }
-        if(oldVersion <= 6){
-            try {
-                database.execSQL("alter table cards add column learningDate VARCHAR");
-                database.execSQL("update cards set learningDate='0000-00-00 00:00:00.000000'");
 
-                }catch (android.database.SQLException e){
-                Log.e(TAG, "Upgrading failed, one of the column  might already exists.", e);
-            }
-            try{
-                database.execSQL("alter table learning_data add column favourite INTEGER");
-                database.execSQL("update learning_data set favourite='0'");
-            }catch (android.database.SQLException e){
-                Log.e(TAG, "Upgrading failed, one of the column  might already exists.", e);
-            }
-            try{
-                database.execSQL("alter table settings add column learningMode INTEGER");
-                database.execSQL("update settings set learningMode='0'");
-            }catch (android.database.SQLException e){
-                Log.e(TAG, "Upgrading failed, one of the column  might already exists.", e);
-            }
-            try{
-                database.execSQL("alter table cards add column imgPath VARCHAR");
-                database.execSQL("update cards set imgPath=''");
-            }catch (android.database.SQLException e){
-                Log.e(TAG, "Upgrading failed, one of the column  might already exists.", e);
-            }
+        if(oldVersion <= 5){
+            database.execSQL("alter table learning_data add column favourite INTEGER");
+            database.execSQL("update learning_data set favourite='0'");
+            Log.d(TAG, "Adding  new column called favourite for db version " + oldVersion);
+
         }
 
 

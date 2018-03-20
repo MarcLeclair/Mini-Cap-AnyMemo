@@ -66,7 +66,7 @@ public class QuizActivity extends QACardActivity {
 
     /* UI elements */
     private GradeButtonsFragment gradeButtonsFragment;
-    private ImageView  mImageView;
+    private ImageView mImageView;
     /* Settings */
     private Setting setting;
     private Option option;
@@ -92,6 +92,7 @@ public class QuizActivity extends QACardActivity {
 
     //Random variable declared
     private static SecureRandom random = new SecureRandom();
+
     @Override
     public int getContentView() {
         return R.layout.qa_card_layout_study;
@@ -174,38 +175,45 @@ public class QuizActivity extends QACardActivity {
                 speakAnswer();
                 break;
             }
-            case R.id.picture_hint:{
-                if(!isAnswerShown())
-                {
+            case R.id.picture_hint: {
+                if (!isAnswerShown()) {
                     showPictureHint();
+                    //resetting the letter counter every time the picture is called
+                    letterHintCounter = 0;
                 }
                 break;
             }
-            case R.id.multiple_choice_hint:{
+            case R.id.multiple_choice_hint: {
                 List<Card> mcCards = new ArrayList<>();
                 //find random index for array
-                for(int i = 0; i < 3; i++ ){
+                for (int i = 0; i < 3; i++) {
                     int randomNumb = random.nextInt(queueManager.getAllCards().size());
-                    while(randomNumb == 0){
+                    while (randomNumb == 0) {
                         randomNumb = random.nextInt(queueManager.getAllCards().size());
                     }
                     mcCards.add(queueManager.getAllCards().get(randomNumb));
                 }
 
-                if(!isAnswerShown())
-                {
+                if (!isAnswerShown()) {
                     showMcHint(mcCards);
+                    //resetting the letter counter every time the multiple choice is called
+                    letterHintCounter = 0;
                 }
                 break;
             }
             case R.id.letter_hint: {
 
-                if (!isAnswerShown())
-                {
+                if (!isAnswerShown()) {
                     //every time the button gets clicked, counter increases by 1
                     letterHintCounter++;
                     //showLetterhint() is in QACardActivity.java
                     showLetterHint(letterHintCounter);
+                }
+
+                //reset the counter if the answer is shown
+                //otherwise it will affect the next answer which will not start from 0
+                else {
+                    letterHintCounter = 0;
                 }
                 break;
             }
