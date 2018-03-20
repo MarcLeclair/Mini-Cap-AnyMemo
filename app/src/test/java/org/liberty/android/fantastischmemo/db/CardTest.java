@@ -26,7 +26,6 @@ public class CardTest {
         card = new Card();
     }
 
-
     @After
     public void tearDown() {
         card = null;
