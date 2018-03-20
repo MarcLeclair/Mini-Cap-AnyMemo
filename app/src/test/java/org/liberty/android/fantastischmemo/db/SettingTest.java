@@ -22,7 +22,6 @@ public class SettingTest {
         setting = new Setting();
     }
 
-
     @After
     public void tearDown() {
         setting = null;
