@@ -179,9 +179,14 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
         }
 
         if(oldVersion <= 5){
+            try{
             database.execSQL("alter table learning_data add column favourite INTEGER");
             database.execSQL("update learning_data set favourite='0'");
             Log.d(TAG, "Adding  new column called favourite for db version " + oldVersion);
+
+            } catch (android.database.SQLException e) {
+                Log.e(TAG, "Upgrading failed, the column favourite might already exists.", e);
+            }
 
         }
 

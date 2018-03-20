@@ -177,8 +177,17 @@ public class OpenActionsFragment extends BaseDialogFragment {
 
 
             if (v == workoutModeItem) {
-
+                int maxNumCards = AnyMemoDBOpenHelperManager.getHelper(mActivity, dbPath)
+                        .getCardDao().getAllCards(null).size();
+                //if the deck is empty don't pop up the dialogue box for workout mode
+                if (maxNumCards == 0) {
+                    Toast.makeText(mActivity, "You must have at least 1 card in your deck to add" +
+                            " this deck to workout mode!", Toast.LENGTH_LONG).show();
+                    return;
+                }
                 final Dialog dialog = new Dialog(mActivity);
+
+
                 dialog.setContentView(R.layout.workout);
                 dialog.show();
 
@@ -249,7 +258,9 @@ public class OpenActionsFragment extends BaseDialogFragment {
                                     setWorkoutModeDates(AnyMemoDBOpenHelperManager.getHelper
                                             (mActivity, dbPath), numDays, startDate);
                                     dialog.dismiss();
-                                    Toast.makeText(mActivity, "Successfully added deck to study " +
+                                    Toast.makeText(mActivity, "Successfully added deck to " +
+                                            "workout" +
+                                            " " +
                                             "mode!", Toast
                                             .LENGTH_LONG).show();
                                 }
@@ -350,18 +361,24 @@ public class OpenActionsFragment extends BaseDialogFragment {
 
         CardDao cardDao = helper.getCardDao();
         List<Card> cards = cardDao.getAllCards(null);
-        Log.d(TAG, "card numbers " + cards.size());
+//        Log.d(TAG, "card numbers " + cards.size());
         if (cards.size() == 0) {
             //if the deck size is equal to 0, skip the logic below
             return false;
         }
-        int nbCardsPerWorkout = cards.size() / numDays;
-        Log.d(TAG, "card numbers " + nbCardsPerWorkout);
+        //rounding up the result of an integer division
+        // for example if the person chooses 2 days to study a deck
+        // of 3 cards, 3 / 2 = 2
+        //there will be 2 cards to study at first then 1 card, we need to round up with integer
+        // division. Otherwise 3/2 = 1 which would mean 1 card per day, for 3 days, which is not
+        // what we want
+        int nbCardsPerWorkout = (cards.size() + numDays - 1) / numDays;
+        //Log.d(TAG, "card numbers " + nbCardsPerWorkout);
 
         int count = 0;
         int addDays = 0;
 
-        Log.d(TAG, "before setting the date");
+        //Log.d(TAG, "before setting the date");
         Date learningDate;
 
         for (Card card : cards) {
@@ -374,8 +391,8 @@ public class OpenActionsFragment extends BaseDialogFragment {
                     addDays);
             card.setLearningDate(learningDate);
             cardDao.update(card);
-            Log.d(TAG, "date is set to : " + card.getLearningDate
-                    ());
+//            Log.d(TAG, "date is set to : " + card.getLearningDate
+//                    ());
             count++;
         }
         AnyMemoDBOpenHelperManager.releaseHelper(helper);
