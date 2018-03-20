@@ -19,9 +19,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.liberty.android.fantastischmemo.R;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
+import static android.support.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -31,52 +34,69 @@ import static org.hamcrest.Matchers.is;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class addToLearningModeEspresso {
+public class SpellingTestEspresso {
 
     @Rule
     public ActivityTestRule<AnyMemo> mActivityTestRule = new ActivityTestRule<>(AnyMemo.class);
 
     @Test
-    public void addToLearningModeEspresso() {
-        final String TAG = "Espresso logger";
+    public void spellingTestEspresso() {
+        String TAG = SpellingTestEspresso.class.getSimpleName();
         try {
-        ViewInteraction appCompatButton = onView(
-                allOf(withId(android.R.id.button1), withText("OK"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.ScrollView")),
-                                        0),
-                                3)));
-        appCompatButton.perform(scrollTo(), click());
+            ViewInteraction appCompatButton = onView(
+                    allOf(withId(android.R.id.button1), withText("OK"),
+                            childAtPosition(
+                                    allOf(withClassName(is("com.android.internal.widget.ButtonBarLayout")),
+                                            childAtPosition(
+                                                    withClassName(is("android.widget.LinearLayout")),
+                                                    3)),
+                                    3),
+                            isDisplayed()));
+            appCompatButton.perform(click());
         } catch (NoMatchingViewException e) {
-
-            //catch exception if there is no dialogue box with an OK text
-
-            //sometimes this text will only appear on the first time of running the test
-
-            Log.d(TAG, "letterHintEspresso() returned: exception, could not find text with OK" );
-
+            Log.d(TAG, "Exception thrown, OK button not found");
         }
 
-
-        ViewInteraction appCompatButton2 = onView(
-                allOf(withId(R.id.recent_item_more_button), withText("MORE"),
+        //click on the tab to list all db's
+        ViewInteraction tabView = onView(
+                allOf(childAtPosition(
                         childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.FrameLayout")),
-                                        0),
-                                2),
+                                withId(R.id.tabs),
+                                0),
+                        1),
                         isDisplayed()));
-        appCompatButton2.perform(click());
+        tabView.perform(click());
 
+        //click on the first db at the top of the db list
+        ViewInteraction recyclerView = onView(
+                allOf(withId(R.id.file_list),
+                        childAtPosition(
+                                withClassName(is("android.widget.LinearLayout")),
+                                1)));
+        recyclerView.perform(actionOnItemAtPosition(1, click()));
+
+        //click on study from the menu
         ViewInteraction linearLayout = onView(
-                allOf(withId(R.id.study_mode),
+                allOf(withId(R.id.study),
                         childAtPosition(
                                 childAtPosition(
                                         withClassName(is("android.widget.ScrollView")),
                                         0),
-                                1)));
+                                0)));
         linearLayout.perform(scrollTo(), click());
+
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+
+        //click on type out the answer to get the answer dialogue box
+        ViewInteraction appCompatTextView = onView(
+                allOf(withId(R.id.title), withText("Type out the answer"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withClassName(is("android.support.v7.view.menu.ListMenuItemView")),
+                                        0),
+                                0),
+                        isDisplayed()));
+        appCompatTextView.perform(click());
 
     }
 
