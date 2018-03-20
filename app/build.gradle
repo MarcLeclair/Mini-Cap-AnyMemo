@@ -125,9 +125,6 @@ dependencies {
 
 
 
-    androidTestCompile 'com.crittercism.dexmaker:dexmaker:1.4'
-    androidTestCompile 'com.crittercism.dexmaker:dexmaker-dx:1.4'
-    androidTestCompile 'com.crittercism.dexmaker:dexmaker-mockito:1.4'
     androidTestCompile 'com.linkedin.dexmaker:dexmaker-mockito:2.12.1'
     androidTestCompile 'org.mockito:mockito-core:2.16.0'
     androidTestCompile 'com.android.support.test:runner:0.5'
@@ -150,6 +147,12 @@ dependencies {
     testCompile 'org.powermock:powermock-module-junit4:1.6.1'
     testCompile 'org.testng:testng:6.9.6'
     testCompile 'org.robolectric:robolectric:3.0'
+    androidTestCompile 'com.android.support.test.espresso:espresso-contrib:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+        exclude group: 'com.android.support', module: 'support-v4'
+        exclude group: 'com.android.support', module: 'design'
+        exclude group: 'com.android.support', module: 'recyclerview-v7'
+    }
 }
 
 static def getBuildString () {

@@ -34,14 +34,14 @@ import static org.hamcrest.Matchers.is;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class MultipleChoiceHintEspresso {
+public class LetterHintEspresso {
 
     @Rule
     public ActivityTestRule<AnyMemo> mActivityTestRule = new ActivityTestRule<>(AnyMemo.class);
 
     @Test
-    public void multipleChoiceHintEspresso() {
-        String TAG = MultipleChoiceHintEspresso.class.getSimpleName();
+    public void letterHintEspresso() {
+        String TAG = LetterHintEspresso.class.getSimpleName();
         try {
             ViewInteraction appCompatButton = onView(
                     allOf(withId(android.R.id.button1), withText("OK"),
@@ -97,9 +97,9 @@ public class MultipleChoiceHintEspresso {
 
         openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
 
-        //click on multiple choice hint to get the multiple choice hints displayed
+        //click on letter hint to get the first letter hint
         ViewInteraction appCompatTextView = onView(
-                allOf(withId(R.id.title), withText("Multiple choice hint"),
+                allOf(withId(R.id.title), withText("Letter hint"),
                         childAtPosition(
                                 childAtPosition(
                                         withClassName(is("android.support.v7.view.menu.ListMenuItemView")),
