@@ -158,7 +158,8 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
         if (oldVersion <= 4) {
             try {
                 database.execSQL("alter table learning_data add column firstLearnDate VARCHAR");
-                database.execSQL("update learning_data set firstLearnDate='2010-01-01 00:00:00.000000'")
+                database.execSQL("update learning_data set firstLearnDate='2010-01-01 " +
+                        "00:00:00.000000'");
         
                 database.execSQL("alter table settings add column learningMode INTEGER");
                 database.execSQL("update settings set learningMode='0'");
