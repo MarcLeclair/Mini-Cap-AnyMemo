@@ -102,7 +102,7 @@ public class LearnQueueManager implements QueueManager {
     public synchronized  Card dequeueWorkout(){
         shuffle();
         if (!workoutQueue.isEmpty()) {
-            Card c = workoutQueue.get(0);
+            Card c = workoutQueue.remove(0);
             Log.d(TAG, "workoutQueue card: " + c.getId());
             return c;
         } else {
@@ -252,7 +252,7 @@ public class LearnQueueManager implements QueueManager {
             refill();
         }
         else{
-            getWorkoutCards();
+            //getWorkoutCards();
         }
     }
 

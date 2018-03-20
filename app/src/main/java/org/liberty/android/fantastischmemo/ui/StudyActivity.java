@@ -709,9 +709,10 @@ public class StudyActivity extends QACardActivity {
                 }
 
                 // Dequeue card and update the queue
+                Card nextCard = new Card();
                 queueManager.update(updatedCard);
-
-                Card nextCard = queueManager.dequeue();
+                if(workout_mode == false)  nextCard = queueManager.dequeue();
+                if(workout_mode == true)  nextCard = queueManager.dequeueWorkout();
                 queueManager.remove(nextCard);
                 if (nextCard == null && workout_mode == false) {
                     showNoItemDialog();
