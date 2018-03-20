@@ -4,12 +4,8 @@ package org.liberty.android.fantastischmemo.db;
  * Created by Wei on 3/18/2018.
  */
 import android.test.suitebuilder.annotation.SmallTest;
-<<<<<<< HEAD
-
-=======
 import org.junit.After;
 import org.junit.Before;
->>>>>>> 05983955cbfbbf73dee502a745378103ab5a3ba3
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.liberty.android.fantastischmemo.entity.Setting;
@@ -26,15 +22,11 @@ public class SettingTest {
         setting = new Setting();
     }
 
-
-<<<<<<< HEAD
-=======
     @After
     public void tearDown() {
         setting = null;
     }
 
->>>>>>> 05983955cbfbbf73dee502a745378103ab5a3ba3
     @SmallTest
     @Test
     public void testDefaults() {

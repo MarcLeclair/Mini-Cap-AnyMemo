@@ -3,16 +3,10 @@ package org.liberty.android.fantastischmemo.db;
 /**
  * Created by Wei on 3/17/2018.
  */
-<<<<<<< HEAD
-//import android.support.test.filters.SmallTest;
 
-import android.test.suitebuilder.annotation.SmallTest;
-
-=======
 import android.test.suitebuilder.annotation.SmallTest;
 import org.junit.After;
 import org.junit.Before;
->>>>>>> 05983955cbfbbf73dee502a745378103ab5a3ba3
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.liberty.android.fantastischmemo.entity.Card;
@@ -33,15 +27,11 @@ public class CardTest {
         card = new Card();
     }
 
-
-<<<<<<< HEAD
-=======
     @After
     public void tearDown() {
         card = null;
     }
 
->>>>>>> 05983955cbfbbf73dee502a745378103ab5a3ba3
     @SmallTest
     @Test
     public void testDefaults() {
