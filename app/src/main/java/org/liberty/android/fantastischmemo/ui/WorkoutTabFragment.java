@@ -2,25 +2,14 @@ package org.liberty.android.fantastischmemo.ui;
 
 import android.animation.ObjectAnimator;
 import android.animation.TimeInterpolator;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.res.TypedArray;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentActivity;
+import android.support.annotation.Nullable;;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -40,9 +29,9 @@ import org.apache.commons.io.FilenameUtils;
 import org.liberty.android.fantastischmemo.R;
 import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelper;
 import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelperManager;
+import org.liberty.android.fantastischmemo.common.BaseActivity;
 import org.liberty.android.fantastischmemo.common.BaseFragment;
 import org.liberty.android.fantastischmemo.dao.CardDao;
-import org.liberty.android.fantastischmemo.ui.helper.SelectableAdapter;
 import org.liberty.android.fantastischmemo.utils.DatabaseUtil;
 import org.liberty.android.fantastischmemo.utils.RecentListActionModeUtil;
 import org.liberty.android.fantastischmemo.utils.WorkOutListUtil;
@@ -62,9 +51,7 @@ import com.github.aakira.expandablelayout.Utils;
 
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.inject.Inject;
@@ -79,10 +66,10 @@ public class WorkoutTabFragment extends BaseFragment {
 
     private final AtomicInteger workoutListVersion = new AtomicInteger(0);
     private final static String TAG = WorkoutTabFragment.class.getSimpleName();
-    private Set<String> dbAdded = new HashSet<>();
-    private List<WorkoutItem> woList = new ArrayList();
+
     String[] colors;
 
+    private BaseActivity mActivity;
     WorkoutListAdapter woAdapter;
     @Inject WorkOutListUtil workoutList;
 
@@ -99,6 +86,8 @@ public class WorkoutTabFragment extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        new RecentListLoaderCallbacks().onCreateLoader(1, savedInstanceState);
         fragmentComponents().inject(this);
     }
 
@@ -113,6 +102,7 @@ public class WorkoutTabFragment extends BaseFragment {
     @Override
     public void onAttach(Context activity) {
         super.onAttach(activity);
+        super.onAttach(activity);
         setHasOptionsMenu(true);
     }
 
@@ -125,10 +115,6 @@ public class WorkoutTabFragment extends BaseFragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-
-       // if (woAdapter != null && !isVisibleToUser) {
-           // woAdapter.stopActionMode();
-       // }
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -141,7 +127,7 @@ public class WorkoutTabFragment extends BaseFragment {
         recentListRecyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
 
         recentListRecyclerView.setLayoutManager(new LinearLayoutManager(recentListRecyclerView.getContext()));
-        woAdapter = new WorkoutListAdapter(woList,workoutList);
+        woAdapter = new WorkoutListAdapter(workoutList);
 
 
         recentListRecyclerView.setAdapter(woAdapter);
@@ -176,7 +162,8 @@ public class WorkoutTabFragment extends BaseFragment {
         @Override
         public void onLoadFinished(Loader<List<WorkoutItem>> loader, List<WorkoutItem> ril) {
             if (workoutListVersion.get() == loadedVersion) {
-               // woAdapter.setItems(ril);
+
+               woAdapter.setItems(ril);
             }
         }
 
@@ -207,7 +194,7 @@ public class WorkoutTabFragment extends BaseFragment {
             // Make sure the recentListVersion is updated so the previous running loadRecentItemsWithNames will fail.
             // Also if multiple loadRecentItemsWithDetails, only one succeeded
             if (workoutListVersion.get() == loadedVersion) {
-               // woAdapter.setItems(ril);
+                  woAdapter.setItems(ril);
             }
         }
 
@@ -231,6 +218,7 @@ public class WorkoutTabFragment extends BaseFragment {
         String[] allPath = workoutList.getAllRecentDBPath();
         final List<WorkoutItem> ril = new ArrayList<WorkoutItem>();
         int index = 0;
+
         for(int i = 0; i < allPath.length; i++){
             if(allPath[i] == null){
                 continue;
@@ -240,12 +228,12 @@ public class WorkoutTabFragment extends BaseFragment {
                 workoutList.deleteFromWorkoutList(allPath[i]);
                 continue;
             }
-            if(!dbAdded.contains(FilenameUtils.getName(allPath[i]))) {
-                ri.dbInfo = getContext().getString(R.string.loading_database);
-                ri.index = index++;
-                ril.add(ri);
-                ri.dbPath = allPath[i];
-                ri.dbName = FilenameUtils.getName(allPath[i]);
+            String  path = FilenameUtils.getName(allPath[i]);
+            ri.dbInfo = getContext().getString(R.string.loading_database);
+            ri.index = index++;
+            ril.add(ri);
+            ri.dbPath = allPath[i];
+            ri.dbName = FilenameUtils.getName(allPath[i]);
                 if(i > colors.length){
                     int newIndex = i - colors.length;
                     ri.colorId1 =  Color.parseColor(colors[i]);
@@ -256,9 +244,8 @@ public class WorkoutTabFragment extends BaseFragment {
                     ri.colorId2 = Color.parseColor(colors[i+1]);
                 }
                 ri.interpolator = Utils.createInterpolator(Utils.ACCELERATE_DECELERATE_INTERPOLATOR);
-                woList.add(ri);
-                dbAdded.add(FilenameUtils.getName(allPath[i]));
-            }
+
+
         }
         return ril;
     }
@@ -286,24 +273,16 @@ public class WorkoutTabFragment extends BaseFragment {
         return ril;
     }
 
-    public void clearMap(String dpPath){  dbAdded.remove(dpPath);   }
     private  class WorkoutListAdapter extends RecyclerSwipeAdapter<WorkoutListAdapter.ViewHolder> {
 
-        private List<WorkoutItem> workout;
+        private List<WorkoutItem> workout = new ArrayList<>();
 
         private  Context context;
         private SparseBooleanArray expandState = new SparseBooleanArray();
         private WorkOutListUtil woUtil;
 
-       // private final WorkOutListUtil workoutUtil;
+        public WorkoutListAdapter(WorkOutListUtil woUtil) {
 
-
-        public WorkoutListAdapter(final List<WorkoutItem> data, WorkOutListUtil woUtil) {
-            workout = data;
-            for (int i = 0; i < data.size(); i++) {
-                expandState.append(i, false);
-
-            }
             this.woUtil = woUtil;
         }
         public  class ViewHolder extends RecyclerView.ViewHolder {
@@ -317,6 +296,7 @@ public class WorkoutTabFragment extends BaseFragment {
             TextView textViewPos;
             TextView textViewData;
             Button buttonDelete;
+            Button startWorkout;
 
 
             public ViewHolder(View view) {
@@ -326,26 +306,14 @@ public class WorkoutTabFragment extends BaseFragment {
                 buttonLayout = (RelativeLayout) view.findViewById(R.id.button);
                 insideView = (TextView) view.findViewById(R.id.insideView);
                 expandableLayout = (ExpandableLinearLayout) view.findViewById(R.id.expandableLayout);
+                startWorkout = (Button) view.findViewById(R.id.start_workout);
 
                 swipeLayout = (SwipeLayout) itemView.findViewById(R.id.swipe);
-                //textViewPos = (TextView) itemView.findViewById(R.id.position);
-                //textViewData = (TextView) itemView.findViewById(R.id.text_data);
                 buttonDelete = (Button) itemView.findViewById(R.id.delete);
 
-               /* view.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Log.d(getClass().getSimpleName(), "onItemSelected: " + textViewData.getText().toString());
-                        Toast.makeText(view.getContext(), "onItemSelected: " + textViewData.getText().toString(), Toast.LENGTH_SHORT).show();
-
-                    }
-
-                });*/
             }
-
             public void setItem(WorkoutItem item) {
                 //filenameView.setText(item.dbName);
-
             }
         }
 
@@ -364,7 +332,7 @@ public class WorkoutTabFragment extends BaseFragment {
         public void onBindViewHolder(final ViewHolder holder, final int position) {
             final WorkoutItem item = workout.get(position);
 
-            //holder.swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
+            holder.swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
             holder.swipeLayout.addSwipeListener(new SimpleSwipeListener() {
             @Override
             public void onClose(SwipeLayout layout) {
@@ -388,7 +356,6 @@ public class WorkoutTabFragment extends BaseFragment {
             public void onClick(View view) {
                 mItemManger.removeShownLayouts(holder.swipeLayout);
                 String dbName = workout.get(position).dbPath;
-                WorkoutTabFragment.this.clearMap(dbName);
                 woUtil.deleteFromWorkoutList(dbName);
                 workout.remove(position);
 
@@ -398,6 +365,16 @@ public class WorkoutTabFragment extends BaseFragment {
                 notifyItemRangeChanged(position, workout.size());
                 mItemManger.closeAllItems();
                 Toast.makeText(view.getContext(), "Deleted " + dbName + "!", Toast.LENGTH_SHORT).show();
+            }
+        });
+        holder.startWorkout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("START WORKOUT", "CLICKED START WORKOUT");
+                Intent myIntent = new Intent();
+                myIntent.setClass(getActivity(), StudyActivity.class);
+                myIntent.putExtra(StudyActivity.EXTRA_DBPATH, item.dbPath);
+                startActivity(myIntent);
             }
         });
        // holder.textViewPos.setText((position + 1) + ".");
@@ -439,6 +416,11 @@ public class WorkoutTabFragment extends BaseFragment {
             expandableLayout.toggle();
         }
         public synchronized void setItems(List<WorkoutItem> items) {
+
+            for (int i = 0; i < items.size(); i++) {
+                expandState.append(i, false);
+
+            }
             this.workout.clear();
             this.workout.addAll(items);
             this.notifyDataSetChanged();
