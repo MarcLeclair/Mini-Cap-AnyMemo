@@ -13,6 +13,7 @@ import org.liberty.android.fantastischmemo.ui.MiscTabFragment;
 import org.liberty.android.fantastischmemo.ui.OpenActionsFragment;
 import org.liberty.android.fantastischmemo.ui.QuizLauncherDialogFragment;
 import org.liberty.android.fantastischmemo.ui.RecentListFragment;
+import org.liberty.android.fantastischmemo.ui.WorkoutTabFragment;
 
 import dagger.Component;
 
@@ -43,5 +44,7 @@ public interface FragmentComponents {
     void inject(CardsetsListFragment fragment);
 
     void inject(MiscTabFragment fragment);
+
+    void inject(WorkoutTabFragment fragment);
 
 }

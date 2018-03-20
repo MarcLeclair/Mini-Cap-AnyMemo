@@ -24,7 +24,9 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
@@ -38,26 +40,42 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.jobdispatcher.Constraint;
+import com.firebase.jobdispatcher.FirebaseJobDispatcher;
+import com.firebase.jobdispatcher.GooglePlayDriver;
+import com.firebase.jobdispatcher.Trigger;
+
 import org.liberty.android.fantastischmemo.R;
 import org.liberty.android.fantastischmemo.common.AMPrefKeys;
 import org.liberty.android.fantastischmemo.common.BaseActivity;
 import org.liberty.android.fantastischmemo.common.BaseDialogFragment;
 import org.liberty.android.fantastischmemo.entity.Card;
+import org.liberty.android.fantastischmemo.service.NotificationService;
 import org.liberty.android.fantastischmemo.utils.AMFileUtil;
 import org.liberty.android.fantastischmemo.utils.AMPrefUtil;
 import org.liberty.android.fantastischmemo.utils.DateUtil;
 import org.liberty.android.fantastischmemo.utils.RecentListUtil;
 import org.liberty.android.fantastischmemo.utils.ShareUtil;
+
+import org.liberty.android.fantastischmemo.utils.WorkOutListUtil;
+
 import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelper;
 import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelperManager;
 import org.liberty.android.fantastischmemo.dao.CardDao;
 import org.liberty.android.fantastischmemo.utils.DatabaseUtil;
 import org.w3c.dom.Text;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
+
 
 import javax.inject.Inject;
+
+import static java.lang.Math.toIntExact;
 
 
 public class OpenActionsFragment extends BaseDialogFragment {
@@ -95,7 +113,12 @@ public class OpenActionsFragment extends BaseDialogFragment {
     @Inject
     AMPrefUtil amPrefUtil;
 
+
+    @Inject WorkOutListUtil workoutListUtil;
+
+
     AnyMemoDBOpenHelper helper;
+
 
     public OpenActionsFragment() {
     }
@@ -163,11 +186,22 @@ public class OpenActionsFragment extends BaseDialogFragment {
                 myIntent.putExtra(StudyActivity.EXTRA_DBPATH, dbPath);
                 startActivity(myIntent);
                 recentListUtil.addToRecentList(dbPath);
+                workoutListUtil.addToRecentList(dbPath);
             }
 
-            if (v == workoutModeItem) {
 
+            if (v == workoutModeItem) {
+                int maxNumCards = AnyMemoDBOpenHelperManager.getHelper(mActivity, dbPath)
+                        .getCardDao().getAllCards(null).size();
+                //if the deck is empty don't pop up the dialogue box for workout mode
+                if (maxNumCards == 0) {
+                    Toast.makeText(mActivity, "You must have at least 1 card in your deck to add" +
+                            " this deck to workout mode!", Toast.LENGTH_LONG).show();
+                    return;
+                }
                 final Dialog dialog = new Dialog(mActivity);
+
+
                 dialog.setContentView(R.layout.workout);
                 dialog.show();
 
@@ -197,6 +231,7 @@ public class OpenActionsFragment extends BaseDialogFragment {
 
                 // if button is clicked, set the new workout dates for each cards within the deck
                 positiveButton.setOnClickListener(new View.OnClickListener() {
+                   @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
                     public void onClick(View v) {
                         final String numDaysInput = numDaysInputWrapper.getEditText().getText()
@@ -238,9 +273,15 @@ public class OpenActionsFragment extends BaseDialogFragment {
                                     setWorkoutModeDates(AnyMemoDBOpenHelperManager.getHelper
                                             (mActivity, dbPath), numDays, startDate);
                                     dialog.dismiss();
-                                    Toast.makeText(mActivity, "Successfully added deck to study " +
+                                    Toast.makeText(mActivity, "Successfully added deck to " +
+                                            "workout" +
+                                            " " +
                                             "mode!", Toast
                                             .LENGTH_LONG).show();
+                                    //schedule notification
+                                    addNotificationScheduler(startDate, numDays);
+
+
                                 }
                             }
                         } catch (Exception e) {
@@ -256,6 +297,7 @@ public class OpenActionsFragment extends BaseDialogFragment {
                         dialog.dismiss();
                     }
                 });
+
 
                 dialog.show();
             }
@@ -338,18 +380,24 @@ public class OpenActionsFragment extends BaseDialogFragment {
 
         CardDao cardDao = helper.getCardDao();
         List<Card> cards = cardDao.getAllCards(null);
-        Log.d(TAG, "card numbers " + cards.size());
+//        Log.d(TAG, "card numbers " + cards.size());
         if (cards.size() == 0) {
             //if the deck size is equal to 0, skip the logic below
             return false;
         }
-        int nbCardsPerWorkout = cards.size() / numDays;
-        Log.d(TAG, "card numbers " + nbCardsPerWorkout);
+        //rounding up the result of an integer division
+        // for example if the person chooses 2 days to study a deck
+        // of 3 cards, 3 / 2 = 2
+        //there will be 2 cards to study at first then 1 card, we need to round up with integer
+        // division. Otherwise 3/2 = 1 which would mean 1 card per day, for 3 days, which is not
+        // what we want
+        int nbCardsPerWorkout = (cards.size() + numDays - 1) / numDays;
+        //Log.d(TAG, "card numbers " + nbCardsPerWorkout);
 
         int count = 0;
         int addDays = 0;
 
-        Log.d(TAG, "before setting the date");
+        //Log.d(TAG, "before setting the date");
         Date learningDate;
 
         for (Card card : cards) {
@@ -362,12 +410,52 @@ public class OpenActionsFragment extends BaseDialogFragment {
                     addDays);
             card.setLearningDate(learningDate);
             cardDao.update(card);
-            Log.d(TAG, "date is set to : " + card.getLearningDate
-                    ());
+//            Log.d(TAG, "date is set to : " + card.getLearningDate
+//                    ());
             count++;
         }
         AnyMemoDBOpenHelperManager.releaseHelper(helper);
         //if the deck size is not equal to 0, return true
         return true;
+    }
+
+    //schedule notifications
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private boolean addNotificationScheduler(Date startDate, int numDays) throws ParseException {
+
+        DateUtil dt= new DateUtil();
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String dateString =formatter.format(startDate);
+
+        int days = DateUtil.getDateDifference(startDate);
+        int duration=Math.abs(days*24);
+
+        final int periodicity = (int) TimeUnit.HOURS.toSeconds(duration);
+        final int toleranceInterval = (int) TimeUnit.HOURS.toSeconds(1);
+
+        Bundle bundle = new Bundle();
+        bundle.putString("startdate", dateString);
+        bundle.putString("numDays", Integer.toString(numDays));
+
+        FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(mActivity));
+        int result =
+                dispatcher.schedule(dispatcher.newJobBuilder()
+                .setService(NotificationService.class)
+                .setTag("First day of your work out")
+                .setTrigger(Trigger.executionWindow(periodicity, periodicity + toleranceInterval))
+                .setReplaceCurrent(true)
+                .setRecurring(false)
+                .setConstraints(Constraint.ON_UNMETERED_NETWORK)
+                .setExtras(bundle)
+                .build()
+        );
+        if (result == FirebaseJobDispatcher.SCHEDULE_RESULT_SUCCESS) {
+            Log.d(TAG, "Job scheduled");
+            return true;
+        } else {
+            Log.d(TAG, "Job not scheduled");
+            return false;
+        }
     }
 }

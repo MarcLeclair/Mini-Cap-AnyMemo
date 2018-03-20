@@ -326,7 +326,7 @@ public class RecentListFragment extends BaseFragment {
         }
 
         public RecentListAdapter(Context context, RecentListUtil recentListUtil,
-                                 RecentListActionModeUtil recentListActionModeUtil) {
+                                     RecentListActionModeUtil recentListActionModeUtil) {
             this.context = context;
             this.recentListUtil = recentListUtil;
             this.recentListActionModeUtil = recentListActionModeUtil;

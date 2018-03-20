@@ -31,7 +31,7 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
 
     private final String dbPath;
 
-    private static final int CURRENT_VERSION = 6;
+    private static final int CURRENT_VERSION = 7;
 
     private CardDao cardDao = null;
 
@@ -158,7 +158,8 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
         if (oldVersion <= 4) {
             try {
                 database.execSQL("alter table learning_data add column firstLearnDate VARCHAR");
-                database.execSQL("update learning_data set firstLearnDate='2010-01-01 00:00:00.000000'");
+                database.execSQL("update learning_data set firstLearnDate='2010-01-01 00:00:00.000000'")
+        
                 database.execSQL("alter table settings add column learningMode INTEGER");
                 database.execSQL("update settings set learningMode='0'");
                 Log.d(TAG, "Adding  new column called learningMode for db version " + oldVersion);
@@ -168,6 +169,7 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
                 database.execSQL("alter table cards add column learningDate VARCHAR");
                 database.execSQL("update cards set learningDate='0000-00-00 00:00:00.000000'");
                 Log.d(TAG, "Adding  new column called learningDate for db version " + oldVersion);
+
             } catch (android.database.SQLException e) {
                 Log.e(TAG, "Upgrading failed, the column firstLearnData might already exists.", e);
                 Log.e(TAG, "Upgrading failed, the column learningMode might already exists.", e);
@@ -175,10 +177,17 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
                 Log.e(TAG, "Upgrading failed, the column learningDate might already exists.", e);
             }
         }
+
         if(oldVersion <= 5){
+            try{
             database.execSQL("alter table learning_data add column favourite INTEGER");
             database.execSQL("update learning_data set favourite='0'");
             Log.d(TAG, "Adding  new column called favourite for db version " + oldVersion);
+
+            } catch (android.database.SQLException e) {
+                Log.e(TAG, "Upgrading failed, the column favourite might already exists.", e);
+            }
+
         }
 
 
