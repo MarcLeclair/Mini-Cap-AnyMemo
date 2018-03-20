@@ -374,6 +374,7 @@ public class WorkoutTabFragment extends BaseFragment {
                 Intent myIntent = new Intent();
                 myIntent.setClass(getActivity(), StudyActivity.class);
                 myIntent.putExtra(StudyActivity.EXTRA_DBPATH, item.dbPath);
+                myIntent.putExtra(StudyActivity.WORKOUT_MODE, true);
                 startActivity(myIntent);
             }
         });
