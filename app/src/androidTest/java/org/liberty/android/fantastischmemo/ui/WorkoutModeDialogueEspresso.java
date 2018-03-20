@@ -14,16 +14,17 @@ import android.view.ViewParent;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import org.hamcrest.core.IsInstanceOf;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.liberty.android.fantastischmemo.R;
 
-import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
+import static android.support.test.espresso.action.ViewActions.swipeLeft;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
@@ -34,14 +35,16 @@ import static org.hamcrest.Matchers.is;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class MultipleChoiceHintEspresso {
+public class WorkoutModeDialogueEspresso {
 
     @Rule
     public ActivityTestRule<AnyMemo> mActivityTestRule = new ActivityTestRule<>(AnyMemo.class);
 
     @Test
-    public void multipleChoiceHintEspresso() {
-        String TAG = MultipleChoiceHintEspresso.class.getSimpleName();
+    public void workoutModeDialogueEspresso() {
+    String TAG = WorkoutModeDialogueEspresso.class.getSimpleName();
+        //catch the exception in case this dialogue box does not show up
+        //it only shows up on a brand new installed anyMemo application
         try {
             ViewInteraction appCompatButton = onView(
                     allOf(withId(android.R.id.button1), withText("OK"),
@@ -75,38 +78,61 @@ public class MultipleChoiceHintEspresso {
                                 1)));
         recyclerView.perform(actionOnItemAtPosition(1, click()));
 
-        //click on quiz from the menu
+        //select study mode, afterwards a dialogue box will pop up
         ViewInteraction linearLayout = onView(
-                allOf(withId(R.id.quiz),
+                allOf(withId(R.id.study_mode),
                         childAtPosition(
                                 childAtPosition(
                                         withClassName(is("android.widget.ScrollView")),
                                         0),
-                                4)));
+                                1)));
         linearLayout.perform(scrollTo(), click());
 
-        //start quiz
-        ViewInteraction appCompatButton2 = onView(
-                allOf(withId(R.id.start_quiz_button), withText("Start quiz"),
+        //verify the dialogue box view contains a start date button to add calendar dates
+        ViewInteraction button = onView(
+                allOf(withId(R.id.start_date_button),
                         childAtPosition(
                                 childAtPosition(
-                                        withClassName(is("android.widget.ScrollView")),
-                                        0),
-                                2)));
-        appCompatButton2.perform(scrollTo(), click());
+                                        IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class),
+                                        2),
+                                0),
+                        isDisplayed()));
+        button.check(matches(isDisplayed()));
 
-        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
 
-        //click on multiple choice hint to get the multiple choice hints displayed
-        ViewInteraction appCompatTextView = onView(
-                allOf(withId(R.id.title), withText("Multiple choice hint"),
+        //verify the dialogue box view contains a user input for the number of days of a workout
+        ViewInteraction editText = onView(
+                allOf(withId(R.id.num_days_input),
                         childAtPosition(
                                 childAtPosition(
-                                        withClassName(is("android.support.v7.view.menu.ListMenuItemView")),
+                                        withId(R.id.num_days_input_wrapper),
                                         0),
                                 0),
                         isDisplayed()));
-        appCompatTextView.perform(click());
+        editText.check(matches(withText("")));
+
+        //verify the dialogue box view contains an OK button
+        ViewInteraction button2 = onView(
+                allOf(withId(R.id.button_ok),
+                        childAtPosition(
+                                childAtPosition(
+                                        IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class),
+                                        3),
+                                1),
+                        isDisplayed()));
+        button2.check(matches(isDisplayed()));
+
+        //verify the dialogue box view contains a CANCEL button
+        ViewInteraction button4 = onView(
+                allOf(withId(R.id.button_cancel),
+                        childAtPosition(
+                                childAtPosition(
+                                        IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class),
+                                        3),
+                                0),
+                        isDisplayed()));
+        button4.check(matches(isDisplayed()));
+
     }
 
     private static Matcher<View> childAtPosition(

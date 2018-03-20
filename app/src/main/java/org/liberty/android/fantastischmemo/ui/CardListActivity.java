@@ -306,10 +306,6 @@ public class CardListActivity extends BaseActivity {
         // Light yellow color
         view.setBackgroundColor(REVIEW_CARD_ITEM_COLOR);
     }
-    private void highlightCardViewAsFavourite(View view) {
-        // Light pink color
-        view.setBackgroundColor(FAVOURITE_CARD_ITEM_COLOR);
-    }
 
     // Need to maintain compatibility with Android 2.3
     @SuppressWarnings("deprecation")
