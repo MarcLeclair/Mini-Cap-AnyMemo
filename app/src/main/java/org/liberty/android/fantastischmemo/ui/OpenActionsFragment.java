@@ -56,6 +56,9 @@ import org.liberty.android.fantastischmemo.utils.AMPrefUtil;
 import org.liberty.android.fantastischmemo.utils.DateUtil;
 import org.liberty.android.fantastischmemo.utils.RecentListUtil;
 import org.liberty.android.fantastischmemo.utils.ShareUtil;
+
+import org.liberty.android.fantastischmemo.utils.WorkOutListUtil;
+
 import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelper;
 import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelperManager;
 import org.liberty.android.fantastischmemo.dao.CardDao;
@@ -68,6 +71,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
+
 
 import javax.inject.Inject;
 
@@ -109,7 +113,12 @@ public class OpenActionsFragment extends BaseDialogFragment {
     @Inject
     AMPrefUtil amPrefUtil;
 
+
+    @Inject WorkOutListUtil workoutListUtil;
+
+
     AnyMemoDBOpenHelper helper;
+
 
     public OpenActionsFragment() {
     }
@@ -177,7 +186,9 @@ public class OpenActionsFragment extends BaseDialogFragment {
                 myIntent.putExtra(StudyActivity.EXTRA_DBPATH, dbPath);
                 startActivity(myIntent);
                 recentListUtil.addToRecentList(dbPath);
+                workoutListUtil.addToRecentList(dbPath);
             }
+
 
             if (v == workoutModeItem) {
                 int maxNumCards = AnyMemoDBOpenHelperManager.getHelper(mActivity, dbPath)
@@ -286,6 +297,7 @@ public class OpenActionsFragment extends BaseDialogFragment {
                         dialog.dismiss();
                     }
                 });
+
 
                 dialog.show();
             }
