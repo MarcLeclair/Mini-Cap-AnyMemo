@@ -3,22 +3,10 @@
 
 
     <string-array name="color_materials">
-        <item>#ffdb4437</item>
-        <item>#ffe67c73</item>
-        <item>#ffe91e63</item>
-        <item>#fff06292</item>
-        <item>#ff9c27b0</item>
-        <item>#ffba68c8</item>
-        <item>#ff673ab7</item>
-        <item>#ff9575cd</item>
-        <item>#ff3f51b5</item>
-        <item>#ff7986cb</item>
-        <item>#ff2196f3</item>
+        <item>#ff0d47a1</item>
         <item>#ff64b5f6</item>
-        <item>#ff03a9f4</item>
-        <item>#ff4fc3f7</item>
-        <item>#ff00bcd4</item>
-        <item>#ff4dd0e1</item>
+        <item>#ff546e7a</item>
+        <item>#ff78909c</item>
     </string-array>
     <string-array name="font_size_list">
         <item>12</item>

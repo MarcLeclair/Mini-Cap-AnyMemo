@@ -1,6 +1,9 @@
 package org.liberty.android.fantastischmemo.dao;
 
 import com.google.common.base.Strings;
+import com.j256.ormlite.field.DataType;
+import com.j256.ormlite.field.FieldType;
+import com.j256.ormlite.field.types.DateStringType;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.UpdateBuilder;
@@ -775,6 +778,28 @@ public class CardDaoImpl extends AbstractHelperDaoImpl<Card, Integer> implements
             }
         });
     }
+
+
+    public List<Card> getAllCardsForToday(Date today) {
+
+        LearningDataDao learningDataDao = getHelper().getLearningDataDao();
+        QueryBuilder<Card, Integer> qb = queryBuilder();
+        try {
+            Where<Card, Integer> where = qb.where().eq("learningDate", today);
+            qb.setWhere(where);
+            PreparedQuery<Card> pq = qb.prepare();
+            List<Card> result = query(pq);
+            for (Card c : result) {
+                learningDataDao.refresh(c.getLearningData());
+            }
+
+            return result;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
 
     public List<Card> getAllCards(final Category filterCategory) {
         final LearningDataDao learningDataDao = getHelper().getLearningDataDao();
