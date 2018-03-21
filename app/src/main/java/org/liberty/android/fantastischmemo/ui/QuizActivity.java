@@ -36,6 +36,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Button;
 
 import com.google.common.base.Strings;
 
@@ -152,29 +153,21 @@ public class QuizActivity extends QACardActivity {
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.quiz_activity_menu, menu);
-        return true;
-    }
+    public boolean onCreateHintOptions(MenuItem item ){
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_lookup: {
-                dictionaryUtil.showLookupListDialog("" + getCurrentCard().getQuestion() + " " +
-                        getCurrentCard().getAnswer());
-                break;
-            }
-            case R.id.menu_speak_question: {
-                speakQuestion();
-                break;
-            }
-            case R.id.menu_speak_answer: {
-                speakAnswer();
-                break;
-            }
+        Button letterButton = (Button) findViewById(R.id.letter_hint);
+        Button pictureButton = (Button) findViewById(R.id.picture_hint);
+        Button choiceButton = (Button) findViewById(R.id.multiple_choice_hint);
+
+        letterButton.setVisibility(View.VISIBLE);
+        pictureButton.setVisibility(View.VISIBLE);
+        choiceButton.setVisibility(View.VISIBLE);
+        showHintOption();
+        switch  (item.getItemId()){/*
+            if (R.id.picture_hint | R.id.multiple_choice_hint | R.id.letter_hint){
+                return true;
+            }*/
+
             case R.id.picture_hint: {
                 if (!isAnswerShown()) {
                     showPictureHint();
@@ -184,7 +177,9 @@ public class QuizActivity extends QACardActivity {
                 break;
             }
             case R.id.multiple_choice_hint: {
+
                 List<Card> mcCards = new ArrayList<>();
+
                 //find random index for array
                 for (int i = 0; i < 3; i++) {
                     int randomNumb = random.nextInt(queueManager.getAllCards().size());
@@ -218,6 +213,40 @@ public class QuizActivity extends QACardActivity {
                 break;
             }
 
+        }
+        return false;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.quiz_activity_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_lookup: {
+                dictionaryUtil.showLookupListDialog("" + getCurrentCard().getQuestion() + " " +
+                        getCurrentCard().getAnswer());
+                break;
+            }
+            case R.id.menu_speak_question: {
+                speakQuestion();
+                break;
+            }
+            case R.id.menu_speak_answer: {
+                speakAnswer();
+                break;
+            }
+            case R.id.hint_option:{
+                //Method that allows the user to view the available hint options
+                showHintOption();
+                break;
+
+            }
+
             case R.id.menu_paint: {
                 Intent myIntent = new Intent(this, PaintActivity.class);
                 startActivity(myIntent);
@@ -225,6 +254,9 @@ public class QuizActivity extends QACardActivity {
         }
         return false;
     }
+
+
+
 
     @Override
     protected boolean onClickQuestionText() {
