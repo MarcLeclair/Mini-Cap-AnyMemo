@@ -24,6 +24,7 @@ import org.liberty.android.fantastischmemo.utils.AMPrefUtil;
 import org.liberty.android.fantastischmemo.utils.AMUiUtil;
 import org.liberty.android.fantastischmemo.utils.DatabaseUtil;
 import org.liberty.android.fantastischmemo.utils.RecentListUtil;
+import org.liberty.android.fantastischmemo.utils.WorkOutListUtil;
 import org.liberty.android.fantastischmemo.widget.WidgetRemoteViewsFactory;
 
 import java.util.Map;
@@ -44,6 +45,7 @@ public interface AppComponents {
     AMUiUtil amUiUtil();
     OkHttpClient okHttpClient();
     RecentListUtil recenetListUtil();
+    WorkOutListUtil workoutListUtil();
     SchedulingAlgorithmParameters schedulingAlgorithmParameters();
     DownloaderUtils downloaderUtils();
     DatabaseUtil databaseUtil();

@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <string-array name="color_materials">
+        <item>#ff0d47a1</item>
+        <item>#ff64b5f6</item>
+        <item>#ff546e7a</item>
+        <item>#ff78909c</item>
+    </string-array>
     <string-array name="font_size_list">
         <item>12</item>
         <item>14</item>

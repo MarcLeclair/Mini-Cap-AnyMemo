@@ -73,7 +73,7 @@ public class AnyMemoDBOpenHelperManager {
         try {
             String dbpath = helper.getDbPath();
             if (!helpers.containsKey(dbpath)) {
-                Log.w(TAG, "Release a wrong db path or release an already been released helper!");
+//                Log.w(TAG, "Release a wrong db path or release an already been released helper!");
                 return;
             }
 

@@ -1,5 +1,7 @@
 package org.liberty.android.fantastischmemo.ui;
 
+import android.test.suitebuilder.annotation.SmallTest;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -17,14 +19,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
-import android.util.Log;
+//import android.util.Log;
 
 /**
  * Created by melid on 2018-03-18.
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({OpenActionsFragment.class, Log.class})
+//@RunWith(PowerMockRunner.class)
+//@PrepareForTest({OpenActionsFragment.class, Log.class})
 public class OpenActionFragmentTest {
     AnyMemoDBOpenHelper helper;
     CardDao dao;
@@ -47,7 +48,7 @@ public class OpenActionFragmentTest {
     public void setUp() throws Exception {
         //add all necessary objects that will be used in the tests
         //must mock the log, otherwise a runtime error is thrown
-        PowerMockito.mockStatic(Log.class);
+        //      PowerMockito.mockStatic(Log.class);
         cards = new ArrayList<>();
         realCards = new ArrayList<>();
 
@@ -92,6 +93,7 @@ public class OpenActionFragmentTest {
         date3 = null;
     }
 
+    @SmallTest
     @Test
     public void setWorkoutModeDatesTest() {
         Mockito.when(helper.getCardDao()).thenReturn(dao);
@@ -106,6 +108,7 @@ public class OpenActionFragmentTest {
 
     }
 
+    @SmallTest
     @Test
     public void verifyDatesForEachCard() {
         //to test that the cards have appropriate dates, we must use actual card objects to be

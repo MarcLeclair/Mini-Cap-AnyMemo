@@ -59,7 +59,10 @@ public class QuizQueueManager implements QueueManager {
         reviewCache = new LinkedList<Card>();
         dirtyCache = new HashSet<Card>();
     }
-
+    @Override
+    public synchronized  Card dequeueWorkout(){
+        return new Card();
+    }
 	@Override
 	public synchronized Card dequeue() {
         if (newCache.size() > 0) {

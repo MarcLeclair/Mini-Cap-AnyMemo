@@ -33,6 +33,7 @@ import org.liberty.android.fantastischmemo.utils.GooglePlayUtil;
 import org.liberty.android.fantastischmemo.utils.RecentListActionModeUtil;
 import org.liberty.android.fantastischmemo.utils.RecentListUtil;
 import org.liberty.android.fantastischmemo.utils.ShareUtil;
+import org.liberty.android.fantastischmemo.utils.WorkOutListUtil;
 
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -63,6 +64,8 @@ public interface ActivityComponents {
     Option option();
 
     RecentListUtil recentListUtil();
+
+    WorkOutListUtil workoutListUtil();
 
     AMPrefUtil amPrefUtil();
 

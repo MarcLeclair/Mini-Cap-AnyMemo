@@ -69,6 +69,8 @@ public class AMPrefKeys {
 
     public static final String RECENT_COUNT_KEY = "recent_count";
 
+    public static final String WORKOUT_COUNT_KEY = "workout_count";
+
     public static final String ENABLE_ANIMATION_KEY = "enable_animation";
 
     // Dropbox
@@ -93,6 +95,9 @@ public class AMPrefKeys {
 
     // AnyMemo main activity
     public static final String FIRST_TIME_KEY = "first_time";
+
+
+    public static final String getWorkoutCountKey(int ord) {return "workoutpath"+ord; }
 
     public static final String getRecentPathKey(int ord) {
         return "recentdbpath" + ord;
