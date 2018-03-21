@@ -3,6 +3,7 @@ package org.liberty.android.fantastischmemo.common;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.test.suitebuilder.annotation.Suppress;
 import android.util.Log;
 
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
@@ -149,6 +150,7 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
                     + " set category_id = 1"
                     + " where category_id is null");
         }
+
         if (oldVersion <= 3) {
             database.execSQL("update settings set questionTextColor = ? where questionTextColor = ?", new Object[] {null, 0xFFBEBEBE});
             database.execSQL("update settings set answerTextColor = ? where answerTextColor = ?", new Object[] {null, 0xFFBEBEBE} );
@@ -158,8 +160,10 @@ public class AnyMemoDBOpenHelper extends OrmLiteSqliteOpenHelper {
         if (oldVersion <= 4) {
             try {
                 database.execSQL("alter table learning_data add column firstLearnDate VARCHAR");
+
                 database.execSQL("update learning_data set firstLearnDate='2010-01-01 " +
                         "00:00:00.000000'");
+
         
                 database.execSQL("alter table settings add column learningMode INTEGER");
                 database.execSQL("update settings set learningMode='0'");

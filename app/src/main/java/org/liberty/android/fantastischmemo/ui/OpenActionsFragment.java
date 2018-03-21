@@ -185,7 +185,6 @@ public class OpenActionsFragment extends BaseDialogFragment {
                 myIntent.putExtra(StudyActivity.EXTRA_DBPATH, dbPath);
                 startActivity(myIntent);
                 recentListUtil.addToRecentList(dbPath);
-                workoutListUtil.addToRecentList(dbPath);
             }
 
 
@@ -299,6 +298,8 @@ public class OpenActionsFragment extends BaseDialogFragment {
 
 
                 dialog.show();
+
+                workoutListUtil.addToRecentList(dbPath);
             }
 
             if (v == editItem) {

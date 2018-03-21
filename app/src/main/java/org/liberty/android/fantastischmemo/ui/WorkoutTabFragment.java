@@ -49,9 +49,12 @@ import com.github.aakira.expandablelayout.ExpandableLinearLayout;
 import com.github.aakira.expandablelayout.Utils;
 
 
-
+import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.inject.Inject;
@@ -67,8 +70,9 @@ public class WorkoutTabFragment extends BaseFragment {
     private final AtomicInteger workoutListVersion = new AtomicInteger(0);
     private final static String TAG = WorkoutTabFragment.class.getSimpleName();
 
-    String[] colors;
-
+    private int colorIndex = 0;
+    private String[] colors;
+    private HashMap<String,int[]> dbPathColored = new HashMap<>();
     private BaseActivity mActivity;
     WorkoutListAdapter woAdapter;
     @Inject WorkOutListUtil workoutList;
@@ -228,26 +232,49 @@ public class WorkoutTabFragment extends BaseFragment {
                 workoutList.deleteFromWorkoutList(allPath[i]);
                 continue;
             }
-            String  path = FilenameUtils.getName(allPath[i]);
+
             ri.dbInfo = getContext().getString(R.string.loading_database);
             ri.index = index++;
             ril.add(ri);
             ri.dbPath = allPath[i];
             ri.dbName = FilenameUtils.getName(allPath[i]);
-                if(i > colors.length){
-                    int newIndex = i - colors.length;
-                    ri.colorId1 =  Color.parseColor(colors[i]);
-                    ri.colorId2 = Color.parseColor(colors[i+1]);
+            if(!dbPathColored.containsKey(FilenameUtils.getName(allPath[i]))) {
+                assignColor(ri);
+            }
+            else{
+                int temp[] = new int[2];
+                for(int temp_index = 0; temp_index < 2 ; temp_index++){
+                    temp[temp_index] = dbPathColored.get(FilenameUtils.getName(allPath[i]))[temp_index];
                 }
-                else {
-                    ri.colorId1 = Color.parseColor(colors[i]);
-                    ri.colorId2 = Color.parseColor(colors[i+1]);
-                }
-                ri.interpolator = Utils.createInterpolator(Utils.ACCELERATE_DECELERATE_INTERPOLATOR);
+                ri.colorId1 = temp[0];
+                ri.colorId2 = temp[1];
+            }
+            ri.interpolator = Utils.createInterpolator(Utils.ACCELERATE_DECELERATE_INTERPOLATOR);
 
 
         }
         return ril;
+    }
+
+    private void assignColor(WorkoutItem ri){
+        int temp[] = new int[2];
+        if (colorIndex >= colors.length) {
+            colorIndex = colorIndex - colors.length;
+        }
+        if((colorIndex + 1)==colors.length){
+            ri.colorId1 = Color.parseColor(colors[colorIndex]);
+            ri.colorId1 = Color.parseColor(colors[0]);
+            temp[0] = Color.parseColor(colors[colorIndex]);
+            temp[1] = Color.parseColor(colors[0]);
+            colorIndex = 1;
+        }else{
+            ri.colorId1 = Color.parseColor(colors[colorIndex]);
+            ri.colorId2 = Color.parseColor(colors[colorIndex + 1]);
+            temp[0] = Color.parseColor(colors[colorIndex]);
+            temp[1] = Color.parseColor(colors[colorIndex + 1]);
+            colorIndex = colorIndex + 2;
+        }
+        dbPathColored.put(FilenameUtils.getName(ri.dbPath), temp);
     }
 
     private List<WorkoutItem> loadRecentItemsWithDetails() {
@@ -374,6 +401,7 @@ public class WorkoutTabFragment extends BaseFragment {
                 Intent myIntent = new Intent();
                 myIntent.setClass(getActivity(), StudyActivity.class);
                 myIntent.putExtra(StudyActivity.EXTRA_DBPATH, item.dbPath);
+                myIntent.putExtra(StudyActivity.WORKOUT_MODE, true);
                 startActivity(myIntent);
             }
         });
