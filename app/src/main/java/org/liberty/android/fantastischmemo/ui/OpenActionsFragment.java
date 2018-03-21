@@ -66,12 +66,10 @@ import org.liberty.android.fantastischmemo.utils.DatabaseUtil;
 import org.w3c.dom.Text;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
-
 
 import javax.inject.Inject;
 
@@ -426,17 +424,13 @@ public class OpenActionsFragment extends BaseDialogFragment {
 
         DateUtil dt= new DateUtil();
 
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        String dateString =formatter.format(startDate);
-
         int days = DateUtil.getDateDifference(startDate);
         int duration=Math.abs(days*24);
 
         final int periodicity = (int) TimeUnit.HOURS.toSeconds(duration);
-        final int toleranceInterval = (int) TimeUnit.HOURS.toSeconds(1);
+        final int toleranceInterval = (int) TimeUnit.MINUTES.toSeconds(5);
 
         Bundle bundle = new Bundle();
-        bundle.putString("startdate", dateString);
         bundle.putString("numDays", Integer.toString(numDays));
 
         FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(mActivity));

@@ -2,6 +2,7 @@ package org.liberty.android.fantastischmemo.utils;
 
 import android.test.suitebuilder.annotation.SmallTest;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -10,6 +11,7 @@ import java.util.Date;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
+import static org.liberty.android.fantastischmemo.utils.DateUtil.getDateDifference;
 
 /**
  * Created by melid on 2018-03-18.
@@ -60,5 +62,12 @@ public class DateUtilTest {
         cal.set(Calendar.MILLISECOND, 0);
         Date date = cal.getTime();
         assertEquals(date, DateUtil.getDate(12, 3, 2018));
+    }
+
+    @Test
+    public void getDateDifferenceTest(){
+        int delay1 = getDateDifference(new Date());
+        int delay2 = getDateDifference(new Date());
+        Assert.assertEquals(delay1,delay2);
     }
 }

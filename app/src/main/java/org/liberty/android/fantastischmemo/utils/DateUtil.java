@@ -21,6 +21,7 @@ public class DateUtil {
         cal.add(Calendar.DATE, days); // use -days to get a previous day
         return cal.getTime();
     }
+
     public static Date getDate(int day, int month, int year) {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, year);

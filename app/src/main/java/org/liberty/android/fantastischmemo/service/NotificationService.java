@@ -25,6 +25,7 @@ public class NotificationService extends JobService {
     // Magic id used for Card player's notification
     private static final int NOTIFICATION_ID = 9283372;
     private int count=0;
+    private final String TAG = getClass().getSimpleName();
     @Override
     public boolean onStartJob(JobParameters job) {
 
@@ -42,12 +43,16 @@ public class NotificationService extends JobService {
             notification.flags = notification.flags | Notification.FLAG_AUTO_CANCEL;
             notificationManager.notify(NOTIFICATION_ID, notification);
 
+try{
+    if(count==0){
+        scheduleFollowingJob(job.getExtras());
 
-        if(count==0){
-            scheduleFollowingJob(job.getExtras());
-
+    }
+    count++;
+}catch(Exception e){
+            Log.e(TAG,"No bundle found");
         }
-        count++;
+
 
         return false; // Answers the question: "Is there still work going on?"
     }
