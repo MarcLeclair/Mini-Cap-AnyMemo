@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
     <string name="app_name">AnyMemo</string>
     <string name="app_full_name">AnyMemo</string>
@@ -25,6 +25,7 @@
     <string name="memo_show_answer">Show answer</string>
     <string name="memo_no_item_title">No item</string>
     <string name="memo_no_item_message">There is no item to learn for now. If you want to cram, you can do quizzes by long clicking a db in the &quot;Recent&quot; tab.</string>
+    <string name="memo_no_workout_message">This is it for your workout today!</string>
     <string name="memo_btn0_text">0 Forgot</string>
     <string name="memo_btn1_text">1 Forgot</string>
     <string name="memo_btn2_text">2 Very Hard</string>
@@ -118,6 +119,7 @@
     <string name="about_version">Version history</string>
     <string name="what_is_new">New version installed</string>
     <string name="downloader_categories">Categories</string>
+    <string name="use_hint">Use hints for this quiz</string>
 
     <string name="interface_locale_title">Interface language</string>
     <string name="interface_locale_summary">Choose the language of the user interface. Please restart AnyMemo to take effect.</string>
@@ -474,7 +476,20 @@
     <string name="letter_hint">Letter hint</string>
     <string name="favourite_text">Mark as Favourite</string>
     <string name="error_programmatic">You should enter \'ciao\' here</string>
-    <string name="spell_test">Type out the answer</string>
+
+    <string name="spell_hint_text">Spell hint edit text </string>
+    <string name="spell_hint">Type out the answer</string>
     <string name="add_to_study_mode">Add to study mode</string>
-    <string name="display_hint_option">Display hint options</string>
+    <string name="spell_hint_btn_text">Verify answer</string>
+    <string name="workout_text">Workout Mode</string>
+
+    <string name="spell_test">Type out the answer</string>
+    <string name="add_to_workout_mode">Add to workout</string>
+    <string name="add_to_workout_mode_message">By adding this deck to workout mode, you will be able
+        to study a number of cards every day .</string>
+    <string name="add_start_date">Add start date</string>
+    <string name="add_start_date_message">""</string>
+    <string name="add_number_of_days">Add number of days</string>
+    <string name="add_number_of_days_message">Add number of days</string>
+
 </resources>

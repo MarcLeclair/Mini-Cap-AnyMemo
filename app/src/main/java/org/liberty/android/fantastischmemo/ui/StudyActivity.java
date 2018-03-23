@@ -61,6 +61,7 @@ import javax.inject.Inject;
  * The StudyActivity is used for the classic way of learning cards.
  */
 public class StudyActivity extends QACardActivity {
+    public static String WORKOUT_MODE = "workout_mode";
     public static String EXTRA_DBPATH = "dbpath";
     public static String EXTRA_CATEGORY_ID = "category_id";
     public static String EXTRA_START_CARD_ID = "start_card_id";
@@ -77,6 +78,7 @@ public class StudyActivity extends QACardActivity {
     /* State objects */
     private Card prevCard = null;
     private String dbPath = "";
+    private boolean workout_mode = false;
     private int filterCategoryId = -1;
     private Category filterCategory;
     private int startCardId = -1;
@@ -105,6 +107,7 @@ public class StudyActivity extends QACardActivity {
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
+            workout_mode = extras.getBoolean(WORKOUT_MODE, false);
             dbPath = extras.getString(EXTRA_DBPATH);
             filterCategoryId = extras.getInt(EXTRA_CATEGORY_ID, -1);
             startCardId = extras.getInt(EXTRA_START_CARD_ID, -1);
@@ -333,25 +336,49 @@ public class StudyActivity extends QACardActivity {
     @Override
     public void onPostInit() {
         super.onPostInit();
-        if (filterCategoryId != -1) {
-            filterCategory = getDbOpenHelper().getCategoryDao().queryForId(filterCategoryId);
-        }
+        if(workout_mode == false) {
+            if (filterCategoryId != -1) {
+                filterCategory = getDbOpenHelper().getCategoryDao().queryForId(filterCategoryId);
+            }
 
-        /* Run the learnQueue init in a separate thread */
-        if (startCardId != -1) {
-            Card card = queueManager.dequeuePosition(startCardId);
-            queueManager.remove(card);
-            setCurrentCard(card);
-        } else {
-            Card card = queueManager.dequeue();
-            queueManager.remove(card);
-            setCurrentCard(card);
+            /* Run the learnQueue init in a separate thread */
+            if (startCardId != -1) {
+                Card card = queueManager.dequeuePosition(startCardId);
+                queueManager.remove(card);
+                setCurrentCard(card);
+            } else {
+                Card card = queueManager.dequeue();
+                queueManager.remove(card);
+                setCurrentCard(card);
+            }
+            refreshStatInfo();
+            // If the db does not contain any cards. Show no item dialog.
+            if (getCurrentCard() == null) {
+                showNoItemDialog();
+                return;
+            }
         }
-        refreshStatInfo();
-        // If the db does not contain any cards. Show no item dialog.
-        if (getCurrentCard() == null) {
-            showNoItemDialog();
-            return;
+        else{
+            if (filterCategoryId != -1) {
+                filterCategory = getDbOpenHelper().getCategoryDao().queryForId(filterCategoryId);
+            }
+
+            /* Run the learnQueue init in a separate thread */
+            if (startCardId != -1) {
+                Card card = queueManager.dequeuePosition(startCardId);
+                queueManager.remove(card);
+                setCurrentCard(card);
+            } else {
+                Card card = queueManager.dequeueWorkout();
+                queueManager.remove(card);
+                setCurrentCard(card);
+            }
+            refreshStatInfo();
+            // If the db does not contain any cards. Show no item dialog.
+            if (getCurrentCard() == null) {
+                showNoWorkoutDialog();
+                return;
+            }
         }
         setupGradeButtons();
         displayCard(false);
@@ -488,11 +515,32 @@ public class StudyActivity extends QACardActivity {
             .show();
     }
 
+    private void showNoWorkoutDialog(){
+        new AlertDialog.Builder(this)
+                .setTitle(this.getString(R.string.memo_no_item_title))
+                .setMessage(this.getString(R.string.memo_no_workout_message))
+                .setPositiveButton(getString(R.string.back_menu_text), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                    /* Finish the current activity and go back to the last activity.
+                     * It should be the open screen. */
+                        onBackPressed();
+                    }
+                })
+                .setOnCancelListener(new DialogInterface.OnCancelListener(){
+                    public void onCancel(DialogInterface dialog){
+                        onBackPressed();
+                    }
+                })
+                .create()
+                .show();
+    }
+
     private class LearnQueueManagerLoaderCallbacks implements
             LoaderManager.LoaderCallbacks<QueueManager> {
         @Override
         public Loader<QueueManager> onCreateLoader(int arg0, Bundle arg1) {
-             Loader<QueueManager> loader = new LearnQueueManagerLoader(appComponents(), dbPath, filterCategoryId);
+             Loader<QueueManager> loader = new LearnQueueManagerLoader(appComponents(), dbPath, filterCategoryId, workout_mode);
              loader.forceLoad();
              return loader;
         }
@@ -517,12 +565,14 @@ public class StudyActivity extends QACardActivity {
 
         @Inject SchedulingAlgorithmParameters schedulingAlgorithmParameters;
 
+        private boolean workout_mode;
         private final int filterCategoryId;
 
-        public LearnQueueManagerLoader(AppComponents appComponents, String dbPath, int filterCategoryId) {
+        public LearnQueueManagerLoader(AppComponents appComponents, String dbPath, int filterCategoryId, boolean workout_mode) {
             super(appComponents.applicationContext(), dbPath);
             appComponents.inject(this);
             this.filterCategoryId = filterCategoryId;
+            this.workout_mode = workout_mode;
         }
 
         @Override
@@ -537,7 +587,8 @@ public class StudyActivity extends QACardActivity {
                 .setLearnQueueSize(queueSize)
                 .setCacheSize(50)
                 .setFilterCategory(filterCategory)
-                .setReviewOrdering(this.schedulingAlgorithmParameters.getReviewOrdering());
+                .setReviewOrdering(this.schedulingAlgorithmParameters.getReviewOrdering())
+                .setWorkoutMode(workout_mode);
             if (option.getShuffleType() == Option.ShuffleType.LOCAL) {
                 builder.setShuffle(true);
             } else {
@@ -559,7 +610,6 @@ public class StudyActivity extends QACardActivity {
             }
         }
     }
-
     private void refreshStatInfo() {
        newCardCount = getDbOpenHelper().getCardDao().getNewCardCount(filterCategory);
        scheduledCardCount = getDbOpenHelper().getCardDao().getScheduledCardCount(filterCategory);
@@ -659,14 +709,17 @@ public class StudyActivity extends QACardActivity {
                 }
 
                 // Dequeue card and update the queue
+                Card nextCard = new Card();
                 queueManager.update(updatedCard);
-
-                Card nextCard = queueManager.dequeue();
+                if(workout_mode == false)  nextCard = queueManager.dequeue();
+                if(workout_mode == true)  nextCard = queueManager.dequeueWorkout();
                 queueManager.remove(nextCard);
-
-                if (nextCard == null) {
+                if (nextCard == null && workout_mode == false) {
                     showNoItemDialog();
-                } else {
+                }else if(nextCard == null && workout_mode == true){
+                    showNoWorkoutDialog();
+                }
+                else {
                     setCurrentCard(nextCard);
                     displayCard(false);
                 }

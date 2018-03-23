@@ -94,6 +94,8 @@ public class QuizLauncherDialogFragment extends BaseDialogFragment {
 
     private CheckBox shuffleCheckbox;
 
+    private CheckBox useQuizCheckbox;
+
     private Button categoryButton;
 
     private int totalCardNumber;
@@ -197,6 +199,7 @@ public class QuizLauncherDialogFragment extends BaseDialogFragment {
 
         shuffleCheckbox = (CheckBox) v.findViewById(R.id.shuffle_checkbox);
 
+        useQuizCheckbox = (CheckBox) v.findViewById(R.id.use_quiz_checkbox);
         return new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.quiz_text)
                 .setView(v)
@@ -236,6 +239,7 @@ public class QuizLauncherDialogFragment extends BaseDialogFragment {
                 intent.putExtra(QuizActivity.EXTRA_DBPATH, dbPath);
                 intent.putExtra(QuizActivity.EXTRA_CATEGORY_ID, categoryId);
                 intent.putExtra(QuizActivity.EXTRA_SHUFFLE_CARDS, shuffleCheckbox.isChecked());
+                intent.putExtra(QuizActivity.EXTRA_QUIZ_HINT,useQuizCheckbox.isChecked());
                 startActivity(intent);
             } else if(quizByRangeRadio.isChecked()) {
             	Intent intent = new Intent(mActivity, QuizActivity.class);
@@ -250,6 +254,7 @@ public class QuizLauncherDialogFragment extends BaseDialogFragment {
                 intent.putExtra(QuizActivity.EXTRA_START_CARD_ORD, startOrd);
                 intent.putExtra(QuizActivity.EXTRA_QUIZ_SIZE, size);
                 intent.putExtra(QuizActivity.EXTRA_SHUFFLE_CARDS, shuffleCheckbox.isChecked());
+                intent.putExtra(QuizActivity.EXTRA_QUIZ_HINT,useQuizCheckbox.isChecked());
                 
                 startActivity(intent);
             } else{
@@ -262,6 +267,7 @@ public class QuizLauncherDialogFragment extends BaseDialogFragment {
                 intent.putExtra(QuizActivity.EXTRA_START_CARD_ORD, startOrd);
                 intent.putExtra(QuizActivity.EXTRA_QUIZ_SIZE, groupSize);
                 intent.putExtra(QuizActivity.EXTRA_SHUFFLE_CARDS, shuffleCheckbox.isChecked());
+                intent.putExtra(QuizActivity.EXTRA_QUIZ_HINT,useQuizCheckbox.isChecked());
                 startActivity(intent);
             }
         }

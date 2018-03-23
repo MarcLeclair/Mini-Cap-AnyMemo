@@ -19,6 +19,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 package org.liberty.android.fantastischmemo.ui;
 
+import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -28,6 +30,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -39,6 +42,9 @@ import android.widget.Toast;
 import android.widget.Button;
 
 import com.google.common.base.Strings;
+import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
+import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
+import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 
 import org.liberty.android.fantastischmemo.R;
 import org.liberty.android.fantastischmemo.entity.Card;
@@ -63,6 +69,7 @@ public class QuizActivity extends QACardActivity {
     public static String EXTRA_START_CARD_ORD = "start_card_ord";
     public static String EXTRA_QUIZ_SIZE = "quiz_size";
     public static String EXTRA_SHUFFLE_CARDS = "shuffle_cards";
+    public static String EXTRA_QUIZ_HINT = "quiz_hint";
     public static String EXTRA_START_CARD_ID = "start_card_id";
 
     /* UI elements */
@@ -83,9 +90,17 @@ public class QuizActivity extends QACardActivity {
     private int startCardOrd = -1;
     private int quizSize = -1;
 
+
+    private ImageView rlIcon1;
+    private ImageView rlIcon2;
+    private ImageView rlIcon3;
+
+
     private boolean isNewCardsCompleted = false;
 
     private boolean shuffleCards = false;
+
+    private boolean showQuizHint = false;
 
     private int totalQuizSize = -1;
     //the hintCounter is to count how many times the user clicks the letter hint button
@@ -134,6 +149,78 @@ public class QuizActivity extends QACardActivity {
         startCardOrd = extras.getInt(EXTRA_START_CARD_ORD, -1);
         quizSize = extras.getInt(EXTRA_QUIZ_SIZE, -1);
         shuffleCards = extras.getBoolean(EXTRA_SHUFFLE_CARDS, false);
+        showQuizHint = extras.getBoolean(EXTRA_QUIZ_HINT, false);
+
+        if(showQuizHint == true) {
+            final ImageView fabIconNew = new ImageView(this);
+            fabIconNew.setImageDrawable(getResources().getDrawable(R.drawable.hint));
+            final FloatingActionButton rightLowerButton = new FloatingActionButton.Builder(this)
+                    .setContentView(fabIconNew)
+                    .build();
+
+            SubActionButton.Builder rLSubBuilder = new SubActionButton.Builder(this);
+             rlIcon1 = new ImageView(this);
+             rlIcon2 = new ImageView(this);
+             rlIcon3 = new ImageView(this);
+
+            rlIcon1.setImageDrawable(getResources().getDrawable(R.drawable.hang_man));
+            rlIcon2.setImageDrawable(getResources().getDrawable(R.drawable.multiple_choice));
+            rlIcon3.setImageDrawable(getResources().getDrawable(R.drawable.picture_icon));
+
+            final FloatingActionMenu rightLowerMenu = new FloatingActionMenu.Builder(this)
+                    .addSubActionView(rLSubBuilder.setContentView(rlIcon1).build())
+                    .addSubActionView(rLSubBuilder.setContentView(rlIcon2).build())
+                    .addSubActionView(rLSubBuilder.setContentView(rlIcon3).build())
+                    .attachTo(rightLowerButton)
+                    .build();
+
+            rlIcon1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                   letter_hint();
+                }
+            });
+            rlIcon2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (!isAnswerShown()) {
+                        multiple_choie();
+                    }
+                }
+            });
+
+            rlIcon3.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (!isAnswerShown()) {
+                        showPictureHint();
+                    }
+                }
+            });
+            rightLowerMenu.setStateChangeListener(new FloatingActionMenu.MenuStateChangeListener() {
+                @Override
+                public void onMenuOpened(FloatingActionMenu menu) {
+                    // Rotate the icon of rightLowerButton 45 degrees clockwise
+                    fabIconNew.setRotation(0);
+                    PropertyValuesHolder pvhR = PropertyValuesHolder.ofFloat(View.ROTATION, 45);
+                    ObjectAnimator animation = ObjectAnimator.ofPropertyValuesHolder(fabIconNew, pvhR);
+                    animation.start();
+                }
+
+                @Override
+                public void onMenuClosed(FloatingActionMenu menu) {
+                    // Rotate the icon of rightLowerButton 45 degrees counter-clockwise
+                    fabIconNew.setRotation(45);
+                    PropertyValuesHolder pvhR = PropertyValuesHolder.ofFloat(View.ROTATION, 0);
+                    ObjectAnimator animation = ObjectAnimator.ofPropertyValuesHolder(fabIconNew, pvhR);
+                    animation.start();
+                }
+
+
+            });
+        }
+
+        Log.d("Quiz hint mode: ", String.valueOf(showQuizHint));
         if (savedInstanceState != null) {
             startCardId = savedInstanceState.getInt(EXTRA_START_CARD_ID, -1);
         }
@@ -210,6 +297,20 @@ public class QuizActivity extends QACardActivity {
                 else {
                     letterHintCounter = 0;
                 }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_lookup: {
+                dictionaryUtil.showLookupListDialog("" + getCurrentCard().getQuestion() + " " +
+                        getCurrentCard().getAnswer());
+                break;
+            }
+            case R.id.menu_speak_question: {
+                speakQuestion();
+                break;
+            }
+            case R.id.menu_speak_answer: {
+                speakAnswer();
                 break;
             }
 
@@ -478,7 +579,40 @@ public class QuizActivity extends QACardActivity {
                 .setCancelable(false)
                 .show();
     }
+    //multiple choice option
+    private void multiple_choie(){
+        List<Card> mcCards = new ArrayList<>();
+        //find random index for array
+        for (int i = 0; i < 3; i++) {
+            int randomNumb = random.nextInt(queueManager.getAllCards().size());
+            while (randomNumb == 0) {
+                randomNumb = random.nextInt(queueManager.getAllCards().size());
+            }
+            mcCards.add(queueManager.getAllCards().get(randomNumb));
+        }
 
+        if (!isAnswerShown()) {
+            showMcHint(mcCards);
+            //resetting the letter counter every time the multiple choice is called
+            letterHintCounter = 0;
+        }
+    }
+
+    //letter hint option
+    private void letter_hint(){
+        if (!isAnswerShown()) {
+            //every time the button gets clicked, counter increases by 1
+            letterHintCounter++;
+            //showLetterhint() is in QACardActivity.java
+            showLetterHint(letterHintCounter);
+        }
+
+        //reset the counter if the answer is shown
+        //otherwise it will affect the next answer which will not start from 0
+        else {
+            letterHintCounter = 0;
+        }
+    }
     // Current flush is not functional. So this method only quit and does not flush
     // the queue.
     private DialogInterface.OnClickListener flushAndQuitListener =

@@ -19,48 +19,46 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.liberty.android.fantastischmemo.R;
 
-import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
-import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
+import static android.support.test.espresso.action.ViewActions.swipeLeft;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
-import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class pictureHintEspresso {
-
+public class WorkoutDeleteTest {
 
     @Rule
     public ActivityTestRule<AnyMemo> mActivityTestRule = new ActivityTestRule<>(AnyMemo.class);
 
     @Test
-    public void pictureHintEspresso() {
+    public void workoutDeleteTest() {
         final String TAG = "Espresso logger";
         try {
+            //view is displayed logic
             ViewInteraction appCompatButton = onView(
                     allOf(withId(android.R.id.button1), withText("OK"),
                             childAtPosition(
-                                    childAtPosition(
-                                            withClassName(is("android.widget.ScrollView")),
-                                            0),
-                                    3)));
-            appCompatButton.perform(scrollTo(), click());
-        }catch(NoMatchingViewException e) {
+                                    allOf(withClassName(is("com.android.internal.widget" +
+                                                    ".ButtonBarLayout")),
+                                            childAtPosition(
+                                                    withClassName(is("android.widget.LinearLayout")),
+                                                    3)),
+                                    3),
+                            isDisplayed()));
+            appCompatButton.perform(click());
+        } catch (NoMatchingViewException e) {
             //catch exception if there is no dialogue box with an OK text
             //sometimes this text will only appear on the first time of running the test
             Log.d(TAG, "letterHintEspresso() returned: exception, could not find text with OK" );
-
         }
 
         ViewInteraction appCompatButton2 = onView(
@@ -74,34 +72,23 @@ public class pictureHintEspresso {
         appCompatButton2.perform(click());
 
         ViewInteraction linearLayout = onView(
-                allOf(withId(R.id.quiz),
+                allOf(withId(R.id.study_mode),
                         childAtPosition(
                                 childAtPosition(
                                         withClassName(is("android.widget.ScrollView")),
                                         0),
-                                3)));
+                                1)));
         linearLayout.perform(scrollTo(), click());
 
         ViewInteraction appCompatButton3 = onView(
-                allOf(withId(R.id.start_quiz_button), withText("Start quiz"),
+                allOf(withId(R.id.start_date_button), withText("Add start date"),
                         childAtPosition(
                                 childAtPosition(
-                                        withClassName(is("android.widget.ScrollView")),
-                                        0),
-                                2)));
-        appCompatButton3.perform(scrollTo(), click());
-
-        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
-
-        ViewInteraction appCompatTextView = onView(
-                allOf(withId(R.id.title), withText("Picture hint"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.support.v7.view.menu.ListMenuItemView")),
-                                        0),
+                                        withClassName(is("android.widget.LinearLayout")),
+                                        2),
                                 0),
                         isDisplayed()));
-        appCompatTextView.perform(click());
+        appCompatButton3.perform(click());
 
         ViewInteraction appCompatButton4 = onView(
                 allOf(withId(android.R.id.button1), withText("OK"),
@@ -112,65 +99,64 @@ public class pictureHintEspresso {
                                 3)));
         appCompatButton4.perform(scrollTo(), click());
 
-        ViewInteraction formEditText = onView(
-                allOf(withId(R.id.edit_imgpath_entry),
+        ViewInteraction appCompatEditText = onView(
+                allOf(withId(R.id.num_days_input),
                         childAtPosition(
                                 childAtPosition(
-                                        withClassName(is("android.widget.ScrollView")),
+                                        withId(R.id.num_days_input_wrapper),
                                         0),
-                                7)));
-        formEditText.perform(scrollTo(), click());
-
-        ViewInteraction formEditText2 = onView(
-                allOf(withId(R.id.edit_imgpath_entry),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.ScrollView")),
-                                        0),
-                                7)));
-        formEditText2.perform(scrollTo(), replaceText("https://img.webmd.com/dtmcms/live/WebMD/consumer_assets/site_images/media/medical/hw/hwkb17_073_002.jpg"), closeSoftKeyboard());
-
-        ViewInteraction actionMenuItemView = onView(
-                allOf(withId(R.id.save), withContentDescription("Save"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.action_bar),
-                                        1),
                                 0),
                         isDisplayed()));
-        actionMenuItemView.perform(click());
-
-        pressBack();
+        appCompatEditText.perform(replaceText("5"), closeSoftKeyboard());
 
         ViewInteraction appCompatButton5 = onView(
-                allOf(withId(R.id.start_quiz_button), withText("Start quiz"),
+                allOf(withId(R.id.button_ok), withText("Add to workout"),
                         childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.ScrollView")),
-                                        0),
-                                2)));
-        appCompatButton5.perform(scrollTo(), click());
-
-        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
-
-        ViewInteraction appCompatTextView2 = onView(
-                allOf(withId(R.id.title), withText("Picture hint"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.support.v7.view.menu.ListMenuItemView")),
-                                        0),
-                                0),
-                        isDisplayed()));
-        appCompatTextView2.perform(click());
-
-        ViewInteraction linearLayout2 = onView(
-                allOf(withId(R.id.root),
-                        withParent(allOf(withId(R.id.field2),
                                 childAtPosition(
                                         withClassName(is("android.widget.LinearLayout")),
-                                        2))),
+                                        3),
+                                1),
                         isDisplayed()));
-        linearLayout2.perform(click());
+        appCompatButton5.perform(click());
+
+        ViewInteraction tabView = onView(
+                allOf(childAtPosition(
+                        childAtPosition(
+                                withId(R.id.tabs),
+                                0),
+                        4),
+                        isDisplayed()));
+        tabView.perform(click());
+
+        ViewInteraction viewPager = onView(
+                allOf(withId(R.id.viewpager),
+                        childAtPosition(
+                                allOf(withId(R.id.main_content),
+                                        childAtPosition(
+                                                withId(R.id.drawer_layout),
+                                                0)),
+                                1),
+                        isDisplayed()));
+        viewPager.perform(swipeLeft());
+
+        ViewInteraction tabView2 = onView(
+                allOf(childAtPosition(
+                        childAtPosition(
+                                withId(R.id.tabs),
+                                0),
+                        4),
+                        isDisplayed()));
+        tabView2.perform(click());
+
+        ViewInteraction appCompatButton6 = onView(
+                allOf(withId(R.id.delete), withText("Yes,Delete"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.swipe),
+                                        0),
+                                2),
+                        isDisplayed()));
+        appCompatButton6.perform(click());
 
     }
 

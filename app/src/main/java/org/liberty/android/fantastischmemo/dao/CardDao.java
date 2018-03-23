@@ -1,5 +1,7 @@
 package org.liberty.android.fantastischmemo.dao;
 
+import com.j256.ormlite.field.types.DateStringType;
+
 import org.liberty.android.fantastischmemo.entity.Card;
 import org.liberty.android.fantastischmemo.entity.Category;
 import org.liberty.android.fantastischmemo.entity.ReviewOrdering;
@@ -110,4 +112,6 @@ public interface CardDao extends HelperDao<Card, Integer> {
      * @return all cards.
      */
     List<Card> getAllCards(Category filterCategory);
+
+    List<Card> getAllCardsForToday(Date today);
 }

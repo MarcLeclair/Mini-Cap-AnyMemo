@@ -1,9 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
+
+    <color name="transparent">#0fff</color>
+
+    <color name="white">#fff</color>
+
+    <color name="gray">#333</color>
+
+    <color name="gray_light">#dfdfdf</color>
+
     <color name="primary_text_light">#FFFFFF</color>
     <color name="secondary_text_light">#B2FFFFFF</color>
     <color name="disabled_text_light">#7FFFFFFF</color>
     <color name="dividers_light">#1EFFFFFF</color>
+
+    <color name="backgroundColor">#E8E8E0</color>
+    <color name="backgroundColorPress">#DBDBD3</color>
 
     <color name="primary_text_dark">#DD000000</color>
     <color name="secondary_text_dark">#89000000</color>

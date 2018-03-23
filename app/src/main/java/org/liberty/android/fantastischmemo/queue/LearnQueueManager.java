@@ -23,6 +23,8 @@ package org.liberty.android.fantastischmemo.queue;
 import android.content.Context;
 import android.util.Log;
 
+import com.j256.ormlite.field.types.DateStringType;
+
 import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelper;
 import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelperManager;
 import org.liberty.android.fantastischmemo.dao.CardDao;
@@ -34,7 +36,10 @@ import org.liberty.android.fantastischmemo.scheduler.Scheduler;
 import org.liberty.android.fantastischmemo.utils.AnyMemoExecutor;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -52,6 +57,7 @@ public class LearnQueueManager implements QueueManager {
 
     private Category filterCategory;
 
+    private List<Card> workoutQueue;
     private List<Card> learnQueue;
     private List<Card> newCache;
     private List<Card> reviewCache;
@@ -62,6 +68,8 @@ public class LearnQueueManager implements QueueManager {
     private int cacheSize;
 
     private boolean shuffle;
+
+    private boolean workoutMode;
 
     private ReviewOrdering reviewOrdering;
 
@@ -77,8 +85,10 @@ public class LearnQueueManager implements QueueManager {
         this.scheduler = builder.scheduler;
         this.context = builder.context;
         this.dbPath = builder.dbPath;
+        this.workoutMode = builder.workoutOrNot;
         this.reviewOrdering = builder.reviewOrdering;
 
+        workoutQueue = Collections.synchronizedList(new LinkedList<Card>());
         learnQueue = Collections.synchronizedList(new LinkedList<Card>());
         newCache = Collections.synchronizedList(new LinkedList<Card>());
         reviewCache = Collections.synchronizedList(new LinkedList<Card>());
@@ -88,6 +98,17 @@ public class LearnQueueManager implements QueueManager {
         dirtyCache = new LinkedBlockingQueue<Card>();
     }
 
+
+    public synchronized  Card dequeueWorkout(){
+        shuffle();
+        if (!workoutQueue.isEmpty()) {
+            Card c = workoutQueue.remove(0);
+            Log.d(TAG, "workoutQueue card: " + c.getId());
+            return c;
+        } else {
+            return null;
+        }
+    }
     @Override
     public synchronized Card dequeue() {
         shuffle();
@@ -116,6 +137,7 @@ public class LearnQueueManager implements QueueManager {
 
     @Override
     public synchronized void remove(Card card) {
+        workoutQueue.remove(card);
         learnQueue.remove(card);
         reviewCache.remove(card);
         newCache.remove(card);
@@ -127,7 +149,38 @@ public class LearnQueueManager implements QueueManager {
         flushDirtyCache();
         AnyMemoExecutor.waitAllTasks();
     }
+    private synchronized void getWorkoutCards(){
 
+        Calendar c = new GregorianCalendar();
+        c.set(Calendar.HOUR_OF_DAY, 0); //anything 0 - 23
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND,0);
+        Date today = c.getTime();
+
+        final AnyMemoDBOpenHelper dbOpenHelper = AnyMemoDBOpenHelperManager
+                .getHelper(context, dbPath);
+        final CardDao cardDao = dbOpenHelper.getCardDao();
+        dumpLearnQueue();
+        List<Card> exclusionList = new ArrayList<Card>(learnQueue.size()
+                + dirtyCache.size());
+        exclusionList.addAll(learnQueue);
+        exclusionList.addAll(dirtyCache);
+        try{
+
+            if (workoutQueue.size() == 0) {
+                List<Card> cs = cardDao.getAllCardsForToday(today);
+                if (cs.size() > 0) {
+                    workoutQueue.addAll(cs);
+                }
+            }
+        }finally {
+            AnyMemoDBOpenHelperManager.releaseHelper(dbOpenHelper);
+        }
+
+        flushDirtyCache();
+        dumpLearnQueue();
+    }
     private synchronized void refill() {
         final AnyMemoDBOpenHelper dbOpenHelper = AnyMemoDBOpenHelperManager
                 .getHelper(context, dbPath);
@@ -185,17 +238,22 @@ public class LearnQueueManager implements QueueManager {
         // Make sure to remove the stale cache first.
         // Set.add(Object) will not overwrite object.
         remove(card);
-        if (!scheduler.isCardLearned(card.getLearningData())) {
-            // Add to the back of the queue
-            learnQueue.add(card);
+        if(workoutMode == false) {
+            if (!scheduler.isCardLearned(card.getLearningData())) {
+                // Add to the back of the queue
+                learnQueue.add(card);
+            }
+            try {
+                dirtyCache.put(card);
+            } catch (InterruptedException e) {
+                Log.e(TAG, "Updating card is interrupted", e);
+                assert false : "The update should not be interrupted";
+            }
+            refill();
         }
-        try {
-            dirtyCache.put(card);
-        } catch (InterruptedException e) {
-            Log.e(TAG, "Updating card is interrupted", e);
-            assert false : "The update should not be interrupted";
+        else{
+            //getWorkoutCards();
         }
-        refill();
     }
 
     private synchronized void position(int cardId) {
@@ -317,6 +375,8 @@ public class LearnQueueManager implements QueueManager {
 
         private boolean shuffle = false;
 
+        private boolean workoutOrNot = false;
+
         private String dbPath;
 
         private Context context;
@@ -354,10 +414,19 @@ public class LearnQueueManager implements QueueManager {
             this.reviewOrdering = reviewOrdering;
             return this;
         }
+        public Builder setWorkoutMode(boolean workoutOrNot){
+            this.workoutOrNot = workoutOrNot;
+            return this;
+        }
 
         public QueueManager build() {
             LearnQueueManager qm = new LearnQueueManager(this);
-            qm.refill();
+            if(workoutOrNot == true){
+                qm.getWorkoutCards();
+            }
+            else {
+                qm.refill();
+            }
             return qm;
         }
     }
