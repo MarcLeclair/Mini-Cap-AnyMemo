@@ -119,6 +119,7 @@
     <string name="about_version">Version history</string>
     <string name="what_is_new">New version installed</string>
     <string name="downloader_categories">Categories</string>
+    <string name="use_hint">Use hints for this quiz</string>
 
     <string name="interface_locale_title">Interface language</string>
     <string name="interface_locale_summary">Choose the language of the user interface. Please restart AnyMemo to take effect.</string>
