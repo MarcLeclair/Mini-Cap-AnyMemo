@@ -58,6 +58,11 @@
                 android:inputType="number" />
 
         </android.support.design.widget.TextInputLayout>
+        <CheckBox
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/notification"
+            android:text="@string/Enable_notification" />
     </LinearLayout>
 
     <LinearLayout

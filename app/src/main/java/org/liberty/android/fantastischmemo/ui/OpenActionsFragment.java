@@ -35,6 +35,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -225,7 +226,7 @@ public class OpenActionsFragment extends BaseDialogFragment {
                 final EditText num_days_input = (EditText) dialog.findViewById(R.id.num_days_input);
                 final TextInputLayout numDaysInputWrapper = (TextInputLayout) dialog.findViewById
                         (R.id.num_days_input_wrapper);
-
+                final CheckBox notificationCheckbox = (CheckBox) dialog.findViewById(R.id.notification);
                 // if button is clicked, set the new workout dates for each cards within the deck
                 positiveButton.setOnClickListener(new View.OnClickListener() {
                    @RequiresApi(api = Build.VERSION_CODES.N)
@@ -276,7 +277,10 @@ public class OpenActionsFragment extends BaseDialogFragment {
                                             "mode!", Toast
                                             .LENGTH_LONG).show();
                                     //schedule notification
-                                    addNotificationScheduler(startDate, numDays);
+                                   if(notificationCheckbox.isChecked()){
+                                        addNotificationScheduler(startDate, numDays);
+                                    }
+
 
 
                                 }
@@ -428,7 +432,7 @@ public class OpenActionsFragment extends BaseDialogFragment {
         int duration=Math.abs(days*24);
 
         final int periodicity = (int) TimeUnit.HOURS.toSeconds(duration);
-        final int toleranceInterval = (int) TimeUnit.MINUTES.toSeconds(5);
+        final int toleranceInterval = (int) TimeUnit.MINUTES.toSeconds(1);
 
         Bundle bundle = new Bundle();
         bundle.putString("numDays", Integer.toString(numDays));
