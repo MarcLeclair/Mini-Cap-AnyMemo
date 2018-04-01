@@ -492,4 +492,8 @@
     <string name="add_number_of_days">Add number of days</string>
     <string name="add_number_of_days_message">Add number of days</string>
     <string name="Enable_notification">Enable notification</string>
+    <string name="Num_days_button">Select number of days</string>
+    <string name="Num_cards_button">Select number of cards</string>
+    <string name="add_number_of_cards">Add number of cards</string>
+
 </resources>
