@@ -476,13 +476,11 @@
     <string name="letter_hint">Letter hint</string>
     <string name="favourite_text">Mark as Favourite</string>
     <string name="error_programmatic">You should enter \'ciao\' here</string>
-
     <string name="spell_hint_text">Spell hint edit text </string>
     <string name="spell_hint">Type out the answer</string>
     <string name="add_to_study_mode">Add to study mode</string>
     <string name="spell_hint_btn_text">Verify answer</string>
     <string name="workout_text">Workout Mode</string>
-
     <string name="spell_test">Type out the answer</string>
     <string name="add_to_workout_mode">Add to workout</string>
     <string name="add_to_workout_mode_message">By adding this deck to workout mode, you will be able
@@ -491,5 +489,14 @@
     <string name="add_start_date_message">""</string>
     <string name="add_number_of_days">Add number of days</string>
     <string name="add_number_of_days_message">Add number of days</string>
-
+    <string name="spell_test">Type out the answer</string>
+    <string name="add_to_workout_mode">Add to workout</string>
+    <string name="add_to_workout_mode_message">By adding this deck to workout mode, you will be able
+        to study a number of cards every day .</string>
+    <string name="add_start_date">Add start date</string>
+    <string name="add_start_date_message">""</string>
+    <string name="add_number_of_days">Add number of days</string>
+    <string name="add_number_of_days_message">Add number of days</string>
+    <string name="add_to_study_mode">Add to study mode</string>
+    <string name="display_hint_option">Display hint options</string>
 </resources>
