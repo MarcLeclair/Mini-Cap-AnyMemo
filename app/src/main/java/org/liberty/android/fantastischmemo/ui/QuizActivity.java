@@ -61,6 +61,7 @@ import org.liberty.android.fantastischmemo.utils.DictionaryUtil;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javax.inject.Inject;
 
@@ -517,7 +518,7 @@ public class QuizActivity extends QACardActivity {
             //letter hint option
             private void letter_hint () {
                 if (!isAnswerShown()) {
-                    //every time the button gets clicked, counter increases by 1
+                   //every time the button gets clicked, counter increases by 1
                     letterHintCounter++;
                     //showLetterhint() is in QACardActivity.java
                     showLetterHint(letterHintCounter);
