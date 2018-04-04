@@ -41,6 +41,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Button;
 
 import com.google.common.base.Strings;
 
@@ -117,6 +118,8 @@ public abstract class QACardActivity extends BaseActivity {
     String TAG = "spellingHint";
 
     private HintUtil hintUtil;
+
+    Button btn;
 
     /**
      * This needs to be defined before onCreate so in onCreate, all loaders will
@@ -206,6 +209,8 @@ public abstract class QACardActivity extends BaseActivity {
     protected String getDbName() {
         return dbName;
     }
+
+    private boolean hintView = true;
 
     public CardFragment.Builder getDefaultQuestionFragment(Setting.Align questionAlign, String
             questionTypefaceValue, String[] imageSearchPaths) {
@@ -400,6 +405,7 @@ public abstract class QACardActivity extends BaseActivity {
     protected void displayLetterHint(boolean enableLetterHint, int letterHintCounter) {
 
         // First prepare the text to display
+
 
         String questionTypeface = setting.getQuestionFont();
         String answerTypeface = setting.getAnswerFont();
@@ -829,6 +835,7 @@ public abstract class QACardActivity extends BaseActivity {
     }
 
     protected void displayPictureHint(boolean enablePictureHint) {
+       // hintView = false;
         if (getCurrentCard().getImgPath() == null) {
             getCurrentCard().setImgPath("");
         }
@@ -1117,6 +1124,8 @@ public abstract class QACardActivity extends BaseActivity {
         displayPictureHint(true);
         return true;
     }
+
+
 
     private void loadGestures() {
         gestureLibrary = GestureLibraries.fromRawResource(this, R.raw.gestures);
