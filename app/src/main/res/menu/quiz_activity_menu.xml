@@ -18,7 +18,5 @@
             android:id="@+id/menu_speak_answer"
             android:icon="@drawable/speak_a_48"
             android:title="@string/speak_answer_menu_text" />
-        <item
-            android:id="@+id/hint_option"
-            android:title="@string/display_hint_option"/>
+
 </menu>

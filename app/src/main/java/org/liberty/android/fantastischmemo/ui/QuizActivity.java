@@ -240,68 +240,7 @@ public class QuizActivity extends QACardActivity {
         }
     }
 
-    public boolean onCreateHintOptions(MenuItem item) {
 
-        Button letterButton = (Button) findViewById(R.id.letter_hint);
-        Button pictureButton = (Button) findViewById(R.id.picture_hint);
-        Button choiceButton = (Button) findViewById(R.id.multiple_choice_hint);
-
-        letterButton.setVisibility(View.VISIBLE);
-        pictureButton.setVisibility(View.VISIBLE);
-        choiceButton.setVisibility(View.VISIBLE);
-        showHintOption();
-        switch (item.getItemId()) {/*
-            if (R.id.picture_hint | R.id.multiple_choice_hint | R.id.letter_hint){
-                return true;
-            }*/
-
-            case R.id.picture_hint: {
-                if (!isAnswerShown()) {
-                    showPictureHint();
-                    //resetting the letter counter every time the picture is called
-                    letterHintCounter = 0;
-                }
-                break;
-            }
-            case R.id.multiple_choice_hint: {
-
-                List<Card> mcCards = new ArrayList<>();
-
-                //find random index for array
-                for (int i = 0; i < 3; i++) {
-                    int randomNumb = random.nextInt(queueManager.getAllCards().size());
-                    while (randomNumb == 0) {
-                        randomNumb = random.nextInt(queueManager.getAllCards().size());
-                    }
-                    mcCards.add(queueManager.getAllCards().get(randomNumb));
-                }
-
-                if (!isAnswerShown()) {
-                    showMcHint(mcCards);
-                    //resetting the letter counter every time the multiple choice is called
-                    letterHintCounter = 0;
-                }
-                break;
-            }
-            case R.id.letter_hint: {
-
-                if (!isAnswerShown()) {
-                    //every time the button gets clicked, counter increases by 1
-                    letterHintCounter++;
-                    //showLetterhint() is in QACardActivity.java
-                    showLetterHint(letterHintCounter);
-                }
-
-                //reset the counter if the answer is shown
-                //otherwise it will affect the next answer which will not start from 0
-                else {
-                    letterHintCounter = 0;
-                }
-            }
-        }
-        return  false;
-
-    }
 
 
         @Override
@@ -326,12 +265,6 @@ public class QuizActivity extends QACardActivity {
                 case R.id.menu_speak_answer: {
                     speakAnswer();
                     break;
-                }
-                case R.id.hint_option: {
-                    //Method that allows the user to view the available hint options
-                    showHintOption();
-                    break;
-
                 }
                 case R.id.menu_paint: {
                     Intent myIntent = new Intent(this, PaintActivity.class);

@@ -989,33 +989,6 @@ public abstract class QACardActivity extends BaseActivity {
         }
     }
 
-    protected void displayHintOptions(List<Card> list){
-        //super.onCreate(savedInstanceState);
-        setContentView(R.layout.hint_option);
-
-
-
-
-
-        if (hintView == true){
-            Button letterButton = (Button) findViewById(R.id.letter_hint);
-            letterButton.setVisibility(View.VISIBLE);
-
-            Button pictureButton = (Button) findViewById(R.id.picture_hint);
-            pictureButton.setVisibility(View.VISIBLE);
-
-            Button choiceButton = (Button) findViewById(R.id.multiple_choice_hint);
-            choiceButton.setVisibility(View.VISIBLE);
-
-
-        }
-        else{
-           hintView = false;
-        }
-       // displayLetterHint(boolean enableLetterHint, int letterHintCounter);
-      //  displayPictureHint(boolean enablePictureHint) = true;
-    }
-
     protected boolean isAnswerShown() {
         return isAnswerShown;
     }
@@ -1152,10 +1125,7 @@ public abstract class QACardActivity extends BaseActivity {
         return true;
     }
 
-    protected boolean showHintOption(){
-        //displayHintOptions(Bundle.); //Needs to be fixed
-        return true;
-    }
+
 
     private void loadGestures() {
         gestureLibrary = GestureLibraries.fromRawResource(this, R.raw.gestures);
