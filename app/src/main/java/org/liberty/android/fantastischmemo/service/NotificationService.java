@@ -34,12 +34,8 @@ public class NotificationService extends JobService {
     public boolean onStartJob(JobParameters job) {
 
             Intent intent = new Intent(this, AnyMemo.class);
-      //  intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-       // PendingIntent pendingIntent =
-             //   PendingIntent.getActivity(this, 0, new Intent(this, WorkoutTabFragment.class), 0);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
-             //PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
-              //  PendingIntent.FLAG_ONE_SHOT);
+
             NotificationManager notificationManager = (NotificationManager)this.getSystemService(Context.NOTIFICATION_SERVICE);
 
 

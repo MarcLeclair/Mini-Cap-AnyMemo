@@ -57,7 +57,7 @@
         <RadioButton
             android:checked="false"
             android:id="@+id/Num_days_button"
-            android:text="@string/Num_days_button" />
+            android:text="@string/number_days_button" />
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -80,7 +80,7 @@
         <RadioButton
             android:checked="false"
             android:id="@+id/Num_cards_button"
-            android:text="@string/Num_cards_button" />
+            android:text="@string/number_cards_button" />
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -110,7 +110,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/notification"
-        android:text="@string/Enable_notification" />
+        android:text="@string/enable_notification" />
 </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
