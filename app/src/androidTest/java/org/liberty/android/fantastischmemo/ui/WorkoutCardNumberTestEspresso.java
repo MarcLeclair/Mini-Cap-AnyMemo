@@ -67,7 +67,7 @@ public class WorkoutCardNumberTestEspresso {
                         1),
                         isDisplayed()));
         tabView.perform(click());
-        
+
         ViewInteraction recyclerView = onView(
                 allOf(withId(R.id.file_list),
                         childAtPosition(
