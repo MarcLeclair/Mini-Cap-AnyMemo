@@ -21,16 +21,16 @@ public class HintUtil {
         //  String word = getCurrentCard().getAnswer();
         Random generator = new Random();
         StringBuilder string = new StringBuilder();
-        int randomLength = generator.nextInt(word.length());
+        int randomLength = 1 + generator.nextInt(word.length());
         char temp;
-        temp = (char) generator.nextInt(randomLength);
+        temp = word.charAt(generator.nextInt(word.length() +1));
         string.append(temp);
-        for (int i = 0; i < word.length(); i++) {
-
+        for (int i = 0; i < randomLength; i++) {
 
             if (i <= count - 1) { //show letters up to the number of clicks for hint
                 if (word.charAt(i) == ' ') {
                     string.append(" ");
+
                 }
                 string.append(word.charAt(i));
             } else {
