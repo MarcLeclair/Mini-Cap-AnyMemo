@@ -209,8 +209,6 @@ public class OpenActionsFragment extends BaseDialogFragment {
                 dialog.setContentView(R.layout.workout);
                 dialog.show();
 
-                TextView workoutModeMessage = (TextView) dialog.findViewById(R.id.workout_mode_message);
-
                 final TextView startDateMessage = (TextView) dialog.findViewById(R.id.start_date_message);
 
                 final Button startDateButton = (Button) dialog.findViewById(R.id.start_date_button);
@@ -230,7 +228,7 @@ public class OpenActionsFragment extends BaseDialogFragment {
                 Button negativeButton = (Button) dialog.findViewById(R.id.button_cancel);
 
 
-                NumDaysRadioButton = (RadioButton) dialog.findViewById(R.id.Num_days_button);
+                NumDaysRadioButton = (RadioButton) dialog.findViewById(R.id.num_days_button);
                 NumDaysRadioButton.setOnCheckedChangeListener(onCheckedChangeListener);
                 final EditText num_days_input = (EditText) dialog.findViewById(R.id.num_days_input);
                 NumCardsRadioButton = (RadioButton) dialog.findViewById(R.id.Num_cards_button);
@@ -243,8 +241,10 @@ public class OpenActionsFragment extends BaseDialogFragment {
                 final CheckBox notificationCheckbox = (CheckBox) dialog.findViewById(R.id.notification);
 
                 radioButtonSettingsMapping = new HashMap<CompoundButton, View>(2);
-                radioButtonSettingsMapping.put(NumDaysRadioButton, dialog.findViewById(R.id.Num_days_settings));
-                radioButtonSettingsMapping.put(NumCardsRadioButton, dialog.findViewById(R.id.Num_cards_settings));
+                radioButtonSettingsMapping.put(NumDaysRadioButton, dialog.findViewById(R.id
+                        .num_days_settings));
+                radioButtonSettingsMapping.put(NumCardsRadioButton, dialog.findViewById(R.id
+                        .num_cards_settings));
 
                 // if button is clicked, set the new workout dates for each cards within the deck
                 positiveButton.setOnClickListener(new View.OnClickListener() {

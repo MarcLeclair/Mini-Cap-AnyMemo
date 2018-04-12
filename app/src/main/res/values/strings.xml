@@ -491,7 +491,7 @@
     <string name="add_start_date_message">""</string>
     <string name="add_number_of_days">Add number of days</string>
     <string name="add_number_of_days_message">Add number of days</string>
-    <string name="enable_notification">Enable notification</string>
+    <string name="enable_notification">Notify me for my next workout</string>
     <string name="number_days_button">Select number of days</string>
     <string name="number_cards_button">Select number of cards</string>
     <string name="add_number_of_cards">Add number of cards</string>
