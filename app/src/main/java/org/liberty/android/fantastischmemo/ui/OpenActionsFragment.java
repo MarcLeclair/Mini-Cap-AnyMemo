@@ -30,7 +30,6 @@ import android.support.annotation.RequiresApi;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,47 +38,29 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioButton;
-import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.firebase.jobdispatcher.Constraint;
-import com.firebase.jobdispatcher.FirebaseJobDispatcher;
-import com.firebase.jobdispatcher.GooglePlayDriver;
-import com.firebase.jobdispatcher.Trigger;
-
 import org.liberty.android.fantastischmemo.R;
 import org.liberty.android.fantastischmemo.common.AMPrefKeys;
+import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelper;
+import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelperManager;
 import org.liberty.android.fantastischmemo.common.BaseActivity;
 import org.liberty.android.fantastischmemo.common.BaseDialogFragment;
-import org.liberty.android.fantastischmemo.entity.Card;
-import org.liberty.android.fantastischmemo.service.NotificationService;
 import org.liberty.android.fantastischmemo.utils.AMFileUtil;
 import org.liberty.android.fantastischmemo.utils.AMPrefUtil;
+import org.liberty.android.fantastischmemo.utils.DatabaseUtil;
 import org.liberty.android.fantastischmemo.utils.DateUtil;
 import org.liberty.android.fantastischmemo.utils.RecentListUtil;
 import org.liberty.android.fantastischmemo.utils.ShareUtil;
-
 import org.liberty.android.fantastischmemo.utils.WorkOutListUtil;
-
-import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelper;
-import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelperManager;
-import org.liberty.android.fantastischmemo.dao.CardDao;
-import org.liberty.android.fantastischmemo.utils.DatabaseUtil;
 import org.liberty.android.fantastischmemo.utils.WorkoutDialogBoxUtil;
-import org.w3c.dom.Text;
 
-import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 
 import javax.inject.Inject;
-
-import static java.lang.Math.toIntExact;
 
 
 public class OpenActionsFragment extends BaseDialogFragment {
@@ -104,8 +85,8 @@ public class OpenActionsFragment extends BaseDialogFragment {
     private View shareItem;
     private View deleteItem;
     Context context;
-    private RadioButton NumDaysRadioButton;
-    private RadioButton NumCardsRadioButton;
+    private RadioButton numDaysRadioButton;
+    private RadioButton numCardsRadioButton;
     private Map<CompoundButton, View> radioButtonSettingsMapping;
     @Inject
     AMFileUtil amFileUtil;
@@ -232,11 +213,10 @@ public class OpenActionsFragment extends BaseDialogFragment {
                 Button negativeButton = (Button) dialog.findViewById(R.id.button_cancel);
 
 
-                NumDaysRadioButton = (RadioButton) dialog.findViewById(R.id.num_days_button);
-                NumDaysRadioButton.setOnCheckedChangeListener(onCheckedChangeListener);
-                final EditText num_days_input = (EditText) dialog.findViewById(R.id.num_days_input);
-                NumCardsRadioButton = (RadioButton) dialog.findViewById(R.id.Num_cards_button);
-                NumCardsRadioButton.setOnCheckedChangeListener(onCheckedChangeListener);
+                numDaysRadioButton = (RadioButton) dialog.findViewById(R.id.num_days_button);
+                numDaysRadioButton.setOnCheckedChangeListener(onCheckedChangeListener);
+                numCardsRadioButton = (RadioButton) dialog.findViewById(R.id.Num_cards_button);
+                numCardsRadioButton.setOnCheckedChangeListener(onCheckedChangeListener);
 
                 final TextInputLayout numDaysInputWrapper = (TextInputLayout) dialog.findViewById
                         (R.id.num_days_input_wrapper);
@@ -245,9 +225,9 @@ public class OpenActionsFragment extends BaseDialogFragment {
                 final CheckBox notificationCheckbox = (CheckBox) dialog.findViewById(R.id.notification);
 
                 radioButtonSettingsMapping = new HashMap<CompoundButton, View>(2);
-                radioButtonSettingsMapping.put(NumDaysRadioButton, dialog.findViewById(R.id
+                radioButtonSettingsMapping.put(numDaysRadioButton, dialog.findViewById(R.id
                         .num_days_settings));
-                radioButtonSettingsMapping.put(NumCardsRadioButton, dialog.findViewById(R.id
+                radioButtonSettingsMapping.put(numCardsRadioButton, dialog.findViewById(R.id
                         .num_cards_settings));
 
                 // if button is clicked, set the new workout dates for each cards within the deck
@@ -265,7 +245,7 @@ public class OpenActionsFragment extends BaseDialogFragment {
                                 .getCardDao().getAllCards(null).size();
                         String dateAsString = startDateMessage.getText().toString();
                         try {
-                            if (NumDaysRadioButton.isChecked()) {
+                            if (numDaysRadioButton.isChecked() || numCardsRadioButton.isChecked()) {
                                 if (dateAsString.equals("")) {
                                     numDaysInputWrapper.setErrorEnabled(true);
                                     numDaysInputWrapper.setError("Must chose a start date ");
@@ -307,57 +287,6 @@ public class OpenActionsFragment extends BaseDialogFragment {
                                         if (notificationCheckbox.isChecked()) {
                                             workoutDialogBoxUtil.addNotificationScheduler(startDate, numDays, mActivity);
                                         }
-
-
-                                    }
-                                }
-                            }
-                            if (NumCardsRadioButton.isChecked()) {
-                                if (dateAsString.equals("")) {
-                                    numCardsInputWrapper.setErrorEnabled(true);
-                                    numCardsInputWrapper.setError("Must chose a start date ");
-                                } else {
-                                    numCardsInputWrapper.setErrorEnabled(false);
-
-                                    String[] dateAsArray;
-                                    Log.d(TAG, "Date as string is " + dateAsString);
-                                    dateAsArray = dateAsString.split("/");
-                                    Date startDate = DateUtil.getDate(
-                                            Integer.parseInt(dateAsArray[0]),
-                                            Integer.parseInt(dateAsArray[1]),
-                                            Integer.parseInt(dateAsArray[2]));
-//check something
-                                    if (!numCardsInput.equals("")) {
-                                        numCards = Integer.parseInt(numCardsInput);
-                                    } else {
-                                        numCards = 0;
-                                    }
-                                    //check other things
-                                    if (numCards > maxNumCards || numCards == 0 || numCardsInput.equals("")) {
-                                        numCardsInputWrapper.setErrorEnabled(true);
-                                        numCardsInputWrapper.setError("Must enter a number between 1 and " +
-                                                maxNumCards);
-                                    } else {
-                                        numCardsInputWrapper.setErrorEnabled(false);
-                                        int numOfDays1 = (maxNumCards / numCards);
-                                        int numOfDays = (maxNumCards % numCards);
-                                        numDays = numOfDays1 + numOfDays;
-                                        //retrieving the date as a string, and putting it an an array
-                                        // converting that array to a date stored in the variable startDate
-                                        workoutDialogBoxUtil.setWorkoutModeDates(AnyMemoDBOpenHelperManager.getHelper
-                                                (mActivity, dbPath), numDays, startDate);
-                                        dialog.dismiss();
-                                        Toast.makeText(mActivity, "Successfully added deck to " +
-                                                "workout" +
-                                                " " +
-                                                "mode!", Toast
-                                                .LENGTH_LONG).show();
-                                        //schedule notification
-                                        if (notificationCheckbox.isChecked()) {
-                                            workoutDialogBoxUtil.addNotificationScheduler(startDate, numDays, mActivity);
-                                        }
-
-
                                     }
                                 }
                             }
