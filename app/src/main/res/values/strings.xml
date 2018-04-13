@@ -495,5 +495,9 @@
     <string name="number_days_button">Select number of days</string>
     <string name="number_cards_button">Select number of cards</string>
     <string name="add_number_of_cards">Add number of cards</string>
-
+    <string name="today_card">Number of cards today: </string>
+    <string name="new_card">Total number of new cards: </string>
+    <string name="scheduled_card">Total number of scheduled cards: </string>
+    <string name="total_card">Total number of cards: </string>
+    <string name="number_card_left">Number of days remaining for this workout: </string>
 </resources>
