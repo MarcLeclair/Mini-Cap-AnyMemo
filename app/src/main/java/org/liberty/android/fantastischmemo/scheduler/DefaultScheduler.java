@@ -171,7 +171,7 @@ public class DefaultScheduler implements Scheduler {
 
     @Override
     public boolean isCardFavourite(LearningData data) {
-        return data.getFavourite()== 1;
+        return data.getFavourite() == Integer.valueOf(1);
     }
     @Override
     public boolean isCardForReview(LearningData data) {
