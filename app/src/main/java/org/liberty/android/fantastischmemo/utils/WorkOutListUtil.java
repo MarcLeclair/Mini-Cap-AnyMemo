@@ -89,4 +89,8 @@ public class WorkOutListUtil {
     private static String trimPath(String path){
         return FilenameUtils.normalize(path);
     }
+
+    public void displayDialogIncompleteWorkout(){
+
+    }
 }

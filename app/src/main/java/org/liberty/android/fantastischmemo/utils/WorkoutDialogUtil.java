@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
  * Created by melid on 2018-04-12.
  */
 
-public class WorkoutDialogBoxUtil {
+public class WorkoutDialogUtil {
     private final String TAG = getClass().getSimpleName();
 
     public List<Card> setWorkoutModeDates(AnyMemoDBOpenHelper helper, int numDays, Date startDate) {

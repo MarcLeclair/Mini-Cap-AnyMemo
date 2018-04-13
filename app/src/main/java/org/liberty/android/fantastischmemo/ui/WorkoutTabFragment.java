@@ -293,7 +293,7 @@ public class WorkoutTabFragment extends BaseFragment {
                 ril.set(ri.index, ri);
                 AnyMemoDBOpenHelperManager.releaseHelper(helper);
             } catch (Exception e) {
-                Log.e(TAG, "Recent list throws exception (Usually can be safely ignored)", e);
+                Log.e(TAG, "Workout list throws exception (Usually can be safely ignored)", e);
             }
         }
 

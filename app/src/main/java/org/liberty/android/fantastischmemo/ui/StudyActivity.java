@@ -28,6 +28,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -50,6 +51,7 @@ import org.liberty.android.fantastischmemo.queue.QueueManager;
 import org.liberty.android.fantastischmemo.scheduler.Scheduler;
 import org.liberty.android.fantastischmemo.ui.CategoryEditorFragment.CategoryEditorResultListener;
 import org.liberty.android.fantastischmemo.ui.loader.DBLoader;
+import org.liberty.android.fantastischmemo.utils.DateUtil;
 import org.liberty.android.fantastischmemo.utils.DictionaryUtil;
 import org.liberty.android.fantastischmemo.utils.ShareUtil;
 
@@ -73,7 +75,7 @@ public class StudyActivity extends QACardActivity {
     private final int ACTIVITY_SETTINGS = 15;
     private final int ACTIVITY_DETAIL = 16;
 
-    private final static String WEBSITE_HELP_MEMO="https://anymemo.org";
+    private final static String WEBSITE_HELP_MEMO = "https://anymemo.org";
 
     /* State objects */
     private Card prevCard = null;
@@ -92,16 +94,19 @@ public class StudyActivity extends QACardActivity {
 
     boolean initialized = false;
 
-    @Inject Scheduler scheduler;
+    @Inject
+    Scheduler scheduler;
 
-    @Inject DictionaryUtil dictionaryUtil;
+    @Inject
+    DictionaryUtil dictionaryUtil;
 
-    @Inject ShareUtil shareUtil;
+    @Inject
+    ShareUtil shareUtil;
 
     private GradeButtonsFragment gradeButtonsFragment;
 
     @Override
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activityComponents().inject(this);
 
@@ -121,7 +126,7 @@ public class StudyActivity extends QACardActivity {
 
         startInit();
     }
-    
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -136,7 +141,7 @@ public class StudyActivity extends QACardActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu){
+    public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.study_activity_menu, menu);
         return true;
@@ -145,75 +150,62 @@ public class StudyActivity extends QACardActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_memo_help:
-            {
+            case R.id.menu_memo_help: {
                 gotoHelp();
                 return true;
             }
-            case R.id.menuspeakquestion:
-            {
+            case R.id.menuspeakquestion: {
                 return speakQuestion();
             }
 
-            case R.id.menuspeakanswer:
-            {
+            case R.id.menuspeakanswer: {
                 return speakAnswer();
             }
 
-            case R.id.menusettings:
-            {
+            case R.id.menusettings: {
                 gotoSettings();
                 return true;
             }
 
-            case R.id.menudetail:
-            {
+            case R.id.menudetail: {
                 gotoDetail();
                 return true;
             }
 
-            case R.id.menuundo:
-            {
+            case R.id.menuundo: {
                 undoCard();
                 return true;
             }
 
-            case R.id.menu_memo_category:
-            {
+            case R.id.menu_memo_category: {
                 showCategoriesDialog();
                 return true;
             }
 
-            case R.id.menu_context_edit:
-            {
+            case R.id.menu_context_edit: {
                 showEditDialog();
                 return true;
             }
-            case R.id.menu_context_delete:
-            {
+            case R.id.menu_context_delete: {
                 showDeleteDialog();
                 return true;
 
             }
-            case R.id.menu_mark_as_learned_forever:
-            {
+            case R.id.menu_mark_as_learned_forever: {
                 showMarkAsLearnedForeverDialog();
                 return true;
             }
-            case R.id.menu_favourite:
-            {
+            case R.id.menu_favourite: {
                 showMarkAsFavouriteDialog();
                 return true;
             }
-            case R.id.menu_context_gotoprev:
-            {
+            case R.id.menu_context_gotoprev: {
                 gotoPreviewEdit();
                 return true;
             }
 
-            case R.id.menu_context_lookup:
-            {
-                if(getCurrentCard() == null){
+            case R.id.menu_context_lookup: {
+                if (getCurrentCard() == null) {
                     return false;
                 }
                 // Look up words in both question and answer
@@ -223,30 +215,25 @@ public class StudyActivity extends QACardActivity {
 
             }
 
-            case R.id.menu_gestures:
-            {
+            case R.id.menu_gestures: {
                 showGesturesDialog();
                 return true;
             }
 
-            case R.id.menu_context_paint:
-            {
+            case R.id.menu_context_paint: {
                 gotoPaint();
                 return true;
             }
 
-            case R.id.menu_share:
-            {
+            case R.id.menu_share: {
                 shareUtil.shareCard(getCurrentCard());
                 return true;
             }
 
-            case R.id.spelling_test:
-            {
+            case R.id.spelling_test: {
                 //if the person hasn't clicked to get the answer, let them type it in
-                if(!isAnswerShown())
-                {
-                showSpellingTest();
+                if (!isAnswerShown()) {
+                    showSpellingTest();
                 }
                 return true;
             }
@@ -257,7 +244,7 @@ public class StudyActivity extends QACardActivity {
     }
 
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo){
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.memoscreen_context_menu, menu);
@@ -265,40 +252,35 @@ public class StudyActivity extends QACardActivity {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data){
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == Activity.RESULT_CANCELED) {
             return;
         }
 
-        switch(requestCode){
-            case ACTIVITY_FILTER:
-            {
+        switch (requestCode) {
+            case ACTIVITY_FILTER: {
                 Bundle extras = data.getExtras();
                 filterCategoryId = extras.getInt(EXTRA_CATEGORY_ID);
                 restartActivity();
                 break;
             }
-            case ACTIVITY_EDIT:
-            {
+            case ACTIVITY_EDIT: {
                 restartActivity();
                 break;
             }
-            case ACTIVITY_GOTO_PREV:
-            {
-                restartActivity();
-                break;
-            }
-
-            case ACTIVITY_SETTINGS:
-            {
+            case ACTIVITY_GOTO_PREV: {
                 restartActivity();
                 break;
             }
 
-            case ACTIVITY_DETAIL:
-            {
+            case ACTIVITY_SETTINGS: {
+                restartActivity();
+                break;
+            }
+
+            case ACTIVITY_DETAIL: {
                 restartActivity();
                 break;
             }
@@ -320,13 +302,13 @@ public class StudyActivity extends QACardActivity {
     }
 
     @Override
-    public void restartActivity(){
+    public void restartActivity() {
         finish();
         Intent myIntent = new Intent(StudyActivity.this, StudyActivity.class);
         myIntent.putExtra(EXTRA_DBPATH, dbPath);
         myIntent.putExtra(EXTRA_CATEGORY_ID, filterCategoryId);
 
-        if (getCurrentCard() != null ) {
+        if (getCurrentCard() != null) {
             myIntent.putExtra(EXTRA_START_CARD_ID, getCurrentCard().getId());
         }
 
@@ -336,7 +318,7 @@ public class StudyActivity extends QACardActivity {
     @Override
     public void onPostInit() {
         super.onPostInit();
-        if(workout_mode == false) {
+        if (workout_mode == false) {
             if (filterCategoryId != -1) {
                 filterCategory = getDbOpenHelper().getCategoryDao().queryForId(filterCategoryId);
             }
@@ -357,8 +339,7 @@ public class StudyActivity extends QACardActivity {
                 showNoItemDialog();
                 return;
             }
-        }
-        else{
+        } else {
             if (filterCategoryId != -1) {
                 filterCategory = getDbOpenHelper().getCategoryDao().queryForId(filterCategoryId);
             }
@@ -394,7 +375,7 @@ public class StudyActivity extends QACardActivity {
             gradeButtonsFragment.setVisibility(View.VISIBLE);
         } else {
             // The grade button should be gone for double sided cards.
-            if (getSetting().getCardStyle() ==  Setting.CardStyle.DOUBLE_SIDED) {
+            if (getSetting().getCardStyle() == Setting.CardStyle.DOUBLE_SIDED) {
                 gradeButtonsFragment.setVisibility(View.GONE);
             } else {
                 gradeButtonsFragment.setVisibility(View.INVISIBLE);
@@ -403,7 +384,7 @@ public class StudyActivity extends QACardActivity {
 
         // Auto speak after displaying a card.
         if (getOption().getSpeakingType() == Option.SpeakingType.AUTO
-            || getOption().getSpeakingType() ==Option.SpeakingType.AUTOTAP) {
+                || getOption().getSpeakingType() == Option.SpeakingType.AUTOTAP) {
             autoSpeak();
         }
         setSmallTitle(getActivityTitleString());
@@ -440,9 +421,18 @@ public class StudyActivity extends QACardActivity {
     protected boolean onClickAnswerText() {
         if (!isAnswerShown()) {
             onClickAnswerView();
+
+            //set the date to 1/1/1, flagging the card as "worked out"
+            if (workout_mode) {
+                getCurrentCard().setLearningDate(DateUtil.getDate(1, 1, 1));
+                getDbOpenHelper().getCardDao().update(getCurrentCard());
+                Log.d(TAG, "Card's answer has been read. It's date has been changed to : " +
+                        getCurrentCard()
+                                .getLearningDate());
+            }
         } else {
             if ((getOption().getSpeakingType() == Option.SpeakingType.AUTOTAP
-                        || getOption().getSpeakingType() == Option.SpeakingType.TAP)) {
+                    || getOption().getSpeakingType() == Option.SpeakingType.TAP)) {
                 speakAnswer();
             } else {
                 onClickAnswerView();
@@ -450,7 +440,6 @@ public class StudyActivity extends QACardActivity {
         }
         return true;
     }
-
 
 
     @Override
@@ -494,28 +483,28 @@ public class StudyActivity extends QACardActivity {
         return true;
     }
 
-    private void showNoItemDialog(){
+    private void showNoItemDialog() {
         new AlertDialog.Builder(this)
-            .setTitle(this.getString(R.string.memo_no_item_title))
-            .setMessage(this.getString(R.string.memo_no_item_message))
-            .setPositiveButton(getString(R.string.back_menu_text), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface arg0, int arg1) {
+                .setTitle(this.getString(R.string.memo_no_item_title))
+                .setMessage(this.getString(R.string.memo_no_item_message))
+                .setPositiveButton(getString(R.string.back_menu_text), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
                     /* Finish the current activity and go back to the last activity.
                      * It should be the open screen. */
                         onBackPressed();
                     }
                 })
-            .setOnCancelListener(new DialogInterface.OnCancelListener(){
-                public void onCancel(DialogInterface dialog){
+                .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    public void onCancel(DialogInterface dialog) {
                         onBackPressed();
                     }
                 })
-            .create()
-            .show();
+                .create()
+                .show();
     }
 
-    private void showNoWorkoutDialog(){
+    private void showNoWorkoutDialog() {
         new AlertDialog.Builder(this)
                 .setTitle(this.getString(R.string.memo_no_item_title))
                 .setMessage(this.getString(R.string.memo_no_workout_message))
@@ -527,8 +516,8 @@ public class StudyActivity extends QACardActivity {
                         onBackPressed();
                     }
                 })
-                .setOnCancelListener(new DialogInterface.OnCancelListener(){
-                    public void onCancel(DialogInterface dialog){
+                .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    public void onCancel(DialogInterface dialog) {
                         onBackPressed();
                     }
                 })
@@ -540,16 +529,17 @@ public class StudyActivity extends QACardActivity {
             LoaderManager.LoaderCallbacks<QueueManager> {
         @Override
         public Loader<QueueManager> onCreateLoader(int arg0, Bundle arg1) {
-             Loader<QueueManager> loader = new LearnQueueManagerLoader(appComponents(), dbPath, filterCategoryId, workout_mode);
-             loader.forceLoad();
-             return loader;
+            Loader<QueueManager> loader = new LearnQueueManagerLoader(appComponents(), dbPath, filterCategoryId, workout_mode);
+            loader.forceLoad();
+            return loader;
         }
 
         @Override
-        public void onLoadFinished(Loader<QueueManager> loader , QueueManager queueManager) {
+        public void onLoadFinished(Loader<QueueManager> loader, QueueManager queueManager) {
             StudyActivity.this.queueManager = queueManager;
             getMultipleLoaderManager().checkAllLoadersCompleted();
         }
+
         @Override
         public void onLoaderReset(Loader<QueueManager> arg0) {
             // Do nothing now
@@ -559,11 +549,14 @@ public class StudyActivity extends QACardActivity {
     public static class LearnQueueManagerLoader extends
             DBLoader<QueueManager> {
 
-        @Inject Option option;
+        @Inject
+        Option option;
 
-        @Inject Scheduler scheduler;
+        @Inject
+        Scheduler scheduler;
 
-        @Inject SchedulingAlgorithmParameters schedulingAlgorithmParameters;
+        @Inject
+        SchedulingAlgorithmParameters schedulingAlgorithmParameters;
 
         private boolean workout_mode;
         private final int filterCategoryId;
@@ -583,12 +576,12 @@ public class StudyActivity extends QACardActivity {
             }
             int queueSize = option.getQueueSize();
             LearnQueueManager.Builder builder = new LearnQueueManager.Builder(getContext(), dbPath)
-                .setScheduler(scheduler)
-                .setLearnQueueSize(queueSize)
-                .setCacheSize(50)
-                .setFilterCategory(filterCategory)
-                .setReviewOrdering(this.schedulingAlgorithmParameters.getReviewOrdering())
-                .setWorkoutMode(workout_mode);
+                    .setScheduler(scheduler)
+                    .setLearnQueueSize(queueSize)
+                    .setCacheSize(50)
+                    .setFilterCategory(filterCategory)
+                    .setReviewOrdering(this.schedulingAlgorithmParameters.getReviewOrdering())
+                    .setWorkoutMode(workout_mode);
             if (option.getShuffleType() == Option.ShuffleType.LOCAL) {
                 builder.setShuffle(true);
             } else {
@@ -601,7 +594,7 @@ public class StudyActivity extends QACardActivity {
 
     private void autoSpeak() {
         if (getCurrentCard() != null) {
-            if(!isAnswerShown()){
+            if (!isAnswerShown()) {
                 // Make sure the TTS is stop, or it will speak nothing.
                 speakQuestion();
             } else {
@@ -610,10 +603,11 @@ public class StudyActivity extends QACardActivity {
             }
         }
     }
+
     private void refreshStatInfo() {
-       newCardCount = getDbOpenHelper().getCardDao().getNewCardCount(filterCategory);
-       scheduledCardCount = getDbOpenHelper().getCardDao().getScheduledCardCount(filterCategory);
-       newCardLearnedTodayCount = getDbOpenHelper().getCardDao().getTodayNewLearnedCardCount(filterCategory);
+        newCardCount = getDbOpenHelper().getCardDao().getNewCardCount(filterCategory);
+        scheduledCardCount = getDbOpenHelper().getCardDao().getScheduledCardCount(filterCategory);
+        newCardLearnedTodayCount = getDbOpenHelper().getCardDao().getTodayNewLearnedCardCount(filterCategory);
     }
 
     private void showCategoriesDialog() {
@@ -650,7 +644,7 @@ public class StudyActivity extends QACardActivity {
      * When the user select the undo from the menu
      * this is what to do
      */
-    private void undoCard(){
+    private void undoCard() {
         if (prevCard != null) {
 
             // This is a very hacky solution
@@ -668,63 +662,62 @@ public class StudyActivity extends QACardActivity {
             restartActivity();
         } else {
             new AlertDialog.Builder(this)
-                .setTitle(getString(R.string.undo_fail_text))
-                .setMessage(getString(R.string.undo_fail_message))
-                .setNeutralButton(R.string.ok_text, null)
-                .create()
-                .show();
+                    .setTitle(getString(R.string.undo_fail_text))
+                    .setMessage(getString(R.string.undo_fail_message))
+                    .setNeutralButton(R.string.ok_text, null)
+                    .create()
+                    .show();
         }
     }
 
     // When a category is selected in category fragment.
     private CategoryEditorResultListener categoryResultListener =
-        new CategoryEditorResultListener() {
-            public void onReceiveCategory(Category c) {
-                assert c != null : "Receive null category";
-                filterCategoryId = c.getId();
+            new CategoryEditorResultListener() {
+                public void onReceiveCategory(Category c) {
+                    assert c != null : "Receive null category";
+                    filterCategoryId = c.getId();
 
-                // Do not restart with the current card
-                setCurrentCard(null);
-                restartActivity();
-            }
-        };
+                    // Do not restart with the current card
+                    setCurrentCard(null);
+                    restartActivity();
+                }
+            };
 
     private GradeButtonsFragment.OnCardChangedListener onCardChangedListener =
-        new GradeButtonsFragment.OnCardChangedListener() {
-            public void onCardChanged(Card prevCard, Card updatedCard) {
-                StudyActivity.this.prevCard = prevCard;
-                gradeButtonsFragment.setVisibility(View.INVISIBLE);
+            new GradeButtonsFragment.OnCardChangedListener() {
+                public void onCardChanged(Card prevCard, Card updatedCard) {
+                    StudyActivity.this.prevCard = prevCard;
+                    gradeButtonsFragment.setVisibility(View.INVISIBLE);
 
-                // Set the stat info in the title
-                if (scheduler.isCardNew(prevCard.getLearningData())) {
-                    newCardCount -= 1;
-                    newCardLearnedTodayCount += 1;
-                    if (!scheduler.isCardLearned(updatedCard.getLearningData())) {
-                        scheduledCardCount += 1;
+                    // Set the stat info in the title
+                    if (scheduler.isCardNew(prevCard.getLearningData())) {
+                        newCardCount -= 1;
+                        newCardLearnedTodayCount += 1;
+                        if (!scheduler.isCardLearned(updatedCard.getLearningData())) {
+                            scheduledCardCount += 1;
+                        }
+                    } else {
+                        if (scheduler.isCardLearned(updatedCard.getLearningData())) {
+                            scheduledCardCount -= 1;
+                        }
                     }
-                } else {
-                    if (scheduler.isCardLearned(updatedCard.getLearningData())) {
-                        scheduledCardCount -= 1;
-                    }
-                }
 
-                // Dequeue card and update the queue
-                Card nextCard = new Card();
-                queueManager.update(updatedCard);
-                if(workout_mode == false)  nextCard = queueManager.dequeue();
-                if(workout_mode == true)  nextCard = queueManager.dequeueWorkout();
-                queueManager.remove(nextCard);
-                if (nextCard == null && workout_mode == false) {
-                    showNoItemDialog();
-                }else if(nextCard == null && workout_mode == true){
-                    showNoWorkoutDialog();
+                    // Dequeue card and update the queue
+                    Card nextCard = new Card();
+                    queueManager.update(updatedCard);
+                    if (workout_mode == false) nextCard = queueManager.dequeue();
+                    if (workout_mode == true) nextCard = queueManager.dequeueWorkout();
+                    queueManager.remove(nextCard);
+                    if (nextCard == null && workout_mode == false) {
+                        showNoItemDialog();
+                    } else if (nextCard == null && workout_mode == true) {
+                        showNoWorkoutDialog();
+                    } else {
+                        setCurrentCard(nextCard);
+                        displayCard(false);
+                    }
                 }
-                else {
-                    setCurrentCard(nextCard);
-                    displayCard(false);
-                }
-            }
-        };
+            };
 
     private String getActivityTitleString() {
         StringBuilder sb = new StringBuilder();
@@ -739,18 +732,19 @@ public class StudyActivity extends QACardActivity {
     }
 
     private void markCurrentCardAsLearnedForever() {
-        if(getCurrentCard() != null) {
+        if (getCurrentCard() != null) {
             getDbOpenHelper().getLearningDataDao()
-                .markAsLearnedForever(getCurrentCard().getLearningData());
+                    .markAsLearnedForever(getCurrentCard().getLearningData());
 
             // Do not restart on this card
             setCurrentCard(null);
             restartActivity();
         }
     }
+
     //activity will restart at the same place, after the card is marked as favourite
     private void markCurrentCardAsFavourite() {
-        if(getCurrentCard() != null) {
+        if (getCurrentCard() != null) {
             getDbOpenHelper().getLearningDataDao()
                     .markAsFavourite(getCurrentCard().getLearningData());
             restartActivity();
@@ -759,7 +753,7 @@ public class StudyActivity extends QACardActivity {
 
     private void showGesturesDialog() {
         final HashMap<String, String> gestureNameDescriptionMap
-            = new HashMap<String, String>();
+                = new HashMap<String, String>();
         gestureNameDescriptionMap.put(GestureName.O_SHAPE.getName(), getString(R.string.look_up_text));
         gestureNameDescriptionMap.put(GestureName.S_SHAPE.getName(), getString(R.string.paint_text));
 
@@ -785,39 +779,40 @@ public class StudyActivity extends QACardActivity {
 
     private void showDeleteDialog() {
         new AlertDialog.Builder(this)
-            .setTitle(R.string.delete_text)
-            .setMessage(R.string.delete_warning)
-            .setPositiveButton(R.string.ok_text, new DialogInterface.OnClickListener(){
-                public void onClick(DialogInterface arg0, int arg1) {
-                    if(getCurrentCard() != null){
-                        getDbOpenHelper().getCardDao().delete(getCurrentCard());
-                        // Do not restart with this card
-                        setCurrentCard(null);
-                        restartActivity();
+                .setTitle(R.string.delete_text)
+                .setMessage(R.string.delete_warning)
+                .setPositiveButton(R.string.ok_text, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        if (getCurrentCard() != null) {
+                            getDbOpenHelper().getCardDao().delete(getCurrentCard());
+                            // Do not restart with this card
+                            setCurrentCard(null);
+                            restartActivity();
+                        }
                     }
-                }
-            })
-        .setNegativeButton(R.string.cancel_text, null)
-            .show();
+                })
+                .setNegativeButton(R.string.cancel_text, null)
+                .show();
     }
 
     private void showMarkAsLearnedForeverDialog() {
         new AlertDialog.Builder(this)
-            .setTitle(R.string.mark_as_learned_forever_text)
-            .setMessage(R.string.mark_as_learned_forever_warning_text)
-            .setPositiveButton(R.string.ok_text, new DialogInterface.OnClickListener(){
-                public void onClick(DialogInterface arg0, int arg1) {
-                    markCurrentCardAsLearnedForever();
-                }
-            })
-        .setNegativeButton(R.string.cancel_text, null)
-            .show();
+                .setTitle(R.string.mark_as_learned_forever_text)
+                .setMessage(R.string.mark_as_learned_forever_warning_text)
+                .setPositiveButton(R.string.ok_text, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        markCurrentCardAsLearnedForever();
+                    }
+                })
+                .setNegativeButton(R.string.cancel_text, null)
+                .show();
     }
+
     private void showMarkAsFavouriteDialog() {
         new AlertDialog.Builder(this)
                 .setTitle("Mark as Favourite")
                 .setMessage("This item will be added to your favourites list")
-                .setPositiveButton(R.string.ok_text, new DialogInterface.OnClickListener(){
+                .setPositiveButton(R.string.ok_text, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface arg0, int arg1) {
                         markCurrentCardAsFavourite();
                     }

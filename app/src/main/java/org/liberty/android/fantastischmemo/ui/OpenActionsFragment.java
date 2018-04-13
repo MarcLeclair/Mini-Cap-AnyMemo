@@ -36,7 +36,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -54,7 +53,7 @@ import org.liberty.android.fantastischmemo.utils.DateUtil;
 import org.liberty.android.fantastischmemo.utils.RecentListUtil;
 import org.liberty.android.fantastischmemo.utils.ShareUtil;
 import org.liberty.android.fantastischmemo.utils.WorkOutListUtil;
-import org.liberty.android.fantastischmemo.utils.WorkoutDialogBoxUtil;
+import org.liberty.android.fantastischmemo.utils.WorkoutDialogUtil;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -106,7 +105,7 @@ public class OpenActionsFragment extends BaseDialogFragment {
 
 
     AnyMemoDBOpenHelper helper;
-    WorkoutDialogBoxUtil workoutDialogBoxUtil;
+    WorkoutDialogUtil workoutDialogBoxUtil;
 
 
     public OpenActionsFragment() {
@@ -126,7 +125,7 @@ public class OpenActionsFragment extends BaseDialogFragment {
         Bundle args = this.getArguments();
         dbPath = args.getString(EXTRA_DBPATH);
         setStyle(DialogFragment.STYLE_NO_TITLE, 0);
-        workoutDialogBoxUtil = new WorkoutDialogBoxUtil();
+        workoutDialogBoxUtil = new WorkoutDialogUtil();
 
     }
 
