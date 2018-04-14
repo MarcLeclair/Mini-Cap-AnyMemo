@@ -370,8 +370,8 @@ public class CardListActivity extends BaseActivity {
             cardListAdapter.sort(new Comparator<CardWrapper>() {
                 @Override
                 public int compare(CardWrapper c1, CardWrapper c2) {
-                    return c1.getCard().getOrdinal()
-                            - c2.getCard().getOrdinal();
+                    return c2.getCard().getOrdinal()
+                            - c1.getCard().getOrdinal();
                 }
             });
                 break;
