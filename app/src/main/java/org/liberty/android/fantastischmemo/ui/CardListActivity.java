@@ -363,16 +363,34 @@ public class CardListActivity extends BaseActivity {
                 public int compare(CardWrapper c1, CardWrapper c2) {
                     return c1.getCard().getOrdinal()
                             - c2.getCard().getOrdinal();
-                };
+                }
             });
             break;
+        case ORDINALR:
+            cardListAdapter.sort(new Comparator<CardWrapper>() {
+                @Override
+                public int compare(CardWrapper c1, CardWrapper c2) {
+                    return c1.getCard().getOrdinal()
+                            - c2.getCard().getOrdinal();
+                }
+            });
+                break;
         case QUESTION:
             cardListAdapter.sort(new Comparator<CardWrapper>() {
                 @Override
                 public int compare(CardWrapper c1, CardWrapper c2) {
                     return c1.getCard().getQuestion()
                             .compareTo(c2.getCard().getQuestion());
-                };
+                }
+            });
+            break;
+        case QUESTIONR:
+            cardListAdapter.sort(new Comparator<CardWrapper>() {
+                @Override
+                public int compare(CardWrapper c1, CardWrapper c2) {
+                    return c1.getCard().getQuestion()
+                            .compareTo(c2.getCard().getQuestion());
+                }
             });
             break;
         case ANSWER:
@@ -381,7 +399,16 @@ public class CardListActivity extends BaseActivity {
                 public int compare(CardWrapper c1, CardWrapper c2) {
                     return c1.getCard().getAnswer()
                             .compareTo(c2.getCard().getAnswer());
-                };
+                }
+            });
+            break;
+        case ANSWERR:
+            cardListAdapter.sort(new Comparator<CardWrapper>() {
+                @Override
+                public int compare(CardWrapper c1, CardWrapper c2) {
+                    return c1.getCard().getAnswer()
+                            .compareTo(c2.getCard().getAnswer());
+                }
             });
             break;
         default:
@@ -669,6 +696,9 @@ public class CardListActivity extends BaseActivity {
 
     private enum SortMethod {
         ORDINAL,
+        ORDINALR,
         QUESTION,
-        ANSWER};
+        QUESTIONR,
+        ANSWER,
+        ANSWERR};
 }

@@ -492,4 +492,7 @@
     <string name="add_number_of_days">Add number of days</string>
     <string name="add_number_of_days_message">Add number of days</string>
 
+    <string name="ordinalr_text">Reversed Ordinal</string>
+    <string name="questionr_text">Reversed Question</string>
+    <string name="answerr_text">Reversed Answer</string>
 </resources>
