@@ -495,5 +495,9 @@
     <string name="number_days_button">Select number of days</string>
     <string name="number_cards_button">Select number of cards</string>
     <string name="add_number_of_cards">Add number of cards</string>
+    <string name="tags">Tags</string>
+    <string name="add_tag">Add a Tag</string>
+    <string name="add_a_tag">Add a tag</string>
+    <string name="add_tag_name">Add tag Name</string>
 
 </resources>
