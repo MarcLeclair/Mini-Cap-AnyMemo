@@ -388,8 +388,8 @@ public class CardListActivity extends BaseActivity {
             cardListAdapter.sort(new Comparator<CardWrapper>() {
                 @Override
                 public int compare(CardWrapper c1, CardWrapper c2) {
-                    return c1.getCard().getQuestion()
-                            .compareTo(c2.getCard().getQuestion());
+                    return c2.getCard().getQuestion()
+                            .compareTo(c1.getCard().getQuestion());
                 }
             });
             break;
@@ -406,8 +406,8 @@ public class CardListActivity extends BaseActivity {
             cardListAdapter.sort(new Comparator<CardWrapper>() {
                 @Override
                 public int compare(CardWrapper c1, CardWrapper c2) {
-                    return c1.getCard().getAnswer()
-                            .compareTo(c2.getCard().getAnswer());
+                    return c2.getCard().getAnswer()
+                            .compareTo(c1.getCard().getAnswer());
                 }
             });
             break;
