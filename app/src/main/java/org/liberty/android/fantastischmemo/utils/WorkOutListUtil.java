@@ -1,5 +1,7 @@
 package org.liberty.android.fantastischmemo.utils;
 
+import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -7,6 +9,7 @@ import android.preference.PreferenceManager;
 import com.viralypatel.sharedpreferenceshelper.lib.SharedPreferencesHelper;
 
 import org.apache.commons.io.FilenameUtils;
+import org.liberty.android.fantastischmemo.R;
 import org.liberty.android.fantastischmemo.common.AMPrefKeys;
 import org.liberty.android.fantastischmemo.entity.Option;
 import org.liberty.android.fantastischmemo.modules.ForApplication;
@@ -90,7 +93,12 @@ public class WorkOutListUtil {
         return FilenameUtils.normalize(path);
     }
 
-    public void displayDialogIncompleteWorkout(){
+    public void displayDialogIncompleteWorkout(Context context){
+        final Dialog dialog = new Dialog(context);
+
+
+        dialog.setContentView(R.layout.workout);
+        dialog.show();
 
     }
 }

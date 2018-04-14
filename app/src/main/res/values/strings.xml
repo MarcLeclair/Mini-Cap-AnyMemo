@@ -495,5 +495,12 @@
     <string name="number_days_button">Select number of days</string>
     <string name="number_cards_button">Select number of cards</string>
     <string name="add_number_of_cards">Add number of cards</string>
+    <string name="incomplete_workout_title">Incomplete workout!</string>
+    <string name="incomplete_workout_message">\n You have unfinished cards from yesterday.
+        Would you like to finish them today?</string>
+    <string name="skip_forever_text">Skip forever</string>
+    <string name="ask_me_tomorrow_text">Ask me tomorrow</string>
+    <string name="reschedule_them_text">Reschedule them another day</string>
+
 
 </resources>

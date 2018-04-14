@@ -13,8 +13,8 @@ import static java.lang.Math.toIntExact;
  * Created by melid on 2018-03-16.
  */
 
-//code source : https://stackoverflow.com/questions/428918/how-can-i-increment-a-date-by-one-day-in-java
 public class DateUtil {
+//code source : https://stackoverflow.com/questions/428918/how-can-i-increment-a-date-by-one-day-in-java
     public static Date addDays(Date date, int days) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
@@ -31,6 +31,11 @@ public class DateUtil {
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
+        return cal.getTime();
+    }
+
+    public static Date today(){
+        Calendar cal = Calendar.getInstance();
         return cal.getTime();
     }
 

@@ -55,7 +55,9 @@ import org.liberty.android.fantastischmemo.utils.DateUtil;
 import org.liberty.android.fantastischmemo.utils.DictionaryUtil;
 import org.liberty.android.fantastischmemo.utils.ShareUtil;
 
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -125,6 +127,30 @@ public class StudyActivity extends QACardActivity {
         getMultipleLoaderManager().registerLoaderCallbacks(LEARN_QUEUE_MANAGER_LOADER_ID, new LearnQueueManagerLoaderCallbacks(), false);
 
         startInit();
+
+        //if the user is in workout mode
+        if (workout_mode) {
+            List<Card> cards = getDbOpenHelper().getCardDao().getAllCards(null);
+            boolean incompleteCards = false;
+
+            //verify if there is at least 1 card with the incomplete flag, which is date any past
+            // date that doesn't include 1/1/1 because 1/1/1 is s completed card
+            for (Card card : cards) {
+                if (card.getLearningDate().equals(DateUtil.getDate(1, 1, 1))) {
+                    incompleteCards = true;
+                    break;
+                }
+            }
+            //if so, display a dialog box for them to reschedule their cards for another day
+            if (incompleteCards) {
+                WorkoutIncompleteLauncherDialogFragment fragment = new WorkoutIncompleteLauncherDialogFragment();
+                Bundle b = new Bundle();
+                b.putString(CategoryEditorFragment.EXTRA_DBPATH, dbPath);
+                fragment.setArguments(b);
+                fragment.show(this.getSupportFragmentManager(), "QuizLauncherDialog");
+            }
+        }
+
     }
 
     @Override

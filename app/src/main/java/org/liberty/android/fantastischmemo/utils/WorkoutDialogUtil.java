@@ -29,21 +29,26 @@ import java.util.concurrent.TimeUnit;
 public class WorkoutDialogUtil {
     private final String TAG = getClass().getSimpleName();
 
-    public List<Card> setWorkoutModeDates(AnyMemoDBOpenHelper helper, int numDays, Date startDate) {
-
+    public List<Card> setWorkoutModeDates(AnyMemoDBOpenHelper helper, int numDaysOrCards, Date
+            startDate, boolean daysMode) {
+        int nbCardsPerWorkout = 0;
         CardDao cardDao = helper.getCardDao();
         List<Card> cards = cardDao.getAllCards(null);
         Log.d(TAG, "card numbers " + cards.size());
-
+        if (daysMode) {
        /* rounding up the result of an integer division
         for example if the person chooses 2 days to study a deck
         of 3 cards, 3 / 2 = 2
         there will be 2 cards to study at first then 1 card, we need to round up with integer
         division. Otherwise 3/2 = 1 which would mean 1 card per day, for 3 days, which is not
         what we want*/
-        int nbCardsPerWorkout = (cards.size() + numDays - 1) / numDays;
-        Log.d(TAG, "card numbers " + nbCardsPerWorkout);
-
+            nbCardsPerWorkout = (cards.size() + numDaysOrCards - 1) / numDaysOrCards;
+            Log.d(TAG, "card numbers " + nbCardsPerWorkout);
+        }
+        else{
+            nbCardsPerWorkout = numDaysOrCards;
+            Log.d(TAG, "card numbers " + nbCardsPerWorkout);
+        }
         int count = 0;
         int addDays = 0;
 
@@ -66,6 +71,14 @@ public class WorkoutDialogUtil {
         AnyMemoDBOpenHelperManager.releaseHelper(helper);
         //if the deck size is not equal to 0, return true
         return cards;
+    }
+
+    public List<Card> setIncompleteCardsDates (Date date,  List<Card> incompleteCards){
+        for (Card card : incompleteCards){
+            card.setLearningDate(date);
+            cardDao.update(card);
+        }
+        return incompleteCards;
     }
 
     //schedule notifications

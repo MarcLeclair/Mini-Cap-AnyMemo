@@ -238,13 +238,13 @@ public class OpenActionsFragment extends BaseDialogFragment {
                                 .toString();
                         final String numCardsInput = numCardsInputWrapper.getEditText().getText()
                                 .toString();
-                        int numDays;
-                        int numCards;
+                        int numDays = 0;
+                        int numCards = 0;
                         int maxNumCards = AnyMemoDBOpenHelperManager.getHelper(mActivity, dbPath)
                                 .getCardDao().getAllCards(null).size();
                         String dateAsString = startDateMessage.getText().toString();
                         try {
-                            if (numDaysRadioButton.isChecked() || numCardsRadioButton.isChecked()) {
+                            if (numDaysRadioButton.isChecked()){
                                 if (dateAsString.equals("")) {
                                     numDaysInputWrapper.setErrorEnabled(true);
                                     numDaysInputWrapper.setError("Must chose a start date ");
@@ -274,8 +274,9 @@ public class OpenActionsFragment extends BaseDialogFragment {
 
                                         //retrieving the date as a string, and putting it an an array
                                         // converting that array to a date stored in the variable startDate
-                                        workoutDialogBoxUtil.setWorkoutModeDates(AnyMemoDBOpenHelperManager.getHelper
-                                                (mActivity, dbPath), numDays, startDate);
+                                        workoutDialogBoxUtil.setWorkoutModeDates
+                                                (AnyMemoDBOpenHelperManager.getHelper
+                                                (mActivity, dbPath), numDays, startDate, true);
                                         dialog.dismiss();
                                         Toast.makeText(mActivity, "Successfully added deck to " +
                                                 "workout" +
@@ -283,8 +284,59 @@ public class OpenActionsFragment extends BaseDialogFragment {
                                                 "mode!", Toast
                                                 .LENGTH_LONG).show();
                                         //schedule notification
-                                        if (notificationCheckbox.isChecked()) {
-                                            workoutDialogBoxUtil.addNotificationScheduler(startDate, numDays, mActivity);
+                                        if(notificationCheckbox.isChecked()){
+                                            workoutDialogBoxUtil.addNotificationScheduler
+                                                    (startDate, numDays, mActivity);
+                                        }
+                                    }
+                                }
+                            }
+                            if(numCardsRadioButton.isChecked()){
+                                if (dateAsString.equals("")) {
+                                    numCardsInputWrapper.setErrorEnabled(true);
+                                    numCardsInputWrapper.setError("Must chose a start date ");
+                                } else {
+                                    numCardsInputWrapper.setErrorEnabled(false);
+
+                                    String[] dateAsArray;
+                                    Log.d(TAG, "Date as string is " + dateAsString);
+                                    dateAsArray = dateAsString.split("/");
+                                    Date startDate = DateUtil.getDate(
+                                            Integer.parseInt(dateAsArray[0]),
+                                            Integer.parseInt(dateAsArray[1]),
+                                            Integer.parseInt(dateAsArray[2]));
+//check something
+                                    if (!numCardsInput.equals("")) {
+                                        numCards = Integer.parseInt(numCardsInput);
+                                    } else {
+                                        numCards = 0;
+                                    }
+                                    //check other things
+                                    if (numCards > maxNumCards || numCards == 0 || numCardsInput.equals("")) {
+                                        numCardsInputWrapper.setErrorEnabled(true);
+                                        numCardsInputWrapper.setError("Must enter a number between 1 and " +
+                                                maxNumCards);
+                                    } else {
+                                        numCardsInputWrapper.setErrorEnabled(false);
+                                      /*  int numOfDays1=(maxNumCards/numCards);
+                                        int numOfDays=(maxNumCards%numCards);
+                                        numDays=numOfDays1 +numOfDays;*/
+                                        //retrieving the date as a string, and putting it an an array
+                                        // converting that array to a date stored in the variable startDate
+                                        workoutDialogBoxUtil.setWorkoutModeDates
+                                                (AnyMemoDBOpenHelperManager
+                                                .getHelper
+                                                (mActivity, dbPath), numCards, startDate, false);
+                                        dialog.dismiss();
+                                        Toast.makeText(mActivity, "Successfully added deck to " +
+                                                "workout" +
+                                                " " +
+                                                "mode!", Toast
+                                                .LENGTH_LONG).show();
+                                        //schedule notification
+                                        if(notificationCheckbox.isChecked()){
+                                            workoutDialogBoxUtil.addNotificationScheduler
+                                                    (startDate, numDays, mActivity);
                                         }
                                     }
                                 }
