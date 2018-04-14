@@ -304,9 +304,11 @@
 
     <string-array name="sort_by_options_values">
         <item>ORDINAL</item>
+        <item>ORDINALR</item>
         <item>QUESTION</item>
         <item>QUESTIONR</item>
         <item>ANSWER</item>
+        <item>ANSWERR</item>
     </string-array>
 
     <string-array name="review_ordering_option">
