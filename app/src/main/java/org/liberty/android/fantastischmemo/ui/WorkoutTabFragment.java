@@ -287,11 +287,11 @@ public class WorkoutTabFragment extends BaseFragment {
                 }
                 AnyMemoDBOpenHelper helper = AnyMemoDBOpenHelperManager.getHelper(getContext(), ri.dbPath);
                 CardDao dao = helper.getCardDao();
-                ri.dbInfo = context.getString(R.string.total_card) + dao.getTotalCount(null) + " \n" +
+                ri.dbInfo = "\n"+context.getString(R.string.total_card) + dao.getTotalCount(null) + " \n" +
                         getContext().getString(R.string.new_card) + dao.getNewCardCount(null) + " \n" +
                         getContext().getString(R.string.scheduled_card)+ dao.getScheduledCardCount(null)+ " \n" +
                         getContext().getString(R.string.today_card)+ dao.getTodayCardCount(null);
-               //         + " \n" +getContext().getString(R.string.number_card_left)+ dao.getTodayCardCount(null) ;
+
 
                 ril.set(ri.index, ri);
                 AnyMemoDBOpenHelperManager.releaseHelper(helper);
