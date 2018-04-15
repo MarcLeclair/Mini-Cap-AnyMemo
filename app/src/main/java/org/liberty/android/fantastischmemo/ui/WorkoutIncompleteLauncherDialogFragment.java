@@ -1,22 +1,3 @@
-/*
-Copyright (C) 2013 Haowen Ning
-
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-
-See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-
-*/
 package org.liberty.android.fantastischmemo.ui;
 
 import android.app.Dialog;
@@ -24,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -62,7 +44,10 @@ public class WorkoutIncompleteLauncherDialogFragment extends BaseDialogFragment 
     private RadioButton askMeTomorrowRadio;
     private RadioButton rescheduleRadio;
     private TextView dateText;
+    private TextView incompleteCardsText;
     private WorkoutDialogUtil workoutDialogUtil;
+    List<Card> incompleteCards;
+    final String TAG = getClass().getSimpleName();
 
     private Map<CompoundButton, View> radioButtonSettingsMapping;
 
@@ -112,9 +97,28 @@ public class WorkoutIncompleteLauncherDialogFragment extends BaseDialogFragment 
 
         dateText = (TextView) v.findViewById(R.id.date);
 
+        incompleteCardsText = (TextView) v.findViewById(R.id.incomplete_cards);
+
         startQuizButton = (Button) v.findViewById(R.id.start_quiz_button);
         startQuizButton.setOnClickListener(startQuizButtonOnClickListener);
 
+        incompleteCards = new ArrayList<>();
+
+/*        for (Card card : AnyMemoDBOpenHelperManager.getHelper(dbPath).getCardDao().getAllCards(null)) {
+            card.setLearningDate(DateUtil.getDate(12,04,2000));
+        }*/
+        /* verify each card in the current date and find all incomplete cards from the any past
+        date and assign to array incompleteCards */
+        for (Card card : AnyMemoDBOpenHelperManager.getHelper(dbPath).getCardDao().getAllCards(null)) {
+            if (card.getLearningDate() != null) {
+                if (!card.getLearningDate().equals(DateUtil.getDate(1, 1, 1)) &&
+                        card.getLearningDate().before(DateUtil.today()) ) {
+                    incompleteCards.add(card);
+                }
+            }
+        }
+        /*display those incomplete cards questions and answers in the TextView */
+        displayCards(incompleteCards, incompleteCardsText);
 
         radioButtonSettingsMapping = new HashMap<>(4);
         radioButtonSettingsMapping.put(skipForeverRadio, v.findViewById(R.id.skip_forever_radio));
@@ -125,13 +129,13 @@ public class WorkoutIncompleteLauncherDialogFragment extends BaseDialogFragment 
                 .setTitle(R.string.incomplete_workout_title)
                 .setView(v)
                 .create();
-
     }
 
     @Override
     public void onStart() {
         super.onStart();
         dbOpenHelper = AnyMemoDBOpenHelperManager.getHelper(mActivity, dbPath);
+
     }
 
     private CompoundButton.OnCheckedChangeListener onCheckedChangeListener
@@ -139,39 +143,26 @@ public class WorkoutIncompleteLauncherDialogFragment extends BaseDialogFragment 
 
         @Override
         public void onCheckedChanged(CompoundButton buttonView,
-                                     boolean isChecked) {
+                                     boolean isChecked){
             View settingsView = radioButtonSettingsMapping.get(buttonView);
             if (isChecked) {
-                List<Card> cards = cardDao.getAllCards(null);
-                List<Card> incompleteCards = new ArrayList<>();
-
-                //put all incomplete cards in an arraylist
-                for (Card card : cards) {
-                    //if it is a pass date, but not flagged as done, a card that is done is
-                    // flagged as 1/1/1
-                    if (card.getLearningDate().before(DateUtil.today()) && !card.getLearningDate()
-                            .equals(DateUtil.getDate(1, 1, 1))) {
-                        incompleteCards.add(card);
-                    }
-                }
                 if (settingsView.getId() == R.id.reschedule_radio) {
+                    dateText.setVisibility(View.VISIBLE);
+                    //allow user to pick a new date from the calendar
                     PickStartDateFragment pickStartDateFragment = new PickStartDateFragment();
                     pickStartDateFragment.show(mActivity.getSupportFragmentManager(), "DatePicker");
                     pickStartDateFragment.setText(dateText);
-                    String[] dateAsArray = dateText.getText().toString().split("/");
-                    Date date = DateUtil.getDate(
-                            Integer.parseInt(dateAsArray[0]),
-                            Integer.parseInt(dateAsArray[1]),
-                            Integer.parseInt(dateAsArray[2]));
-                    workoutDialogUtil.setIncompleteCardsDates(date, incompleteCards);
-                    dateText.setVisibility(View.VISIBLE);
+
                 } else if (settingsView.getId() == R.id.skip_forever_radio) {
                     dateText.setVisibility(View.GONE);
-                    workoutDialogUtil.setIncompleteCardsDates(DateUtil.getDate(1, 1, 1), incompleteCards);
+                    //set card's date to 1/1/1 flagging it as done
+                    workoutDialogUtil.setIncompleteCardsDates(AnyMemoDBOpenHelperManager.getHelper(dbPath), DateUtil.getDate(1, 1, 1), incompleteCards);
                 } else if (settingsView.getId() == R.id.ask_me_tomorrow_radio) {
                     dateText.setVisibility(View.GONE);
                     Date yesterday = DateUtil.addDays(DateUtil.today(), -1);
-                    workoutDialogUtil.setIncompleteCardsDates(yesterday, incompleteCards);
+                    //set card's date to yesterday so that the card does not show up in today's
+                    // workout but will be asked again tomorrow
+                    workoutDialogUtil.setIncompleteCardsDates(AnyMemoDBOpenHelperManager.getHelper(dbPath), yesterday, incompleteCards);
                 }
             }
         }
@@ -180,10 +171,55 @@ public class WorkoutIncompleteLauncherDialogFragment extends BaseDialogFragment 
     private View.OnClickListener startQuizButtonOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            if (rescheduleRadio.isChecked()) {
+                String dateAsString = dateText.getText().toString();
+                String[] dateAsArray;
+                Log.d(TAG, "In method onClick of startQuiz button. Date as string is " + dateAsString);
+
+                //parses the EditText containing the date, and puts each integer value in an array
+                dateAsArray = dateAsString.split("/");
+                Date date = DateUtil.getDate(
+                        Integer.parseInt(dateAsArray[0]),
+                        Integer.parseInt(dateAsArray[1]),
+                        Integer.parseInt(dateAsArray[2]));
+                //set chosen date for all incomplete cards
+                workoutDialogUtil.setIncompleteCardsDates(AnyMemoDBOpenHelperManager.getHelper(dbPath), date, incompleteCards);
+            }
             Intent intent = new Intent(mActivity, StudyActivity.class);
             intent.putExtra(QuizActivity.EXTRA_DBPATH, dbPath);
             startActivity(intent);
         }
     };
+
+    /** Populates the EditText in the dialog box by listing all wanted cards's
+     * question and answer
+     * @param cards the current set of cards for which we want to display
+     * @param view the EditText we want to populate with the question and corresponding answer
+     *             for the card set
+     * @return the string that is used to populate the EditText
+     * **/
+    private String displayCards(List<Card> cards, TextView
+            view) {
+
+        StringBuilder listOfIncompleteCardsText = new StringBuilder();
+
+        //put all incomplete cards in an arraylist
+        for (Card card : cards) {
+            /*verify that card has a past date, but not flagged as done, a card that is
+            done is flagged as 1/1/1*/
+
+                incompleteCards.add(card);
+                listOfIncompleteCardsText.append("question: ")
+                        .append(card.getQuestion())
+                        .append("  ")
+                        .append("answer: ")
+                        .append(card.getAnswer())
+                        .append("\n");
+        }
+        view.setText(listOfIncompleteCardsText.toString());
+
+        return listOfIncompleteCardsText.toString();
+
+    }
 }
 

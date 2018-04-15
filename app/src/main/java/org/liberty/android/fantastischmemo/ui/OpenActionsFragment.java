@@ -46,6 +46,7 @@ import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelper;
 import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelperManager;
 import org.liberty.android.fantastischmemo.common.BaseActivity;
 import org.liberty.android.fantastischmemo.common.BaseDialogFragment;
+import org.liberty.android.fantastischmemo.entity.Card;
 import org.liberty.android.fantastischmemo.utils.AMFileUtil;
 import org.liberty.android.fantastischmemo.utils.AMPrefUtil;
 import org.liberty.android.fantastischmemo.utils.DatabaseUtil;
@@ -55,8 +56,10 @@ import org.liberty.android.fantastischmemo.utils.ShareUtil;
 import org.liberty.android.fantastischmemo.utils.WorkOutListUtil;
 import org.liberty.android.fantastischmemo.utils.WorkoutDialogUtil;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -341,10 +344,21 @@ public class OpenActionsFragment extends BaseDialogFragment {
                                     }
                                 }
                             }
+
+                            //Hard coded date for testing purposes to trigger the reschedule pop up
+/*                            List<Card> temp = AnyMemoDBOpenHelperManager.getHelper(dbPath)
+                                    .getCardDao()
+                                    .getAllCards(null);
+                            temp.get(1).setLearningDate(DateUtil.getDate(12,4,2000));
+                            AnyMemoDBOpenHelperManager.getHelper(dbPath).getCardDao().update(temp
+                                    .get(1));
+                            workoutListUtil.addToRecentList(dbPath);*/
                         } catch (Exception e) {
                             Log.e(TAG, "Workout mode throws an exception ", e);
                         }
                     }
+
+
                 });
 
                 negativeButton.setOnClickListener(new View.OnClickListener() {
@@ -356,9 +370,9 @@ public class OpenActionsFragment extends BaseDialogFragment {
                 });
 
 
-                dialog.show();
 
-                workoutListUtil.addToRecentList(dbPath);
+
+
             }
 
             if (v == editItem) {

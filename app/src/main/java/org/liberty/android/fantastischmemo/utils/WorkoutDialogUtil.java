@@ -29,6 +29,15 @@ import java.util.concurrent.TimeUnit;
 public class WorkoutDialogUtil {
     private final String TAG = getClass().getSimpleName();
 
+    /** Set all cards in current deck to today or future chosen workout date
+     * @param helper  helper used to access the cardDao
+     * @param numDaysOrCards holds either the number of workout days or number of cards per day
+     *                       of workout
+     * @param daysMode flags whether numDaysOrCards is the number of days or cards. if daysMode
+     *                 is set to true, then numDaysOrCards represents the number of days, else it
+     *                 represents the number of cards
+     * @return list of all cards within deck with new learningDate value
+     * **/
     public List<Card> setWorkoutModeDates(AnyMemoDBOpenHelper helper, int numDaysOrCards, Date
             startDate, boolean daysMode) {
         int nbCardsPerWorkout = 0;
@@ -73,7 +82,16 @@ public class WorkoutDialogUtil {
         return cards;
     }
 
-    public List<Card> setIncompleteCardsDates (Date date,  List<Card> incompleteCards){
+    /** Reschedules cards' learningDate to today/future day
+     * @param helper  helper used to access the cardDao
+     * @param date date chosen to reschedule the list of incompleteCards
+     * @param incompleteCards all cards that need to be rescheduled because incomplete (not
+     *                        finished by today)
+     * @return list of rescheduled incomplete cards
+     * **/
+    public List<Card> setIncompleteCardsDates (AnyMemoDBOpenHelper helper, Date date,  List<Card>
+            incompleteCards){
+        CardDao cardDao = helper.getCardDao();
         for (Card card : incompleteCards){
             card.setLearningDate(date);
             cardDao.update(card);

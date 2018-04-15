@@ -39,6 +39,8 @@ import android.widget.Toast;
 import com.google.common.base.Strings;
 
 import org.liberty.android.fantastischmemo.R;
+import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelper;
+import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelperManager;
 import org.liberty.android.fantastischmemo.entity.Card;
 import org.liberty.android.fantastischmemo.entity.Category;
 import org.liberty.android.fantastischmemo.entity.LearningData;
@@ -55,6 +57,7 @@ import org.liberty.android.fantastischmemo.utils.DateUtil;
 import org.liberty.android.fantastischmemo.utils.DictionaryUtil;
 import org.liberty.android.fantastischmemo.utils.ShareUtil;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -130,18 +133,25 @@ public class StudyActivity extends QACardActivity {
 
         //if the user is in workout mode
         if (workout_mode) {
-            List<Card> cards = getDbOpenHelper().getCardDao().getAllCards(null);
+            List<Card> cards = new ArrayList<>();
+            cards = AnyMemoDBOpenHelperManager.getHelper(dbPath).getCardDao()
+                    .getAllCards
+                    (null);
             boolean incompleteCards = false;
 
-            //verify if there is at least 1 card with the incomplete flag, which is date any past
-            // date that doesn't include 1/1/1 because 1/1/1 is s completed card
-            for (Card card : cards) {
-                if (card.getLearningDate().equals(DateUtil.getDate(1, 1, 1))) {
-                    incompleteCards = true;
-                    break;
+
+
+            /*verify if there is at least 1 incomplete card (any date past today)
+            date that doesn't include 1/1/1 because 1/1/1 means that the card is completed*/
+                for (Card card : cards) {
+                    if (!card.getLearningDate().equals(DateUtil.getDate(1, 1, 1))
+                            && card.getLearningDate().before(DateUtil.today())) {
+                        incompleteCards = true;
+                        break;
+                    }
                 }
-            }
-            //if so, display a dialog box for them to reschedule their cards for another day
+            /*if there are incomplete cards, display a dialog box for them to reschedule their
+            cards for another day*/
             if (incompleteCards) {
                 WorkoutIncompleteLauncherDialogFragment fragment = new WorkoutIncompleteLauncherDialogFragment();
                 Bundle b = new Bundle();
