@@ -138,6 +138,8 @@
             android:name=".ui.CardPlayerActivity" />
         <activity
             android:name=".ui.WorkoutSchedulingScreen" />
+       <activity
+            android:name=".ui.GameActivity"/>
         <receiver
             android:name=".receiver.AlarmReceiver"
             android:process=":remote" />
