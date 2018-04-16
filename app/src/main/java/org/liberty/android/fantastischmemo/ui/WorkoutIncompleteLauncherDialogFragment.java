@@ -104,9 +104,6 @@ public class WorkoutIncompleteLauncherDialogFragment extends BaseDialogFragment 
 
         incompleteCards = new ArrayList<>();
 
-/*        for (Card card : AnyMemoDBOpenHelperManager.getHelper(dbPath).getCardDao().getAllCards(null)) {
-            card.setLearningDate(DateUtil.getDate(12,04,2000));
-        }*/
         /* verify each card in the current date and find all incomplete cards from the any past
         date and assign to array incompleteCards */
         for (Card card : AnyMemoDBOpenHelperManager.getHelper(dbPath).getCardDao().getAllCards(null)) {
@@ -156,13 +153,13 @@ public class WorkoutIncompleteLauncherDialogFragment extends BaseDialogFragment 
                 } else if (settingsView.getId() == R.id.skip_forever_radio) {
                     dateText.setVisibility(View.GONE);
                     //set card's date to 1/1/1 flagging it as done
-                    workoutDialogUtil.setIncompleteCardsDates(AnyMemoDBOpenHelperManager.getHelper(dbPath), DateUtil.getDate(1, 1, 1), incompleteCards);
+                    workoutDialogUtil.setCardsDates(AnyMemoDBOpenHelperManager.getHelper(dbPath), DateUtil.getDate(1, 1, 1), incompleteCards);
                 } else if (settingsView.getId() == R.id.ask_me_tomorrow_radio) {
                     dateText.setVisibility(View.GONE);
                     Date yesterday = DateUtil.addDays(DateUtil.today(), -1);
                     //set card's date to yesterday so that the card does not show up in today's
                     // workout but will be asked again tomorrow
-                    workoutDialogUtil.setIncompleteCardsDates(AnyMemoDBOpenHelperManager.getHelper(dbPath), yesterday, incompleteCards);
+                    workoutDialogUtil.setCardsDates(AnyMemoDBOpenHelperManager.getHelper(dbPath), yesterday, incompleteCards);
                 }
             }
         }
@@ -183,10 +180,10 @@ public class WorkoutIncompleteLauncherDialogFragment extends BaseDialogFragment 
                         Integer.parseInt(dateAsArray[1]),
                         Integer.parseInt(dateAsArray[2]));
                 //set chosen date for all incomplete cards
-                workoutDialogUtil.setIncompleteCardsDates(AnyMemoDBOpenHelperManager.getHelper(dbPath), date, incompleteCards);
+                workoutDialogUtil.setCardsDates(AnyMemoDBOpenHelperManager.getHelper(dbPath), date, incompleteCards);
             }
             Intent intent = new Intent(mActivity, StudyActivity.class);
-            intent.putExtra(QuizActivity.EXTRA_DBPATH, dbPath);
+            intent.putExtra(StudyActivity.EXTRA_DBPATH, dbPath);
             startActivity(intent);
         }
     };
@@ -198,27 +195,23 @@ public class WorkoutIncompleteLauncherDialogFragment extends BaseDialogFragment 
      *             for the card set
      * @return the string that is used to populate the EditText
      * **/
-    private String displayCards(List<Card> cards, TextView
+    public String displayCards(List<Card> cards, TextView
             view) {
 
-        StringBuilder listOfIncompleteCardsText = new StringBuilder();
+        StringBuilder listOfCardsText = new StringBuilder();
 
         //put all incomplete cards in an arraylist
         for (Card card : cards) {
-            /*verify that card has a past date, but not flagged as done, a card that is
-            done is flagged as 1/1/1*/
-
-                incompleteCards.add(card);
-                listOfIncompleteCardsText.append("question: ")
+                listOfCardsText.append("question: ")
                         .append(card.getQuestion())
-                        .append("  ")
+                        .append(" ")
                         .append("answer: ")
                         .append(card.getAnswer())
                         .append("\n");
         }
-        view.setText(listOfIncompleteCardsText.toString());
+        view.setText(listOfCardsText.toString());
 
-        return listOfIncompleteCardsText.toString();
+        return listOfCardsText.toString();
 
     }
 }

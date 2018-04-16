@@ -75,7 +75,7 @@ public class OpenActionsFragment extends BaseDialogFragment {
     private BaseActivity mActivity;
 
     private String dbPath;
-
+    private boolean testing = false;
     private View studyItem;
     private View workoutModeItem;
     private View editItem;
@@ -182,6 +182,16 @@ public class OpenActionsFragment extends BaseDialogFragment {
 
 
             if (v == workoutModeItem) {
+/*                WorkoutLauncherDialogFragment fragment = new WorkoutLauncherDialogFragment();
+                Bundle b = new Bundle();
+                b.putString(CategoryEditorFragment.EXTRA_DBPATH, dbPath);
+                fragment.setArguments(b);
+                fragment.show(mActivity.getSupportFragmentManager(), "WorkoutLauncherDialog");
+                mActivity.getSupportFragmentManager().beginTransaction()
+                        .addToBackStack(null)
+                        .commit();
+                recentListUtil.addToRecentList(dbPath);*/
+
                 int maxNumCards = AnyMemoDBOpenHelperManager.getHelper(mActivity, dbPath)
                         .getCardDao().getAllCards(null).size();
                 //if the deck is empty don't pop up the dialogue box for workout mode
@@ -321,9 +331,9 @@ public class OpenActionsFragment extends BaseDialogFragment {
                                                 maxNumCards);
                                     } else {
                                         numCardsInputWrapper.setErrorEnabled(false);
-                                      /*  int numOfDays1=(maxNumCards/numCards);
+                                        int numOfDays1=(maxNumCards/numCards);
                                         int numOfDays=(maxNumCards%numCards);
-                                        numDays=numOfDays1 +numOfDays;*/
+                                        numDays=numOfDays1 +numOfDays;
                                         //retrieving the date as a string, and putting it an an array
                                         // converting that array to a date stored in the variable startDate
                                         workoutDialogBoxUtil.setWorkoutModeDates
@@ -346,13 +356,21 @@ public class OpenActionsFragment extends BaseDialogFragment {
                             }
 
                             //Hard coded date for testing purposes to trigger the reschedule pop up
-/*                            List<Card> temp = AnyMemoDBOpenHelperManager.getHelper(dbPath)
-                                    .getCardDao()
-                                    .getAllCards(null);
-                            temp.get(1).setLearningDate(DateUtil.getDate(12,4,2000));
-                            AnyMemoDBOpenHelperManager.getHelper(dbPath).getCardDao().update(temp
-                                    .get(1));
-                            workoutListUtil.addToRecentList(dbPath);*/
+                            //just set the testing flag to true, if you want to run this piece of
+                            // code, otherwise set it to false
+                            if (testing) {
+
+                                List<Card> temp = AnyMemoDBOpenHelperManager.getHelper(dbPath)
+                                        .getCardDao()
+                                        .getAllCards(null);
+                                if (temp != null) {
+                                    temp.get(1).setLearningDate(DateUtil.getDate(12, 4, 2000));
+                                    AnyMemoDBOpenHelperManager.getHelper(dbPath).getCardDao().update(temp
+                                            .get(1));
+                                }
+                            }
+                            workoutListUtil.addToRecentList(dbPath);
+
                         } catch (Exception e) {
                             Log.e(TAG, "Workout mode throws an exception ", e);
                         }

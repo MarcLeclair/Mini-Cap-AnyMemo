@@ -29,15 +29,26 @@ import java.util.concurrent.TimeUnit;
 public class WorkoutDialogUtil {
     private final String TAG = getClass().getSimpleName();
 
-    /** Set all cards in current deck to today or future chosen workout date
-     * @param helper  helper used to access the cardDao
+    /**
+     * Set all cards in current deck to today or future chosen workout date
+     * If the user chooses the number of days of workout, the result of nbCardsPerWorkout is done
+     * by  rounding up
+     * the result of an integer division for example if the person chooses 2 days to study a deck
+     * of 3 cards, 3 / 2 = 2 there will be 2 cards to study at first then 1 card, we need to round
+     * up with integer division. Otherwise 3/2 = 1 which would mean 1 card per day, for 3 days,
+     * which is not what we want.
+     * If the user chooses the number of cards per day, you simply pass that parameter in to
+     * nbCardsPerWorkout,
+     * without calcuation necessary
+     *
+     * @param helper         helper used to access the cardDao
      * @param numDaysOrCards holds either the number of workout days or number of cards per day
      *                       of workout
-     * @param daysMode flags whether numDaysOrCards is the number of days or cards. if daysMode
-     *                 is set to true, then numDaysOrCards represents the number of days, else it
-     *                 represents the number of cards
+     * @param daysMode       flags whether numDaysOrCards is the number of days or cards. if daysMode
+     *                       is set to true, then numDaysOrCards represents the number of days, else it
+     *                       represents the number of cards
      * @return list of all cards within deck with new learningDate value
-     * **/
+     **/
     public List<Card> setWorkoutModeDates(AnyMemoDBOpenHelper helper, int numDaysOrCards, Date
             startDate, boolean daysMode) {
         int nbCardsPerWorkout = 0;
@@ -45,16 +56,9 @@ public class WorkoutDialogUtil {
         List<Card> cards = cardDao.getAllCards(null);
         Log.d(TAG, "card numbers " + cards.size());
         if (daysMode) {
-       /* rounding up the result of an integer division
-        for example if the person chooses 2 days to study a deck
-        of 3 cards, 3 / 2 = 2
-        there will be 2 cards to study at first then 1 card, we need to round up with integer
-        division. Otherwise 3/2 = 1 which would mean 1 card per day, for 3 days, which is not
-        what we want*/
             nbCardsPerWorkout = (cards.size() + numDaysOrCards - 1) / numDaysOrCards;
             Log.d(TAG, "card numbers " + nbCardsPerWorkout);
-        }
-        else{
+        } else {
             nbCardsPerWorkout = numDaysOrCards;
             Log.d(TAG, "card numbers " + nbCardsPerWorkout);
         }
@@ -78,21 +82,21 @@ public class WorkoutDialogUtil {
             count++;
         }
         AnyMemoDBOpenHelperManager.releaseHelper(helper);
-        //if the deck size is not equal to 0, return true
         return cards;
     }
 
-    /** Reschedules cards' learningDate to today/future day
-     * @param helper  helper used to access the cardDao
-     * @param date date chosen to reschedule the list of incompleteCards
-     * @param incompleteCards all cards that need to be rescheduled because incomplete (not
-     *                        finished by today)
-     * @return list of rescheduled incomplete cards
-     * **/
-    public List<Card> setIncompleteCardsDates (AnyMemoDBOpenHelper helper, Date date,  List<Card>
-            incompleteCards){
+    /**
+     * Reschedules cards' learningDate
+     *
+     * @param helper          helper used to access the cardDao
+     * @param date            date chosen to reschedule the list of incompleteCards
+     * @param incompleteCards all cards that need to be rescheduled
+     * @return list of now rescheduled cards
+     **/
+    public List<Card> setCardsDates(AnyMemoDBOpenHelper helper, Date date, List<Card>
+            incompleteCards) {
         CardDao cardDao = helper.getCardDao();
-        for (Card card : incompleteCards){
+        for (Card card : incompleteCards) {
             card.setLearningDate(date);
             cardDao.update(card);
         }
