@@ -23,6 +23,20 @@ public class ServerConnThreads extends  Thread {
             try {
                 server = new ServerSocket(serverPort);
                 startedServer = true;
+                while(true){
+                    //let server accept connections ( server as in the phone hosting the room)
+                    Socket socket = server.accept();
+                    //Create a listener
+                    ServerListener listener = new ServerListener(socket);
+                    //Start the listener for the server
+                    listener.start();
+                    ServerSender roomName = new ServerSender(socket, "testing_room");
+                    //start roomname thread to propagate the room name to connected clients
+                    roomName.start();
+                    //add server to map of connected users
+                    userConnected(socket,"server");
+
+                }
 
                 } catch (IOException e) {
                 e.printStackTrace();
