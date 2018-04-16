@@ -15,6 +15,7 @@ import android.view.ViewParent;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import org.hamcrest.core.IsInstanceOf;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,6 +27,7 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -36,14 +38,14 @@ import static org.hamcrest.Matchers.is;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class ReverseSortEspressoTest {
+public class ReverseSortEspresso {
 
     @Rule
     public ActivityTestRule<AnyMemo> mActivityTestRule = new ActivityTestRule<>(AnyMemo.class);
 
     @Test
-    public void reverseSortEspressoTest() {
-        String TAG = LetterHintEspresso.class.getSimpleName();
+    public void reverseSortEspresso() {
+        String TAG = ReverseSortEspresso.class.getSimpleName();
 
         try {
             ViewInteraction appCompatButton = onView(
@@ -88,6 +90,39 @@ public class ReverseSortEspressoTest {
                                 0),
                         isDisplayed()));
         appCompatTextView.perform(click());
+
+        ViewInteraction checkedTextView = onView(
+                allOf(withId(android.R.id.text1),
+                        childAtPosition(
+                                allOf(IsInstanceOf.<View>instanceOf(android.widget.ListView.class),
+                                        childAtPosition(
+                                                IsInstanceOf.<View>instanceOf(android.widget.FrameLayout.class),
+                                                0)),
+                                1),
+                        isDisplayed()));
+        checkedTextView.check(matches(isDisplayed()));
+
+        ViewInteraction checkedTextView2 = onView(
+                allOf(withId(android.R.id.text1),
+                        childAtPosition(
+                                allOf(IsInstanceOf.<View>instanceOf(android.widget.ListView.class),
+                                        childAtPosition(
+                                                IsInstanceOf.<View>instanceOf(android.widget.FrameLayout.class),
+                                                0)),
+                                3),
+                        isDisplayed()));
+        checkedTextView2.check(matches(isDisplayed()));
+
+        ViewInteraction checkedTextView3 = onView(
+                allOf(withId(android.R.id.text1),
+                        childAtPosition(
+                                allOf(IsInstanceOf.<View>instanceOf(android.widget.ListView.class),
+                                        childAtPosition(
+                                                IsInstanceOf.<View>instanceOf(android.widget.FrameLayout.class),
+                                                0)),
+                                5),
+                        isDisplayed()));
+        checkedTextView3.check(matches(isDisplayed()));
 
         DataInteraction appCompatCheckedTextView = onData(anything())
                 .inAdapterView(allOf(withClassName(is("com.android.internal.app.AlertController$RecycleListView")),
