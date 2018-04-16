@@ -500,4 +500,7 @@
     <string name="scheduled_card">Total number of scheduled cards: </string>
     <string name="total_card">Total number of cards: </string>
 
+    <string name="ordinalr_text">Reversed Ordinal</string>
+    <string name="questionr_text">Reversed Question</string>
+    <string name="answerr_text">Reversed Answer</string>
 </resources>
