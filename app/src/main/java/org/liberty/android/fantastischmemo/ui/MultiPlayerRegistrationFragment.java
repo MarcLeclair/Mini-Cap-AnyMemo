@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import org.liberty.android.fantastischmemo.R;
+import org.liberty.android.fantastischmemo.utils.ClientHandle;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -26,7 +27,7 @@ public class MultiPlayerRegistrationFragment extends Fragment {
 
     private static MaterialEditText playerName;
     public MultiPlayerRegistrationFragment(){};
-
+    public ClientHandle client;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -53,6 +54,26 @@ public class MultiPlayerRegistrationFragment extends Fragment {
                         if ((playerName.getText().toString().compareTo("")) > 0) {
                             getActivity().getSupportFragmentManager().beginTransaction()
                                     .replace(R.id.container, new HostingFragment()).addToBackStack(HostingFragment.class.getName())
+                                    .commit();
+                        } else {
+                            Toast.makeText(getActivity(), "Check your Username. Please enter a valid value", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+            else{
+                hostGame.setVisibility(View.GONE);
+                joinGame.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //TODO INITIALIZE CLIENTCONNECTION
+                        if ((playerName.getText().toString().compareTo("")) > 0) {
+                            Bundle data = new Bundle();
+                            data.putString("playerName",playerName.getText().toString());
+                            GameJoinFragment joinGame = new GameJoinFragment();
+                            joinGame.setArguments(data);
+                            getActivity().getSupportFragmentManager().beginTransaction()
+                                    .replace(R.id.container, joinGame).addToBackStack(GameJoinFragment.class.getName())
                                     .commit();
                         } else {
                             Toast.makeText(getActivity(), "Check your Username. Please enter a valid value", Toast.LENGTH_SHORT).show();
