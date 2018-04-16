@@ -70,4 +70,15 @@ public class DateUtilTest {
         int delay2 = getDateDifference(new Date());
         Assert.assertEquals(delay1,delay2);
     }
+
+    @Test
+    public void getCalenderDaysTest(){
+
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        Date date = cal.getTime();
+        assertEquals(date, DateUtil.getCalenderDays(date));
+    }
 }

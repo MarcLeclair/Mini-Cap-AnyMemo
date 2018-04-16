@@ -1,5 +1,8 @@
 package org.liberty.android.fantastischmemo.dao;
 
+import android.database.Cursor;
+import android.util.Log;
+
 import com.google.common.base.Strings;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.FieldType;
@@ -15,6 +18,7 @@ import org.liberty.android.fantastischmemo.entity.Card;
 import org.liberty.android.fantastischmemo.entity.Category;
 import org.liberty.android.fantastischmemo.entity.LearningData;
 import org.liberty.android.fantastischmemo.entity.ReviewOrdering;
+import org.liberty.android.fantastischmemo.utils.DateUtil;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -376,7 +380,20 @@ public class CardDaoImpl extends AbstractHelperDaoImpl<Card, Integer> implements
             throw new RuntimeException(e);
         }
     }
+    public long getTodayCardCount(Category filterCategory ){
 
+        Date today = DateUtil.getCalenderDays(new Date());
+        QueryBuilder<Card, Integer> qb = queryBuilder();
+        qb.setCountOf(true);
+        try {
+            Where<Card, Integer> where = qb.where().eq("learningDate", today);
+            qb.setWhere(where);
+
+            return countOf(qb.prepare());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
     public long getNewCardCount(Category filterCategory) {
         try {
             LearningDataDao learningDataDao = getHelper().getLearningDataDao();
@@ -798,7 +815,6 @@ public class CardDaoImpl extends AbstractHelperDaoImpl<Card, Integer> implements
             throw new RuntimeException(e);
         }
     }
-
 
 
     public List<Card> getAllCards(final Category filterCategory) {
