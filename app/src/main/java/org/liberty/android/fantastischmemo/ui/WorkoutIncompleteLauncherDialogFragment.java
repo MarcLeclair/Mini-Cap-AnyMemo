@@ -99,7 +99,7 @@ public class WorkoutIncompleteLauncherDialogFragment extends BaseDialogFragment 
 
         incompleteCardsText = (TextView) v.findViewById(R.id.incomplete_cards);
 
-        startQuizButton = (Button) v.findViewById(R.id.start_quiz_button);
+        startQuizButton = (Button) v.findViewById(R.id.start_work_button);
         startQuizButton.setOnClickListener(startQuizButtonOnClickListener);
 
         incompleteCards = new ArrayList<>();
