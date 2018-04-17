@@ -17,7 +17,6 @@ import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -49,12 +48,9 @@ import com.github.aakira.expandablelayout.ExpandableLinearLayout;
 import com.github.aakira.expandablelayout.Utils;
 
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.inject.Inject;
@@ -101,6 +97,8 @@ public class WorkoutTabFragment extends BaseFragment {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.open_screen_menu, menu);
     }
+
+
 
 
     @Override
@@ -287,13 +285,16 @@ public class WorkoutTabFragment extends BaseFragment {
                 }
                 AnyMemoDBOpenHelper helper = AnyMemoDBOpenHelperManager.getHelper(getContext(), ri.dbPath);
                 CardDao dao = helper.getCardDao();
-                ri.dbInfo = context.getString(R.string.stat_total) + dao.getTotalCount(null) + " " +
-                        getContext().getString(R.string.stat_new) + dao.getNewCardCount(null) + " " +
-                        getContext().getString(R.string.stat_scheduled)+ dao.getScheduledCardCount(null);
+                ri.dbInfo = "\n"+context.getString(R.string.total_card) + dao.getTotalCount(null) + " \n" +
+                        getContext().getString(R.string.new_card) + dao.getNewCardCount(null) + " \n" +
+                        getContext().getString(R.string.scheduled_card)+ dao.getScheduledCardCount(null)+ " \n" +
+                        getContext().getString(R.string.today_card)+ dao.getTodayCardCount(null);
+
+
                 ril.set(ri.index, ri);
                 AnyMemoDBOpenHelperManager.releaseHelper(helper);
             } catch (Exception e) {
-                Log.e(TAG, "Recent list throws exception (Usually can be safely ignored)", e);
+                Log.e(TAG, "Workout list throws exception (Usually can be safely ignored)", e);
             }
         }
 
@@ -306,11 +307,11 @@ public class WorkoutTabFragment extends BaseFragment {
 
         private  Context context;
         private SparseBooleanArray expandState = new SparseBooleanArray();
-        private WorkOutListUtil woUtil;
+        private WorkOutListUtil workOutListUtil;
 
-        public WorkoutListAdapter(WorkOutListUtil woUtil) {
+        public WorkoutListAdapter(WorkOutListUtil workOutListUtil) {
 
-            this.woUtil = woUtil;
+            this.workOutListUtil = workOutListUtil;
         }
         public  class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -383,7 +384,7 @@ public class WorkoutTabFragment extends BaseFragment {
             public void onClick(View view) {
                 mItemManger.removeShownLayouts(holder.swipeLayout);
                 String dbName = workout.get(position).dbPath;
-                woUtil.deleteFromWorkoutList(dbName);
+                workOutListUtil.deleteFromWorkoutList(dbName);
                 workout.remove(position);
 
                 notifyDataSetChanged();

@@ -67,6 +67,7 @@ public interface CardDao extends HelperDao<Card, Integer> {
     /* Number of cards that was graded with "grade" */
     long getNumberOfCardsWithGrade(int grade);
 
+    long getTodayCardCount(Category filterCategory);
     /* Create a list of cards. Also create the related LearningData and Category */
     void createCards(final List<Card> cardList);
 
@@ -114,4 +115,6 @@ public interface CardDao extends HelperDao<Card, Integer> {
     List<Card> getAllCards(Category filterCategory);
 
     List<Card> getAllCardsForToday(Date today);
+
+
 }

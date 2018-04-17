@@ -25,8 +25,10 @@ import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.action.ViewActions.swipeLeft;
+import static android.support.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
+import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
@@ -34,42 +36,44 @@ import static org.hamcrest.Matchers.is;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class WorkoutDeleteTest {
+public class WorkoutCardNumberEspresso {
 
     @Rule
     public ActivityTestRule<AnyMemo> mActivityTestRule = new ActivityTestRule<>(AnyMemo.class);
 
     @Test
-    public void workoutDeleteTest() {
+    public void workoutCardNumberTestEspresso() {
         final String TAG = "Espresso logger";
         try {
             //view is displayed logic
-            ViewInteraction appCompatButton = onView(
-                    allOf(withId(android.R.id.button1), withText("OK"),
-                            childAtPosition(
-                                    allOf(withClassName(is("com.android.internal.widget" +
-                                                    ".ButtonBarLayout")),
-                                            childAtPosition(
-                                                    withClassName(is("android.widget.LinearLayout")),
-                                                    3)),
-                                    3),
-                            isDisplayed()));
-            appCompatButton.perform(click());
+        ViewInteraction appCompatButton = onView(
+                allOf(withId(android.R.id.button1), withText("OK"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withClassName(is("android.widget.ScrollView")),
+                                        0),
+                                3)));
+        appCompatButton.perform(scrollTo(), click());
         } catch (NoMatchingViewException e) {
             //catch exception if there is no dialogue box with an OK text
             //sometimes this text will only appear on the first time of running the test
             Log.d(TAG, "letterHintEspresso() returned: exception, could not find text with OK" );
         }
-
-        ViewInteraction appCompatButton2 = onView(
-                allOf(withId(R.id.recent_item_more_button), withText("MORE"),
+        ViewInteraction tabView = onView(
+                allOf(childAtPosition(
                         childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.FrameLayout")),
-                                        0),
-                                2),
+                                withId(R.id.tabs),
+                                0),
+                        1),
                         isDisplayed()));
-        appCompatButton2.perform(click());
+        tabView.perform(click());
+
+        ViewInteraction recyclerView = onView(
+                allOf(withId(R.id.file_list),
+                        childAtPosition(
+                                withClassName(is("android.widget.LinearLayout")),
+                                1)));
+        recyclerView.perform(actionOnItemAtPosition(3, click()));
 
         ViewInteraction linearLayout = onView(
                 allOf(withId(R.id.study_mode),
@@ -80,7 +84,7 @@ public class WorkoutDeleteTest {
                                 1)));
         linearLayout.perform(scrollTo(), click());
 
-        ViewInteraction appCompatButton3 = onView(
+        ViewInteraction appCompatButton2 = onView(
                 allOf(withId(R.id.start_date_button), withText("Add start date"),
                         childAtPosition(
                                 childAtPosition(
@@ -88,56 +92,67 @@ public class WorkoutDeleteTest {
                                         2),
                                 0),
                         isDisplayed()));
-        appCompatButton3.perform(click());
+        appCompatButton2.perform(click());
 
-        ViewInteraction appCompatButton4 = onView(
+        ViewInteraction appCompatImageButton = onView(
+                allOf(withClassName(is("android.support.v7.widget.AppCompatImageButton")), withContentDescription("Next month"),
+                        childAtPosition(
+                                allOf(withClassName(is("android.widget.DayPickerView")),
+                                        childAtPosition(
+                                                withClassName(is("com.android.internal.widget.DialogViewAnimator")),
+                                                0)),
+                                2),
+                        isDisplayed()));
+        appCompatImageButton.perform(click());
+
+        ViewInteraction appCompatButton3 = onView(
                 allOf(withId(android.R.id.button1), withText("OK"),
                         childAtPosition(
                                 childAtPosition(
                                         withClassName(is("android.widget.ScrollView")),
                                         0),
                                 3)));
-        appCompatButton4.perform(scrollTo(), click());
+        appCompatButton3.perform(scrollTo(), click());
 
-        ViewInteraction appCompatEditText = onView(
-                allOf(withId(R.id.num_days_input),
+        ViewInteraction appCompatRadioButton = onView(
+                allOf(withId(R.id.Num_cards_button), withText("Select number of cards"),
                         childAtPosition(
                                 childAtPosition(
-                                        withId(R.id.num_days_input_wrapper),
+                                        withClassName(is("android.widget.LinearLayout")),
+                                        0),
+                                2),
+                        isDisplayed()));
+        appCompatRadioButton.perform(click());
+
+        ViewInteraction appCompatEditText = onView(
+                allOf(withId(R.id.num_cards_input),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.num_cards_input_wrapper),
                                         0),
                                 0),
                         isDisplayed()));
-        appCompatEditText.perform(replaceText("5"), closeSoftKeyboard());
+        appCompatEditText.perform(replaceText("3"), closeSoftKeyboard());
 
-        ViewInteraction appCompatButton5 = onView(
+        ViewInteraction appCompatCheckBox = onView(
+                allOf(withId(R.id.notification), withText("Enable notification"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withClassName(is("android.widget.LinearLayout")),
+                                        4),
+                                0),
+                        isDisplayed()));
+        appCompatCheckBox.perform(click());
+
+        ViewInteraction appCompatButton4 = onView(
                 allOf(withId(R.id.button_ok), withText("Add to workout"),
                         childAtPosition(
                                 childAtPosition(
                                         withClassName(is("android.widget.LinearLayout")),
-                                        3),
+                                        5),
                                 1),
                         isDisplayed()));
-        appCompatButton5.perform(click());
-
-        ViewInteraction tabView = onView(
-                allOf(childAtPosition(
-                        childAtPosition(
-                                withId(R.id.tabs),
-                                0),
-                        4),
-                        isDisplayed()));
-        tabView.perform(click());
-
-        ViewInteraction viewPager = onView(
-                allOf(withId(R.id.viewpager),
-                        childAtPosition(
-                                allOf(withId(R.id.main_content),
-                                        childAtPosition(
-                                                withId(R.id.drawer_layout),
-                                                0)),
-                                1),
-                        isDisplayed()));
-        viewPager.perform(swipeLeft());
+        appCompatButton4.perform(click());
 
         ViewInteraction tabView2 = onView(
                 allOf(childAtPosition(
@@ -148,15 +163,26 @@ public class WorkoutDeleteTest {
                         isDisplayed()));
         tabView2.perform(click());
 
-        ViewInteraction appCompatButton6 = onView(
-                allOf(withId(R.id.delete), withText("Yes,Delete"),
+        ViewInteraction viewPager2 = onView(
+                allOf(withId(R.id.viewpager),
+                        childAtPosition(
+                                allOf(withId(R.id.main_content),
+                                        childAtPosition(
+                                                withId(R.id.drawer_layout),
+                                                0)),
+                                1),
+                        isDisplayed()));
+        viewPager2.perform(swipeLeft());
+
+        ViewInteraction relativeLayout = onView(
+                allOf(withId(R.id.button),
                         childAtPosition(
                                 childAtPosition(
-                                        withId(R.id.swipe),
+                                        withId(R.id.recent_open_list),
                                         0),
-                                2),
+                                1),
                         isDisplayed()));
-        appCompatButton6.perform(click());
+        relativeLayout.perform(click());
 
     }
 

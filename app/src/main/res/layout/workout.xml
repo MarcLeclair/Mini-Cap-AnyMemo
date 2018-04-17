@@ -56,12 +56,12 @@
         android:orientation="vertical">
         <RadioButton
             android:checked="false"
-            android:id="@+id/Num_days_button"
+            android:id="@+id/num_days_button"
             android:text="@string/number_days_button" />
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/Num_days_settings"
+            android:id="@+id/num_days_settings"
             android:visibility="gone"
             android:orientation="vertical">
             <android.support.design.widget.TextInputLayout
@@ -84,7 +84,7 @@
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/Num_cards_settings"
+            android:id="@+id/num_cards_settings"
             android:visibility="gone"
             android:orientation="vertical">
             <android.support.design.widget.TextInputLayout
