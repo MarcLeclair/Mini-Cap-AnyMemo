@@ -3,6 +3,7 @@ package org.liberty.android.fantastischmemo.utils;
 import org.liberty.android.fantastischmemo.entity.Card;
 
 import java.security.SecureRandom;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -19,28 +20,63 @@ public class HintUtil {
     public String generateLetterHint(int count, String word) {
         //this function is called in the displayLetterHint method, line 276
         //  String word = getCurrentCard().getAnswer();
-        Random generator = new Random();
         StringBuilder string = new StringBuilder();
-        int randomLength = 1 + generator.nextInt(word.length());
-        char temp;
-        temp = word.charAt(generator.nextInt(word.length() +1));
-        string.append(temp);
-        for (int i = 0; i < randomLength; i++) {
+        Random rng = new Random();
 
-            if (i <= count - 1) { //show letters up to the number of clicks for hint
-                if (word.charAt(i) == ' ') {
-                    string.append(" ");
+        char[] letters = word.toCharArray();
+        char[] answers = new char[letters.length];
 
+        int selected = rng.nextInt(letters.length);
+        for (int i = 0; i < word.length(); i++) {
+
+                if (i == selected) {
+                    answers[i] = letters[i];
+                } else {
+                    answers[i] = '_';
                 }
-                string.append(word.charAt(i));
-            } else {
 
-                string.append(" _");
-            }
         }
+        string.append(answers);
         return string.toString();
     }
 
+        // string.append(letters[rng.nextInt(letters.length)]);
+
+        //while (wordGuessed != true) {
+            /*for (int i = 0; i < answers.length; i++) {
+            answers[i] = letters[rng.nextInt(letters.length)];
+            }*/
+        //}
+
+       /* if (wordGuessed == letterGuessed){
+            string.append(wordGuessed);
+        }*/ /*int randomLoc = rng.nextInt(letters.length);
+        int temp = letters[i];
+        letters[i] = letters[randomLoc];
+        letters[randomLoc] = (char) temp;*/
+
+
+
+    /*char[] letters = word.toCharArray();
+        boolean[] hints = new boolean[word.length()];
+        char[] answers = new char[letters.length];
+        Arrays.fill(hints, false);
+
+        int selected = rng.nextInt(hints.length);
+
+        while (hints[selected]) {
+            for (int i = 0; i < letters.length; i++) {
+                    if (hints[i]) {
+                        answers[i] = letters[i];
+
+                    }
+                    string.append(word.charAt(i));
+
+            }
+        }
+        hints[selected] = true;
+        return string.toString();
+    }*/
 
     public List<Card> shuffleHintDeck(List<Card> deck) {
         //Using Yates shuffle algorithm
