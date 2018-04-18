@@ -271,7 +271,7 @@ public class OpenActionsFragment extends BaseDialogFragment {
                                             Integer.parseInt(dateAsArray[0]),
                                             Integer.parseInt(dateAsArray[1]),
                                             Integer.parseInt(dateAsArray[2]));
-//check something
+                                    //check something
                                     if (!numDaysInput.equals("")) {
                                         numDays = Integer.parseInt(numDaysInput);
                                     } else {
