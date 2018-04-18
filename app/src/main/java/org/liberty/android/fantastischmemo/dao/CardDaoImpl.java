@@ -387,8 +387,12 @@ public class CardDaoImpl extends AbstractHelperDaoImpl<Card, Integer> implements
         qb.setCountOf(true);
         try {
             Where<Card, Integer> where = qb.where().eq("learningDate", today);
-            qb.setWhere(where);
 
+            if (filterCategory != null) {
+                where=qb.where().eq("category_id", filterCategory.getId());
+            }
+
+            qb.setWhere(where);
             return countOf(qb.prepare());
         } catch (SQLException e) {
             throw new RuntimeException(e);
