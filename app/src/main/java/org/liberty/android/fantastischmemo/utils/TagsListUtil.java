@@ -1,3 +1,8 @@
+/**
+ * Handles the logic for creating, deleting and editing tags for DBs.
+ * Appears as its own separate window within the app
+ */
+
 package org.liberty.android.fantastischmemo.utils;
 
 import android.content.Context;
@@ -72,9 +77,14 @@ public class TagsListUtil {
         deleteFromTagsList(dbpath);
         String[] allPaths = getAllRecentDBPath();
         for(int i = recentLength - 1; i >= 1; i--){
-            helper.putString(AMPrefKeys.getWorkoutCountKey(i), allPaths[i-1]);
+            helper.putString(AMPrefKeys.getTagsCountKey(i), allPaths[i-1]);
         }
         helper.putString(AMPrefKeys.getTagsCountKey(0), dbpath);
+    }
+
+    public void editTagsList (String dbpath){
+        dbpath = trimPath(dbpath);
+
     }
 
     private static String trimPath(String path){
