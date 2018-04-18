@@ -92,7 +92,7 @@
         android:text="Start Game"
         android:textAllCaps="true"
         android:background="@drawable/button_drawable"
-        android:textColor="#fffff"
+        android:textColor="#ffffff"
         android:layout_marginTop="10dp"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:layout_alignParentBottom="true"

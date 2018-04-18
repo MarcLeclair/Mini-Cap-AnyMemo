@@ -296,7 +296,7 @@ public class RecentListFragment extends BaseFragment {
     /**
      *  The recent list adapter to handle the actual recycler view logic
      */
-    private static class RecentListAdapter extends SelectableAdapter<RecentListAdapter.ViewHolder> {
+        private static class RecentListAdapter extends SelectableAdapter<RecentListAdapter.ViewHolder> {
 
         private final Context context;
 
