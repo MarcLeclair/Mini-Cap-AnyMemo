@@ -12,12 +12,15 @@ import android.widget.Toast;
 
 import org.liberty.android.fantastischmemo.common.BaseFragment;
 import org.liberty.android.fantastischmemo.R;
+
+import java.util.ArrayList;
+
 /**
  * Created by User on 2018-04-16.
  */
 
 public class GameJoinFragment extends BaseFragment {
-
+    private ArrayList<String> dbList;
     private static String playerName;
     private static TextView gameName;
     private static TextView userName;
@@ -30,6 +33,7 @@ public class GameJoinFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         Bundle bundle = this.getArguments();
         if(bundle != null){
+             dbList = bundle.getStringArrayList("listOfDb");
              playerName = bundle.getString("playerName", "");
         }
 

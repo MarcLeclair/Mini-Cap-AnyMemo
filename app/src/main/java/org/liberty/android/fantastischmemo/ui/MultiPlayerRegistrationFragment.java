@@ -15,9 +15,13 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 
 import org.liberty.android.fantastischmemo.R;
 import org.liberty.android.fantastischmemo.utils.ClientHandle;
+import org.liberty.android.fantastischmemo.utils.ClientThread;
+import org.liberty.android.fantastischmemo.utils.DbBrowser;
 
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 
 /**
  * Created by User on 2018-04-15.
@@ -25,9 +29,11 @@ import java.lang.reflect.Method;
 
 public class MultiPlayerRegistrationFragment extends Fragment {
 
+    private ClientHandle client;
     private static MaterialEditText playerName;
+
     public MultiPlayerRegistrationFragment(){};
-    public ClientHandle client;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -62,14 +68,22 @@ public class MultiPlayerRegistrationFragment extends Fragment {
                 });
             }
             else{
+                client = new ClientHandle();
                 hostGame.setVisibility(View.GONE);
                 joinGame.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        //TODO INITIALIZE CLIENTCONNECTION
+
+                        DbBrowser trial = new DbBrowser(getActivity());
+                        File currentDirectory = new File( "/");
+                        ArrayList<String> result = trial.browseTo(currentDirectory);
+
+                        ClientThread clientConnect = new ClientThread(playerName.getText().toString(), result);
+                        clientConnect.start();
                         if ((playerName.getText().toString().compareTo("")) > 0) {
                             Bundle data = new Bundle();
                             data.putString("playerName",playerName.getText().toString());
+                            data.putStringArrayList("listOfDb", result);
                             GameJoinFragment joinGame = new GameJoinFragment();
                             joinGame.setArguments(data);
                             getActivity().getSupportFragmentManager().beginTransaction()

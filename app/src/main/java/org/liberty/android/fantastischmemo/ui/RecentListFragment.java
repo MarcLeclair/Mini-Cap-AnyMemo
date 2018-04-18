@@ -57,7 +57,6 @@ import org.liberty.android.fantastischmemo.ui.helper.SelectableAdapter;
 import org.liberty.android.fantastischmemo.utils.DatabaseUtil;
 import org.liberty.android.fantastischmemo.utils.RecentListActionModeUtil;
 import org.liberty.android.fantastischmemo.utils.RecentListUtil;
-import org.liberty.android.fantastischmemo.utils.ServerConnThreads;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -296,7 +295,7 @@ public class RecentListFragment extends BaseFragment {
     /**
      *  The recent list adapter to handle the actual recycler view logic
      */
-        private static class RecentListAdapter extends SelectableAdapter<RecentListAdapter.ViewHolder> {
+    private static class RecentListAdapter extends SelectableAdapter<RecentListAdapter.ViewHolder> {
 
         private final Context context;
 

@@ -66,6 +66,7 @@ import org.liberty.android.fantastischmemo.ui.loader.MultipleLoaderManager;
 import org.liberty.android.fantastischmemo.utils.AMFileUtil;
 import org.liberty.android.fantastischmemo.utils.AboutUtil;
 import org.liberty.android.fantastischmemo.utils.DatabaseUtil;
+import org.liberty.android.fantastischmemo.utils.DbBrowser;
 import org.liberty.android.fantastischmemo.utils.RecentListActionModeUtil;
 import org.liberty.android.fantastischmemo.utils.RecentListUtil;
 import org.liberty.android.fantastischmemo.utils.WorkOutListUtil;
@@ -74,6 +75,7 @@ import org.liberty.android.fantastischmemo.widget.AnyMemoWidgetProvider;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 import javax.inject.Inject;
 
@@ -204,6 +206,7 @@ public class AnyMemo extends BaseActivity {
                             startActivity(new Intent(tabLayout.getContext(), OptionScreen.class));
                             break;
                         case R.id.play_game:
+
                             Intent i = new Intent(AnyMemo.this, GameActivity.class);
                             startActivity(i);
 
