@@ -38,6 +38,7 @@ public class FileBrowserActivity extends BaseActivity {
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setContentView(R.layout.file_browser_activity);
+        setContentView(R.layout.tag_activity);
         Bundle extras = getIntent().getExtras();
         assert extras != null : "Pass null to extras in File Browser";
         String defaultPath = extras.getString(EXTRA_DEFAULT_ROOT);
