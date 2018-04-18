@@ -51,10 +51,10 @@
         </RadioGroup>
 
         <Button
-            android:id="@+id/start_quiz_button"
+            android:id="@+id/start_work_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/start_quiz_text" />
+            android:text="@string/start_work_text" />
     </LinearLayout>
 </ScrollView>
