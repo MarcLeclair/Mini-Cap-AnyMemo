@@ -10,6 +10,7 @@ import org.liberty.android.fantastischmemo.ui.FileBrowserFragment;
 import org.liberty.android.fantastischmemo.ui.GestureSelectionDialogFragment;
 import org.liberty.android.fantastischmemo.ui.GradeButtonsFragment;
 import org.liberty.android.fantastischmemo.ui.MiscTabFragment;
+import org.liberty.android.fantastischmemo.ui.MultiPlayerRegistrationFragment;
 import org.liberty.android.fantastischmemo.ui.OpenActionsFragment;
 import org.liberty.android.fantastischmemo.ui.QuizLauncherDialogFragment;
 import org.liberty.android.fantastischmemo.ui.RecentListFragment;
@@ -46,5 +47,7 @@ public interface FragmentComponents {
     void inject(MiscTabFragment fragment);
 
     void inject(WorkoutTabFragment fragment);
+
+    void inject(MultiPlayerRegistrationFragment fragment);
 
 }
