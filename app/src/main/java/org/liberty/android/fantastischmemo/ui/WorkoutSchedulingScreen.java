@@ -140,110 +140,120 @@ public class WorkoutSchedulingScreen extends BaseActivity {
         } else return true;
     }
 
-    public boolean validNumDays(TextInputLayout numDaysInputWrapper, int max) {
-        String numDaysInput = numDaysInputWrapper.getEditText().getText().toString();
-        int numDays;
-        boolean correct = true;
-        if (numDaysInput.equals("")) {
-            numDaysInputWrapper.setErrorEnabled(true);
-            numDaysInputWrapper.setError("Must enter a number between " + 1 + "and " + max);
-            correct = false;
-        } else {
-            numDays = Integer.parseInt(numDaysInput);
-            if (numDays > max || numDays == 0) {
-                numDaysInputWrapper.setErrorEnabled(true);
-                numDaysInputWrapper.setError("Must enter a number between " + 1 + "and " + max);
-                correct = false;
-            }
-        }
-        return correct;
-    }
+    public boolean validNumCardsOrDays(TextInputLayout numCardsOrDaysInputWrapper, int max) {
 
-    public boolean validNumCards(TextInputLayout numCardsInputWrapper, int max) {
-
-        String numCardsInput = numCardsInputWrapper.getEditText().getText().toString();
+        String numCardsOrDaysInput = numCardsOrDaysInputWrapper.getEditText().getText().toString();
         int numCards;
         boolean correct = true;
-        if (numCardsInput.equals("")) {
-            numCardsInputWrapper.setErrorEnabled(true);
-            numCardsInputWrapper.setError("Must enter a number between " + 1 + "and " + max);
+        if (numCardsOrDaysInput.equals("")) {
+            numCardsOrDaysInputWrapper.setErrorEnabled(true);
+            numCardsOrDaysInputWrapper.setError("Must enter a number between " + 1 + " and " + max);
             correct = false;
         } else {
-            numCards = Integer.parseInt(numCardsInput);
+            numCards = Integer.parseInt(numCardsOrDaysInput);
             if (numCards > max || numCards == 0) {
-                numCardsInputWrapper.setErrorEnabled(true);
-                numCardsInputWrapper.setError("Must enter a number between " + 1 + "and " + max);
+                numCardsOrDaysInputWrapper.setErrorEnabled(true);
+                numCardsOrDaysInputWrapper.setError("Must enter a number between " + 1 + " and " + max);
                 correct = false;
             }
         }
         return correct;
     }
-
 
     private View.OnClickListener positiveOnClickButtonListener = new View.OnClickListener() {
         @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
         public void onClick(View v) {
-            if (validDate(startDateMessage)) {
-                if (numDaysRadioButton.isChecked() && validNumDays(numDaysInputWrapper,
-                        maxNumCards)) {
-                    Log.d(TAG, "Date as string is " + startDateMessage.getText().toString());
-                    String[] dateAsArray = startDateMessage.getText().toString().split("/");
-                    Date startDate = DateUtil.getDate(
-                            Integer.parseInt(dateAsArray[0]),
-                            Integer.parseInt(dateAsArray[1]),
-                            Integer.parseInt(dateAsArray[2]));
-                    numDaysInput = numDaysInputWrapper.getEditText().getText()
-                            .toString();
-                    int numDays = Integer.parseInt(numDaysInput);
+            //if the the user chose a start date, the number of days is checked, and the user entered a valid number of days
+            if (validDate(startDateMessage) && numDaysRadioButton.isChecked() && validNumCardsOrDays(numDaysInputWrapper,
+                    maxNumCards)) {
+                Log.d(TAG, "Date as string is " + startDateMessage.getText().toString());
 
-                    setWorkoutModeDates(helper, numDays, startDate, true);
-                    workoutListUtil.addToRecentList(dbPath);
-                    try {
-                        if (notificationCheckbox.isChecked()) {
-                            addNotificationScheduler
-                                    (startDate, numDays, WorkoutSchedulingScreen.this);
-                        }
-                    } catch (ParseException e) {
-                        Log.e(TAG, "Parse exception from notification checkbox");
+                //parse the date the user has chosen
+                String[] dateAsArray = startDateMessage.getText().toString().split("/");
+                Date startDate = DateUtil.getDate(
+                        Integer.parseInt(dateAsArray[0]),
+                        Integer.parseInt(dateAsArray[1]),
+                        Integer.parseInt(dateAsArray[2]));
+
+                //parse the number of days the user gave
+                numDaysInput = numDaysInputWrapper.getEditText().getText()
+                        .toString();
+
+                //convert it to an integer
+                int numDays = Integer.parseInt(numDaysInput);
+
+                //set the workout dates for the cards in the deck according to the number of
+                // days and the start date
+                setWorkoutModeDates(helper, numDays, startDate, true);
+
+                //add the db to the workoutListUtil so it can be displayed in the workout tab
+                workoutListUtil.addToRecentList(dbPath);
+
+                //if the notifications are checked, add a notification for the current deck
+                // of cards for the next workout date
+                try {
+                    if (notificationCheckbox.isChecked()) {
+                        addNotificationScheduler
+                                (startDate, numDays, WorkoutSchedulingScreen.this);
                     }
-                    Toast.makeText(WorkoutSchedulingScreen.this, "Successfully added deck to " +
-                            "workout" +
-                            " " +
-                            "mode!", Toast
-                            .LENGTH_LONG).show();
-                    finish();
-                } else if (numCardsRadioButton.isChecked() && validNumCards(numCardsInputWrapper,
-                       maxNumCards)) {
-
-                    Log.d(TAG, "Date as string is " + startDateMessage.getText().toString());
-                    String[] dateAsArray = startDateMessage.getText().toString().split("/");
-                    Date startDate = DateUtil.getDate(
-                            Integer.parseInt(dateAsArray[0]),
-                            Integer.parseInt(dateAsArray[1]),
-                            Integer.parseInt(dateAsArray[2]));
-                    numCardsInput = numCardsInputWrapper.getEditText().getText()
-                            .toString();
-                    int numCards = Integer.parseInt(numCardsInput);
-
-                    setWorkoutModeDates(helper, numCards, startDate, false);
-                    workoutListUtil.addToRecentList(dbPath);
-                    try {
-                        if (notificationCheckbox.isChecked()) {
-                            addNotificationScheduler
-                                    (startDate, numCards, WorkoutSchedulingScreen.this);
-                        }
-                    } catch (ParseException e) {
-                        Log.e(TAG, "Parse exception from notification checkbox");
-                    }
-                    Toast.makeText(WorkoutSchedulingScreen.this, "Successfully added deck to " +
-                            "workout" +
-                            " " +
-                            "mode!", Toast
-                            .LENGTH_LONG).show();
-                    finish();
+                } catch (ParseException e) {
+                    Log.e(TAG, "Parse exception from notification checkbox");
                 }
+                Toast.makeText(WorkoutSchedulingScreen.this, "Successfully added deck to " +
+                        "workout" +
+                        " " +
+                        "mode!", Toast
+                        .LENGTH_LONG).show();
+
+                //destroy the activity after the user presses on "Add to workout mode"
+                finish();
+
+                // if the date is chosen, the number of cards is checked, and the user entered a
+                // valid number of cards
+            } else if (validDate(startDateMessage) && numCardsRadioButton.isChecked() && validNumCardsOrDays(numCardsInputWrapper, maxNumCards)) {
+
+                Log.d(TAG, "Date as string is " + startDateMessage.getText().toString());
+
+                //parse the date chosen by the user
+                String[] dateAsArray = startDateMessage.getText().toString().split("/");
+                Date startDate = DateUtil.getDate(
+                        Integer.parseInt(dateAsArray[0]),
+                        Integer.parseInt(dateAsArray[1]),
+                        Integer.parseInt(dateAsArray[2]));
+
+                //parse the number of cards
+                numCardsInput = numCardsInputWrapper.getEditText().getText()
+                        .toString();
+
+                //convert string to int for the number of cards
+                int numCards = Integer.parseInt(numCardsInput);
+
+                //set the workout dates for the cards in the current deck
+                setWorkoutModeDates(helper, numCards, startDate, false);
+
+                //add the current deck to the workoutlist so it can be shown in the workout tab
+                workoutListUtil.addToRecentList(dbPath);
+                try {
+                    //if the user chose to get notified, the notification will be triggered the
+                    // day of a workout
+                    if (notificationCheckbox.isChecked()) {
+                        addNotificationScheduler
+                                (startDate, numCards, WorkoutSchedulingScreen.this);
+                    }
+                } catch (ParseException e) {
+                    Log.e(TAG, "Parse exception from notification checkbox");
+                }
+                Toast.makeText(WorkoutSchedulingScreen.this, "Successfully added deck to " +
+                        "workout" +
+                        " " +
+                        "mode!", Toast
+                        .LENGTH_LONG).show();
+
+                //destroy the activity once the user pressed on "Add to workout mode"
+                finish();
             }
+
         } //if date is valid
     };
 
@@ -255,6 +265,8 @@ public class WorkoutSchedulingScreen extends BaseActivity {
         }
     };
 
+    /*if the radio button is not checked, dont show the Input text that is associated with it
+    otherwise display it*/
     private CompoundButton.OnCheckedChangeListener onCheckedChangeListener
             = new CompoundButton.OnCheckedChangeListener() {
 
@@ -340,24 +352,22 @@ public class WorkoutSchedulingScreen extends BaseActivity {
         }
     }
 
-        /*Hard codes the date of the first card. This is done for testing purposes to trigger the
-        reschedule pop up
-          just set the testing flag to true, if you want to run this piece of
-          code, otherwise set it to false*/
-        private void setIncompleteDates(boolean testing){
-            if (testing) {
+    /*Hard codes the date of the first card. This is done for testing purposes to trigger the
+    reschedule pop up
+      just set the testing flag to true, if you want to run this piece of
+      code, otherwise set it to false*/
+    private void setIncompleteDates(boolean testing) {
+        if (testing) {
 
-                List<Card> temp = AnyMemoDBOpenHelperManager.getHelper(dbPath)
-                        .getCardDao()
-                        .getAllCards(null);
-                if (temp != null) {
-                    temp.get(0).setLearningDate(DateUtil.getDate(12, 4, 2000));
-                    AnyMemoDBOpenHelperManager.getHelper(dbPath).getCardDao().update(temp
-                            .get(0));
-                }
+            List<Card> temp = AnyMemoDBOpenHelperManager.getHelper(dbPath)
+                    .getCardDao()
+                    .getAllCards(null);
+            if (temp != null) {
+                temp.get(0).setLearningDate(DateUtil.getDate(12, 4, 2000));
+                AnyMemoDBOpenHelperManager.getHelper(dbPath).getCardDao().update(temp
+                        .get(0));
             }
         }
-
-
+    }
 }
 
