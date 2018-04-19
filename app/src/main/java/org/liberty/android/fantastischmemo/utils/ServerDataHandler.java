@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import org.liberty.android.fantastischmemo.entity.Player;
 import org.liberty.android.fantastischmemo.ui.GameRoomListFragment;
 
+import java.util.ArrayList;
+
 /**
  * Created by User on 2018-04-16.
  */
@@ -17,8 +19,11 @@ import org.liberty.android.fantastischmemo.ui.GameRoomListFragment;
 public class ServerDataHandler extends Handler {
 
     private AppCompatActivity mActivity;
-    public ServerDataHandler(AppCompatActivity mActivity){
+    private ArrayList<String> dbOfServer = new ArrayList<>();
+
+    public ServerDataHandler(AppCompatActivity mActivity,ArrayList<String> serverDB){
         this.mActivity = mActivity;
+        dbOfServer.addAll(serverDB);
     }
     @Override
     public void handleMessage(Message msg){
@@ -29,10 +34,18 @@ public class ServerDataHandler extends Handler {
         if(clientObj instanceof Player){
 
             Player player = (Player) clientObj;
+            compareDB(((Player) clientObj).getDB());
+            dbOfServer.remove(0);
             GameRoomListFragment gameRoom = (GameRoomListFragment)mActivity.getSupportFragmentManager().findFragmentByTag("gameRoom");
             gameRoom.addDevice(player.getName());
-            //TODO ADD TO UI LIST
+            gameRoom.addDbs(dbOfServer);
         }
+    }
+
+    private void compareDB(ArrayList<String> clientDB){
+
+        ArrayList<String> resultSet = new ArrayList<>();
+        dbOfServer.retainAll(clientDB);
     }
 
 

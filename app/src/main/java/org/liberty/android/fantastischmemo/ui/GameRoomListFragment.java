@@ -26,7 +26,7 @@ import java.util.List;
 
 public class GameRoomListFragment extends BaseFragment {
 
-
+    private ArrayList<String> dbInCommon  = new ArrayList();
     private static Activity mActivity;
     private static ArrayList<String> deviceConnectedList = new ArrayList();
     private static PlayerListAdapter plAdapter;
@@ -61,7 +61,7 @@ public class GameRoomListFragment extends BaseFragment {
     /**
      *  The recent list adapter to handle the actual recycler view logic
      */
-
+    public void addDbs(ArrayList<String> dbInCommon){this.dbInCommon = dbInCommon;}
     public  static void addDevice(final String userName){
 
         mActivity.runOnUiThread(new Runnable() {
