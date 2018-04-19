@@ -35,7 +35,7 @@ import java.text.ParseException;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21, manifest = "src/main/AndroidManifest.xml", packageName = "org.liberty.android.fantastischmemo")
-public class WorkoutReschedulingScreenTest {
+public class WorkoutSchedulingScreenTest {
 
     WorkoutSchedulingScreen activity;
     TextInputLayout numDaysInputWrapper;
