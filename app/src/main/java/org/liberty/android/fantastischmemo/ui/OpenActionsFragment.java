@@ -52,7 +52,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 
-public class OpenActionsFragment extends BaseDialogFragment implements Serializable{
+public class OpenActionsFragment extends BaseDialogFragment {
 
     @Inject
     DatabaseUtil databaseUtil;
