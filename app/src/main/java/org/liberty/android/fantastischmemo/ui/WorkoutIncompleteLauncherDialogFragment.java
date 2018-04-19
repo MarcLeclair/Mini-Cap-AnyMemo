@@ -201,16 +201,21 @@ public class WorkoutIncompleteLauncherDialogFragment extends BaseDialogFragment 
         StringBuilder listOfCardsText = new StringBuilder();
 
         //put all incomplete cards in an arraylist
-        for (Card card : cards) {
+        try {
+            for (Card card : cards) {
                 listOfCardsText.append("question: ")
                         .append(card.getQuestion())
                         .append(" ")
                         .append("answer: ")
                         .append(card.getAnswer())
                         .append("\n");
-        }
-        view.setText(listOfCardsText.toString());
 
+            }
+            view.setText(listOfCardsText.toString());
+        } catch (NullPointerException e){
+            Log.e(TAG, "displayCards: null pointer exception");
+            return "";
+        }
         return listOfCardsText.toString();
 
     }
