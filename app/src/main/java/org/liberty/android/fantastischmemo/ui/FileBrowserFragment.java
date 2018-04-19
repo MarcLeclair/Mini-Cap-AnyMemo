@@ -72,11 +72,10 @@ public class FileBrowserFragment extends BaseDialogFragment {
     private enum DISPLAYMODE{ABSOLUTE, RELATIVE;}
     private final DISPLAYMODE displayMode = DISPLAYMODE.RELATIVE;
     private ArrayList<String> directoryEntries = new ArrayList<String>();
-    private static File currentDirectory = new File("/");
+    private File currentDirectory = new File("/");
     private String defaultRoot;
     private String[] fileExtensions;
     private Activity mActivity;
-
 
     private RecyclerView filesListRecyclerView;
     private FileBrowserAdapter fileListAdapter;
@@ -96,7 +95,6 @@ public class FileBrowserFragment extends BaseDialogFragment {
     private final static String CURRENT_DIR = ".";
     private SharedPreferences settings;
     private SharedPreferences.Editor editor;
-
 
     public void setOnFileClickListener(OnFileClickListener listener) {
         this.onFileClickListener = listener;
@@ -184,8 +182,6 @@ public class FileBrowserFragment extends BaseDialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
 
-
-
         View v = inflater.inflate(R.layout.file_browser, container, false);
         filesListRecyclerView = (RecyclerView)v.findViewById(R.id.file_list);
         filesListRecyclerView.setLayoutManager(new LinearLayoutManager(filesListRecyclerView.getContext()));
@@ -215,7 +211,7 @@ public class FileBrowserFragment extends BaseDialogFragment {
         }
     }
 
-    public void browseTo(final File aDirectory){
+    private void browseTo(final File aDirectory){
         if(aDirectory.isDirectory()){
             File[] listedFiles = aDirectory.listFiles();
             if (listedFiles != null) {
@@ -308,7 +304,6 @@ public class FileBrowserFragment extends BaseDialogFragment {
                 return true;
 
             }
-
         }
         return false;
     }
@@ -468,15 +463,6 @@ public class FileBrowserFragment extends BaseDialogFragment {
                                                         }));
                                             } else if (which == 2) {
                                                 fragment.disposables.add(fragment.activityComponents().databaseOperationDialogUtil().showRenameDbDialog(clickedFile)
-                                                        .observeOn(AndroidSchedulers.mainThread())
-                                                        .subscribe(new Consumer<File>() {
-                                                            @Override
-                                                            public void accept(File file) throws Exception {
-                                                                fragment.browseTo(file.getParentFile());
-                                                            }
-                                                        }));
-                                            }else if (which == 3) {
-                                                fragment.disposables.add(fragment.activityComponents().databaseOperationDialogUtil().showAddTagDialog(currentDirectory, clickedFile)
                                                         .observeOn(AndroidSchedulers.mainThread())
                                                         .subscribe(new Consumer<File>() {
                                                             @Override

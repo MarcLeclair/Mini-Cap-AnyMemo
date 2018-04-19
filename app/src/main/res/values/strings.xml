@@ -334,7 +334,6 @@
     <string name="reset_customized_scheduling_algorithm_summary">Reset customized scheduling algorithm to default.</string>
     <string name="statistics_text">Statistics</string>
     <string name="statistics_type_text">Statistics type</string>
-    <string name="tags_text">Tags</string>
     <string name="cards_to_review_text">Cards scheduled in a month</string>
     <string name="number_of_cards_scheduled_in_a_day_text">Number of cards scheduled in a day</string>
     <string name="number_of_new_cards_learned_in_a_day_text">Number of new cards learned in a day</string>
@@ -496,10 +495,6 @@
     <string name="number_days_button">Select number of days</string>
     <string name="number_cards_button">Select number of cards</string>
     <string name="add_number_of_cards">Add number of cards</string>
-    <string name="tags">Tags</string>
-    <string name="add_tag">Add a Tag</string>
-    <string name="add_a_tag">Add a tag</string>
-    <string name="add_tag_name">Add tag Name</string>
     <string name="today_card">Number of cards today: </string>
     <string name="new_card">Total number of new cards: </string>
     <string name="scheduled_card">Total number of scheduled cards: </string>

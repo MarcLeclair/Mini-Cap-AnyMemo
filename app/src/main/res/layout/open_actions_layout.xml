@@ -55,7 +55,6 @@
                 android:focusable="false"
                 android:layout_gravity="center" />
         </LinearLayout>
-
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="fill_parent"
