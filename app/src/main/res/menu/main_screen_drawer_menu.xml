@@ -23,6 +23,10 @@
             android:id="@+id/workout_mode"
             android:icon="@drawable/learning_mode"
             android:title="@string/workout_text"/>
+        <item
+            android:id="@+id/play_game"
+            android:icon="@drawable/game_play"
+            android:title="Play Game"/>
     </group>
     <group android:id="@+id/option_tabs_group"
         android:checkableBehavior="single">
