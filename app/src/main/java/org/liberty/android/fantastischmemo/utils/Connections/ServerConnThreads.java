@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * Created by User on 2018-04-15.
@@ -46,4 +47,16 @@ public class ServerConnThreads extends  Thread {
     }
 
     public static void userConnected(Socket socket, String userName){connectedUserMap.put(socket, userName);}
+
+
+
+    public static void sendToAll(Object updateInfo){
+        Iterator<Socket> iterator = connectedUserMap.keySet().iterator();
+        Socket soc;
+        while (iterator.hasNext()){
+            soc = iterator.next();
+            ServerSender send = new ServerSender(soc,updateInfo);
+            send.start();
+        }
+    }
 }

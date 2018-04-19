@@ -8,7 +8,9 @@ import android.support.v7.app.AppCompatActivity;
 import org.liberty.android.fantastischmemo.entity.Player;
 import org.liberty.android.fantastischmemo.ui.GameUI.GameRoomListFragment;
 
+import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * Created by User on 2018-04-16.
@@ -18,6 +20,7 @@ public class ServerDataHandler extends Handler {
 
     private AppCompatActivity mActivity;
     private ArrayList<String> dbOfServer = new ArrayList<>();
+
 
     public ServerDataHandler(AppCompatActivity mActivity,ArrayList<String> serverDB){
         this.mActivity = mActivity;

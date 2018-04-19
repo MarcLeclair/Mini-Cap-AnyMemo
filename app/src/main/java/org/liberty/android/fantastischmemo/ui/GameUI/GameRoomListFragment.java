@@ -3,9 +3,12 @@ package org.liberty.android.fantastischmemo.ui.GameUI;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,6 +20,10 @@ import android.widget.TextView;
 import org.liberty.android.fantastischmemo.R;
 import org.liberty.android.fantastischmemo.common.BaseFragment;
 import org.liberty.android.fantastischmemo.ui.helper.SelectableAdapter;
+import org.liberty.android.fantastischmemo.utils.Connections.ServerConnThreads;
+import org.liberty.android.fantastischmemo.utils.Connections.ServerDataHandler;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,7 +60,39 @@ public class GameRoomListFragment extends BaseFragment {
         listOfPlayer.setLayoutManager(new LinearLayoutManager(this.getActivity()));
         plAdapter = new PlayerListAdapter(deviceConnectedList);
         listOfPlayer.setAdapter(plAdapter);
+        playGame.setOnClickListener(new View.OnClickListener(){
 
+            @Override
+            public void onClick(View view){
+                // setup the alert builder
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Choose a database");
+
+                // add a radio button list
+                final String[] dbChoice = dbInCommon.toArray(new String[dbInCommon.size()]);
+                int checkedItem = 1;
+                builder.setSingleChoiceItems(dbChoice, checkedItem, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+
+                // add OK and Cancel buttons
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ServerConnThreads.sendToAll(dbChoice[which]);
+                    }
+                });
+                builder.setNegativeButton("Cancel", null);
+
+                // create and show the alert dialog
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+
+        });
         return v;
     }
 
