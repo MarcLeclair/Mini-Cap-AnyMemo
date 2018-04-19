@@ -2,8 +2,11 @@ package org.liberty.android.fantastischmemo.service;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.firebase.jobdispatcher.Constraint;
@@ -14,6 +17,7 @@ import com.firebase.jobdispatcher.JobService;
 import com.firebase.jobdispatcher.Trigger;
 
 import org.liberty.android.fantastischmemo.R;
+import org.liberty.android.fantastischmemo.ui.AnyMemo;
 
 import java.util.concurrent.TimeUnit;
 
@@ -29,8 +33,11 @@ public class NotificationService extends JobService {
     @Override
     public boolean onStartJob(JobParameters job) {
 
+            Intent intent = new Intent(this, AnyMemo.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
             NotificationManager notificationManager = (NotificationManager)this.getSystemService(Context.NOTIFICATION_SERVICE);
-            job.getTag();
+
 
             Notification notification = new android.support.v7.app.NotificationCompat.Builder(this)
                     .setTicker("AnyMemo")
@@ -38,10 +45,12 @@ public class NotificationService extends JobService {
                     .setSmallIcon(R.drawable.anymemo_notification_icon)
                     .setContentTitle(job.getTag())
                     .setContentText("You have a workout to do today!")
+                    .setContentIntent(pendingIntent)
                     .build();
 
             notification.flags = notification.flags | Notification.FLAG_AUTO_CANCEL;
             notificationManager.notify(NOTIFICATION_ID, notification);
+
 
 try{
     if(count==0){

@@ -28,20 +28,19 @@ import static android.support.test.espresso.action.ViewActions.swipeLeft;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class WorkoutTestEspresso {
+public class WorkoutDeleteEspresso {
 
     @Rule
     public ActivityTestRule<AnyMemo> mActivityTestRule = new ActivityTestRule<>(AnyMemo.class);
 
     @Test
-    public void workoutTest() {
+    public void workoutDeleteTest() {
         final String TAG = "Espresso logger";
         try {
             //view is displayed logic
@@ -61,7 +60,6 @@ public class WorkoutTestEspresso {
             //sometimes this text will only appear on the first time of running the test
             Log.d(TAG, "letterHintEspresso() returned: exception, could not find text with OK" );
         }
-
 
         ViewInteraction appCompatButton2 = onView(
                 allOf(withId(R.id.recent_item_more_button), withText("MORE"),
@@ -141,155 +139,24 @@ public class WorkoutTestEspresso {
                         isDisplayed()));
         viewPager.perform(swipeLeft());
 
-        ViewInteraction relativeLayout = onView(
-                allOf(withId(R.id.button),
+        ViewInteraction tabView2 = onView(
+                allOf(childAtPosition(
                         childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.recent_open_list),
-                                        0),
-                                1),
+                                withId(R.id.tabs),
+                                0),
+                        4),
                         isDisplayed()));
-        relativeLayout.perform(click());
+        tabView2.perform(click());
 
         ViewInteraction appCompatButton6 = onView(
-                allOf(withId(R.id.start_workout), withText("START WORKOUT!"),
+                allOf(withId(R.id.delete), withText("Yes,Delete"),
                         childAtPosition(
-                                allOf(withId(R.id.expandableLayout),
-                                        childAtPosition(
-                                                withClassName(is("android.widget.RelativeLayout")),
-                                                3)),
-                                1),
+                                childAtPosition(
+                                        withId(R.id.swipe),
+                                        0),
+                                2),
                         isDisplayed()));
         appCompatButton6.perform(click());
-
-        ViewInteraction linearLayout2 = onView(
-                allOf(withId(R.id.root),
-                        withParent(allOf(withId(R.id.field2),
-                                childAtPosition(
-                                        withClassName(is("android.widget.LinearLayout")),
-                                        2))),
-                        isDisplayed()));
-        linearLayout2.perform(click());
-
-        ViewInteraction appCompatButton7 = onView(
-                allOf(withId(R.id.grade_button_5), withText("Easy\n5.0 day"),
-                        childAtPosition(
-                                allOf(withId(R.id.grade_buttons_anki),
-                                        childAtPosition(
-                                                withId(R.id.buttons_root),
-                                                0)),
-                                5),
-                        isDisplayed()));
-        appCompatButton7.perform(click());
-
-        ViewInteraction linearLayout3 = onView(
-                allOf(withId(R.id.root),
-                        withParent(allOf(withId(R.id.field2),
-                                childAtPosition(
-                                        withClassName(is("android.widget.LinearLayout")),
-                                        2))),
-                        isDisplayed()));
-        linearLayout3.perform(click());
-
-        ViewInteraction appCompatButton8 = onView(
-                allOf(withId(R.id.grade_button_5), withText("Easy\n5.0 day"),
-                        childAtPosition(
-                                allOf(withId(R.id.grade_buttons_anki),
-                                        childAtPosition(
-                                                withId(R.id.buttons_root),
-                                                0)),
-                                5),
-                        isDisplayed()));
-        appCompatButton8.perform(click());
-
-        ViewInteraction linearLayout4 = onView(
-                allOf(withId(R.id.root),
-                        withParent(allOf(withId(R.id.field2),
-                                childAtPosition(
-                                        withClassName(is("android.widget.LinearLayout")),
-                                        2))),
-                        isDisplayed()));
-        linearLayout4.perform(click());
-
-        ViewInteraction appCompatButton9 = onView(
-                allOf(withId(R.id.grade_button_5), withText("Easy\n5.0 day"),
-                        childAtPosition(
-                                allOf(withId(R.id.grade_buttons_anki),
-                                        childAtPosition(
-                                                withId(R.id.buttons_root),
-                                                0)),
-                                5),
-                        isDisplayed()));
-        appCompatButton9.perform(click());
-
-        ViewInteraction appCompatTextView = onView(
-                allOf(withId(R.id.card_text_view), withText("?\nShow answer"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.root),
-                                        1),
-                                0)));
-        appCompatTextView.perform(scrollTo(), click());
-
-        ViewInteraction appCompatButton10 = onView(
-                allOf(withId(R.id.grade_button_5), withText("Easy\n5.0 day"),
-                        childAtPosition(
-                                allOf(withId(R.id.grade_buttons_anki),
-                                        childAtPosition(
-                                                withId(R.id.buttons_root),
-                                                0)),
-                                5),
-                        isDisplayed()));
-        appCompatButton10.perform(click());
-
-        ViewInteraction appCompatTextView2 = onView(
-                allOf(withId(R.id.card_text_view), withText("?\nShow answer"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.root),
-                                        1),
-                                0)));
-        appCompatTextView2.perform(scrollTo(), click());
-
-        ViewInteraction appCompatButton11 = onView(
-                allOf(withId(R.id.grade_button_5), withText("Easy\n5.0 day"),
-                        childAtPosition(
-                                allOf(withId(R.id.grade_buttons_anki),
-                                        childAtPosition(
-                                                withId(R.id.buttons_root),
-                                                0)),
-                                5),
-                        isDisplayed()));
-        appCompatButton11.perform(click());
-
-        ViewInteraction appCompatTextView3 = onView(
-                allOf(withId(R.id.card_text_view), withText("?\nShow answer"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.root),
-                                        1),
-                                0)));
-        appCompatTextView3.perform(scrollTo(), click());
-
-        ViewInteraction appCompatButton12 = onView(
-                allOf(withId(R.id.grade_button_5), withText("Easy\n5.0 day"),
-                        childAtPosition(
-                                allOf(withId(R.id.grade_buttons_anki),
-                                        childAtPosition(
-                                                withId(R.id.buttons_root),
-                                                0)),
-                                5),
-                        isDisplayed()));
-        appCompatButton12.perform(click());
-
-        ViewInteraction appCompatButton13 = onView(
-                allOf(withId(android.R.id.button1), withText("Back"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.ScrollView")),
-                                        0),
-                                3)));
-        appCompatButton13.perform(scrollTo(), click());
 
     }
 

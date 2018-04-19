@@ -273,7 +273,19 @@ public class CardDaoTest extends AbstractExistingDBTest {
         Category ct = cts.get(0);
         assertEquals(3L, cardDao.getNewCardCount(ct));
     }
+    @SmallTest
+    @Test
+    public void testGetTodayCardCount() throws Exception {
+        CardDao cardDao = helper.getCardDao();
+        assertEquals(0L, cardDao.getTodayCardCount(null));
 
+        setupThreeCategories();
+        CategoryDao categoryDao = helper.getCategoryDao();
+        List<Category> cts = categoryDao.queryForEq("name", "My category");
+        Category ct = cts.get(0);
+
+        assertEquals(3L, cardDao.getTodayCardCount(ct));
+    }
     @SmallTest
     @Test
     public void testGetScheduledCardCount() throws Exception {
@@ -669,12 +681,15 @@ public class CardDaoTest extends AbstractExistingDBTest {
         ct.setName("My category");
         categoryDao.create(ct);
         c.setCategory(ct);
+        c.setLearningDate(new Date());
         cardDao.update(c);
         c = cardDao.queryForId(5);
         c.setCategory(ct);
+        c.setLearningDate(new Date());
         cardDao.update(c);
         c = cardDao.queryForId(8);
         c.setCategory(ct);
+        c.setLearningDate(new Date());
         cardDao.update(c);
     }
 }

@@ -450,4 +450,8 @@
     <string name="letter_hint">suggerimento di lettera</string>
     <string name="favourite_text" >Contrassegna come preferito</string>
     <string name="spell_test">modalità di test degli incantesimi </string>
+    <string name="tags">Tags</string>
+    <string name="add_tag">Add a Tag</string>
+    <string name="add_a_tag">Add a tag</string>
+    <string name="add_tag_name">Add tag Name</string>
 </resources>

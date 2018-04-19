@@ -20,60 +20,36 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 package org.liberty.android.fantastischmemo.ui;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
-import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.SeekBar;
-import android.widget.TextView;
+import android.widget.CompoundButton;
+import android.widget.RadioButton;
 import android.widget.Toast;
-
-import com.firebase.jobdispatcher.Constraint;
-import com.firebase.jobdispatcher.FirebaseJobDispatcher;
-import com.firebase.jobdispatcher.GooglePlayDriver;
-import com.firebase.jobdispatcher.Trigger;
 
 import org.liberty.android.fantastischmemo.R;
 import org.liberty.android.fantastischmemo.common.AMPrefKeys;
-import org.liberty.android.fantastischmemo.common.BaseActivity;
-import org.liberty.android.fantastischmemo.common.BaseDialogFragment;
-import org.liberty.android.fantastischmemo.entity.Card;
-import org.liberty.android.fantastischmemo.service.NotificationService;
-import org.liberty.android.fantastischmemo.utils.AMFileUtil;
-import org.liberty.android.fantastischmemo.utils.AMPrefUtil;
-import org.liberty.android.fantastischmemo.utils.DateUtil;
-import org.liberty.android.fantastischmemo.utils.RecentListUtil;
-import org.liberty.android.fantastischmemo.utils.ShareUtil;
-
-import org.liberty.android.fantastischmemo.utils.WorkOutListUtil;
-
 import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelper;
 import org.liberty.android.fantastischmemo.common.AnyMemoDBOpenHelperManager;
-import org.liberty.android.fantastischmemo.dao.CardDao;
+import org.liberty.android.fantastischmemo.common.BaseActivity;
+import org.liberty.android.fantastischmemo.common.BaseDialogFragment;
+import org.liberty.android.fantastischmemo.utils.AMFileUtil;
+import org.liberty.android.fantastischmemo.utils.AMPrefUtil;
 import org.liberty.android.fantastischmemo.utils.DatabaseUtil;
-import org.w3c.dom.Text;
+import org.liberty.android.fantastischmemo.utils.RecentListUtil;
+import org.liberty.android.fantastischmemo.utils.ShareUtil;
+import org.liberty.android.fantastischmemo.utils.WorkOutListUtil;
+import org.liberty.android.fantastischmemo.utils.WorkoutDialogUtil;
 
-import java.text.ParseException;
-import java.util.Date;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
+import java.io.Serializable;
+import java.util.Map;
 
 import javax.inject.Inject;
-
-import static java.lang.Math.toIntExact;
 
 
 public class OpenActionsFragment extends BaseDialogFragment {
@@ -82,11 +58,12 @@ public class OpenActionsFragment extends BaseDialogFragment {
     DatabaseUtil databaseUtil;
 
     public static String EXTRA_DBPATH = "dbpath";
+    public static String MAX_NUM_CARDS = "maxNumCards";
     static String TAG = OpenActionsFragment.class.getSimpleName();
     private BaseActivity mActivity;
 
     private String dbPath;
-
+    private boolean testing = false;
     private View studyItem;
     private View workoutModeItem;
     private View editItem;
@@ -98,7 +75,10 @@ public class OpenActionsFragment extends BaseDialogFragment {
     private View shareItem;
     private View deleteItem;
     Context context;
-
+    private RadioButton numDaysRadioButton;
+    private RadioButton numCardsRadioButton;
+    private Map<CompoundButton, View> radioButtonSettingsMapping;
+    private int maxNumCards;
     @Inject
     AMFileUtil amFileUtil;
 
@@ -112,10 +92,12 @@ public class OpenActionsFragment extends BaseDialogFragment {
     AMPrefUtil amPrefUtil;
 
 
-    @Inject WorkOutListUtil workoutListUtil;
+    @Inject
+    WorkOutListUtil workoutListUtil;
 
 
     AnyMemoDBOpenHelper helper;
+    WorkoutDialogUtil workoutDialogBoxUtil;
 
 
     public OpenActionsFragment() {
@@ -135,6 +117,7 @@ public class OpenActionsFragment extends BaseDialogFragment {
         Bundle args = this.getArguments();
         dbPath = args.getString(EXTRA_DBPATH);
         setStyle(DialogFragment.STYLE_NO_TITLE, 0);
+        workoutDialogBoxUtil = new WorkoutDialogUtil();
 
     }
 
@@ -190,115 +173,17 @@ public class OpenActionsFragment extends BaseDialogFragment {
             if (v == workoutModeItem) {
                 int maxNumCards = AnyMemoDBOpenHelperManager.getHelper(mActivity, dbPath)
                         .getCardDao().getAllCards(null).size();
-                //if the deck is empty don't pop up the dialogue box for workout mode
                 if (maxNumCards == 0) {
                     Toast.makeText(mActivity, "You must have at least 1 card in your deck to add" +
                             " this deck to workout mode!", Toast.LENGTH_LONG).show();
                     return;
                 }
-                final Dialog dialog = new Dialog(mActivity);
+                Intent myIntent = new Intent();
+                myIntent.setClass(mActivity, WorkoutSchedulingScreen.class);
+                myIntent.putExtra(WorkoutSchedulingScreen.EXTRA_DBPATH, dbPath);
+                myIntent.putExtra(WorkoutSchedulingScreen.MAX_NUM_CARDS, maxNumCards);
+                startActivity(myIntent);
 
-
-                dialog.setContentView(R.layout.workout);
-                dialog.show();
-
-                TextView workoutModeMessage = (TextView) dialog.findViewById(R.id.workout_mode_message);
-
-                final TextView startDateMessage = (TextView) dialog.findViewById(R.id.start_date_message);
-
-                final Button startDateButton = (Button) dialog.findViewById(R.id.start_date_button);
-                startDateButton.setOnClickListener(new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-
-                        PickStartDateFragment pickStartDateFragment = new PickStartDateFragment();
-                        pickStartDateFragment.setText(startDateMessage);
-                        pickStartDateFragment.show(mActivity.getSupportFragmentManager(), "DatePicker");
-
-                    }
-                });
-
-                Button positiveButton = (Button) dialog.findViewById(R.id.button_ok);
-                Button negativeButton = (Button) dialog.findViewById(R.id.button_cancel);
-
-                final EditText num_days_input = (EditText) dialog.findViewById(R.id.num_days_input);
-                final TextInputLayout numDaysInputWrapper = (TextInputLayout) dialog.findViewById
-                        (R.id.num_days_input_wrapper);
-
-                // if button is clicked, set the new workout dates for each cards within the deck
-                positiveButton.setOnClickListener(new View.OnClickListener() {
-                   @RequiresApi(api = Build.VERSION_CODES.N)
-                    @Override
-                    public void onClick(View v) {
-                        final String numDaysInput = numDaysInputWrapper.getEditText().getText()
-                                .toString();
-                        int numDays;
-
-                        int maxNumCards = AnyMemoDBOpenHelperManager.getHelper(mActivity, dbPath)
-                                .getCardDao().getAllCards(null).size();
-                        String dateAsString = startDateMessage.getText().toString();
-                        try {
-                            if (dateAsString.equals("")) {
-                                numDaysInputWrapper.setErrorEnabled(true);
-                                numDaysInputWrapper.setError("Must chose a start date ");
-                            } else {
-                                numDaysInputWrapper.setErrorEnabled(false);
-
-                                String[] dateAsArray;
-                                Log.d(TAG, "Date as string is " + dateAsString);
-                                dateAsArray = dateAsString.split("/");
-                                Date startDate = DateUtil.getDate(
-                                        Integer.parseInt(dateAsArray[0]),
-                                        Integer.parseInt(dateAsArray[1]),
-                                        Integer.parseInt(dateAsArray[2]));
-
-                                if (!numDaysInput.equals("")) {
-                                    numDays = Integer.parseInt(numDaysInput);
-                                } else {
-                                    numDays = 0;
-                                }
-                                if (numDays > maxNumCards || numDays == 0 || numDaysInput.equals("")) {
-                                    numDaysInputWrapper.setErrorEnabled(true);
-                                    numDaysInputWrapper.setError("Must enter a number between 1 and " +
-                                            maxNumCards);
-                                } else {
-                                    numDaysInputWrapper.setErrorEnabled(false);
-
-                                    //retrieving the date as a string, and putting it an an array
-                                    // converting that array to a date stored in the variable startDate
-                                    setWorkoutModeDates(AnyMemoDBOpenHelperManager.getHelper
-                                            (mActivity, dbPath), numDays, startDate);
-                                    dialog.dismiss();
-                                    Toast.makeText(mActivity, "Successfully added deck to " +
-                                            "workout" +
-                                            " " +
-                                            "mode!", Toast
-                                            .LENGTH_LONG).show();
-                                    //schedule notification
-                                    addNotificationScheduler(startDate, numDays);
-
-
-                                }
-                            }
-                        } catch (Exception e) {
-                            Log.e(TAG, "Workout mode throws an exception ", e);
-                        }
-                    }
-                });
-
-                negativeButton.setOnClickListener(new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
-                    }
-                });
-
-
-                dialog.show();
-
-                workoutListUtil.addToRecentList(dbPath);
             }
 
             if (v == editItem) {
@@ -374,83 +259,4 @@ public class OpenActionsFragment extends BaseDialogFragment {
             dismiss();
         }
     };
-
-    public boolean setWorkoutModeDates(AnyMemoDBOpenHelper helper, int numDays, Date startDate) {
-
-        CardDao cardDao = helper.getCardDao();
-        List<Card> cards = cardDao.getAllCards(null);
-//        Log.d(TAG, "card numbers " + cards.size());
-        if (cards.size() == 0) {
-            //if the deck size is equal to 0, skip the logic below
-            return false;
-        }
-        //rounding up the result of an integer division
-        // for example if the person chooses 2 days to study a deck
-        // of 3 cards, 3 / 2 = 2
-        //there will be 2 cards to study at first then 1 card, we need to round up with integer
-        // division. Otherwise 3/2 = 1 which would mean 1 card per day, for 3 days, which is not
-        // what we want
-        int nbCardsPerWorkout = (cards.size() + numDays - 1) / numDays;
-        //Log.d(TAG, "card numbers " + nbCardsPerWorkout);
-
-        int count = 0;
-        int addDays = 0;
-
-        //Log.d(TAG, "before setting the date");
-        Date learningDate;
-
-        for (Card card : cards) {
-
-            if (count == nbCardsPerWorkout) {
-                count = 0;
-                addDays++;
-            }
-            learningDate = DateUtil.addDays(startDate,
-                    addDays);
-            card.setLearningDate(learningDate);
-            cardDao.update(card);
-//            Log.d(TAG, "date is set to : " + card.getLearningDate
-//                    ());
-            count++;
-        }
-        AnyMemoDBOpenHelperManager.releaseHelper(helper);
-        //if the deck size is not equal to 0, return true
-        return true;
-    }
-
-    //schedule notifications
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    private boolean addNotificationScheduler(Date startDate, int numDays) throws ParseException {
-
-        DateUtil dt= new DateUtil();
-
-        int days = DateUtil.getDateDifference(startDate);
-        int duration=Math.abs(days*24);
-
-        final int periodicity = (int) TimeUnit.HOURS.toSeconds(duration);
-        final int toleranceInterval = (int) TimeUnit.MINUTES.toSeconds(5);
-
-        Bundle bundle = new Bundle();
-        bundle.putString("numDays", Integer.toString(numDays));
-
-        FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(mActivity));
-        int result =
-                dispatcher.schedule(dispatcher.newJobBuilder()
-                .setService(NotificationService.class)
-                .setTag("First day of your work out")
-                .setTrigger(Trigger.executionWindow(periodicity, periodicity + toleranceInterval))
-                .setReplaceCurrent(true)
-                .setRecurring(false)
-                .setConstraints(Constraint.ON_UNMETERED_NETWORK)
-                .setExtras(bundle)
-                .build()
-        );
-        if (result == FirebaseJobDispatcher.SCHEDULE_RESULT_SUCCESS) {
-            Log.d(TAG, "Job scheduled");
-            return true;
-        } else {
-            Log.d(TAG, "Job not scheduled");
-            return false;
-        }
-    }
 }
