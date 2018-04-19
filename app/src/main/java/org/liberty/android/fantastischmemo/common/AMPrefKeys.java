@@ -96,8 +96,6 @@ public class AMPrefKeys {
     // AnyMemo main activity
     public static final String FIRST_TIME_KEY = "first_time";
 
-    public static final String getTagsCountKey (int ord) {return "tagspath" +ord;}
-
     public static final String getWorkoutCountKey(int ord) {return "workoutpath"+ord; }
 
     public static final String getRecentPathKey(int ord) {
