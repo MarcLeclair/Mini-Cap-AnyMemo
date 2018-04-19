@@ -4,6 +4,7 @@ import org.liberty.android.fantastischmemo.entity.Card;
 
 import java.security.SecureRandom;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 
@@ -15,28 +16,47 @@ import java.util.Random;
 public class HintUtil {
 
     public HintUtil() {
+
     }
 
-    public String generateLetterHint(int count, String word) {
+
+    static HashSet<Integer> used = new HashSet<>();
+    public static int unusedIndex(int count){
+        Random rng = new Random();
+        int selected;
+        do{
+            selected = rng.nextInt(count);
+        }
+        while(used.contains(selected));{
+            used.add(selected);
+        }
+        return selected;
+
+    }
+
+
+    public static String generateLetterHint(int  count, String word) {
         //this function is called in the displayLetterHint method, line 276
         //  String word = getCurrentCard().getAnswer();
         StringBuilder string = new StringBuilder();
         Random rng = new Random();
 
+
         char[] letters = word.toCharArray();
         char[] answers = new char[letters.length];
-
         int selected = rng.nextInt(letters.length);
-        for (int i = 0; i < word.length(); i++) {
+            for (int i = 0; i < word.length(); i++) {
+                //if (i == selected) was what it used to be
+                if (used.contains(i)) {
 
-                if (i == selected) {
                     answers[i] = letters[i];
                 } else {
                     answers[i] = '_';
                 }
+            }
 
-        }
-        string.append(answers);
+            string.append(answers);
+
         return string.toString();
     }
 
