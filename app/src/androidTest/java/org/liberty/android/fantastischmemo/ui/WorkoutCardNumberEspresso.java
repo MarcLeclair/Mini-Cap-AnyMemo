@@ -115,7 +115,7 @@ public class WorkoutCardNumberEspresso {
         appCompatButton3.perform(scrollTo(), click());
 
         ViewInteraction appCompatRadioButton = onView(
-                allOf(withId(R.id.Num_cards_button), withText("Select number of cards"),
+                allOf(withId(R.id.num_cards_button), withText("Select number of cards"),
                         childAtPosition(
                                 childAtPosition(
                                         withClassName(is("android.widget.LinearLayout")),
