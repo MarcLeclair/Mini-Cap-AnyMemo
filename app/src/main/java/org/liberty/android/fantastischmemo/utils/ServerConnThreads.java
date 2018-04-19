@@ -11,12 +11,13 @@ import java.util.HashMap;
 
 public class ServerConnThreads extends  Thread {
 
+    private String gameName;
     private static final int serverPort = 8080;
     private static ServerSocket server;
     private static boolean startedServer = false;
     private static HashMap<Socket,String> connectedUserMap = new HashMap();
 
-
+    public ServerConnThreads(String gameName){this.gameName = gameName;}
     @Override
     public void run(){
         if(server == null) {
@@ -30,7 +31,7 @@ public class ServerConnThreads extends  Thread {
                     ServerListener listener = new ServerListener(socket);
                     //Start the listener for the server
                     listener.start();
-                    ServerSender roomName = new ServerSender(socket, "testing_room");
+                    ServerSender roomName = new ServerSender(socket, gameName);
                     //start roomname thread to propagate the room name to connected clients
                     roomName.start();
                     //add server to map of connected users
