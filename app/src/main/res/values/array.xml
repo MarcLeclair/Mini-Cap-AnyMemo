@@ -154,6 +154,7 @@
         <item>@string/delete_text</item>
         <item>@string/clone_text</item>
         <item>@string/rename_text</item>
+        <item>@string/add_tag</item>
     </string-array>
 
     <string-array name="interface_locale_list">
