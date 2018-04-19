@@ -71,6 +71,8 @@ public class AMEnv {
     public final static String CRAM_CLIENT_SECRET;
 
 
+    public final static String DATA = "data";
+
     // Load values from AMSecrets.
     static {
         Map<String, String> secretValuesMap = new HashMap<String, String>(5);

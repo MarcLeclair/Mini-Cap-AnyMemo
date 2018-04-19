@@ -17,6 +17,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.j256.ormlite.logger.Log;
+
 import org.liberty.android.fantastischmemo.R;
 import org.liberty.android.fantastischmemo.common.BaseFragment;
 import org.liberty.android.fantastischmemo.ui.helper.SelectableAdapter;
@@ -74,7 +76,7 @@ public class GameRoomListFragment extends BaseFragment {
                 builder.setSingleChoiceItems(dbChoice, checkedItem, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
+                        android.util.Log.d("WHICH VALUE", String.valueOf(which));
                     }
                 });
 
@@ -82,7 +84,12 @@ public class GameRoomListFragment extends BaseFragment {
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        ServerConnThreads.sendToAll(dbChoice[which]);
+                        if(dbChoice.length >0) {
+                            if (which == dbChoice.length) {
+                                ServerConnThreads.sendToAll(dbChoice[which]);
+                            } else
+                                ServerConnThreads.sendToAll(dbChoice[which]);
+                        }
                     }
                 });
                 builder.setNegativeButton("Cancel", null);

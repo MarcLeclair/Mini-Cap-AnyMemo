@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 
 import org.liberty.android.fantastischmemo.ui.GameUI.GameJoinFragment;
 
+import java.util.ArrayList;
+
 /**
  * Created by User on 2018-04-15.
  */
@@ -23,13 +25,24 @@ public class ClientHandle extends Handler {
     public void handleMessage(Message msg) {
         super.handleMessage(msg);
         msgInfo = msg.getData();
-        int value = msgInfo.getInt("one");
-        Object clientObject = msgInfo.getSerializable("name");
+        int value = msgInfo.getInt("value");
+        Object clientObject = msgInfo.getSerializable("data");
 
         if (value == 1) {
-            String gameName = (String) clientObject;
+
+            String stringValue = (String) clientObject;
             GameJoinFragment fragment = (GameJoinFragment)mActivity.getSupportFragmentManager().findFragmentByTag("joinGame");
-            fragment.setGameName(gameName);
+            if(fragment.isGameNameSet()) {
+                fragment.setGameName(stringValue);
+            }
+            else{
+                fragment.setHostChoice(stringValue);
+            }
+        }
+        if(value == 2){
+            ArrayList<String> dbToChose = (ArrayList<String>) clientObject;
+            GameJoinFragment fragment = (GameJoinFragment)mActivity.getSupportFragmentManager().findFragmentByTag("joinGame");
+            fragment.selectDb(dbToChose);
         }
 
     }

@@ -47,6 +47,7 @@ public class ServerDataHandler extends Handler {
 
         ArrayList<String> resultSet = new ArrayList<>();
         dbOfServer.retainAll(clientDB);
+        ServerConnThreads.sendToAll(dbOfServer);
     }
 
 

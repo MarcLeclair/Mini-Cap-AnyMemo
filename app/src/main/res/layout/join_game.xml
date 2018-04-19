@@ -9,15 +9,12 @@
     tools:context=".MainActivity$PlaceholderFragment">
 
     <View
+        android:id="@+id/view"
         android:layout_width="280dp"
         android:layout_height="470dp"
-        android:alpha="0.3"
-        android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
+        android:layout_alignBottom="@+id/joinGame"
         android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:id="@+id/view"
+        android:alpha="0.3"
         android:tag="joinGame" />
 
     <TextView
@@ -72,6 +69,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/gameNameLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -108,6 +106,85 @@
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/hostChoiceLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_centerInParent="true"
+        android:layout_centerVertical="true"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="25dp"
+        android:background="@drawable/rectangular_box"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/gameNameLayout">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="HOST DB CHOICE: "
+            android:paddingLeft="5dp"
+            android:paddingBottom="5dp"
+            android:elegantTextHeight="true"
+            android:paddingTop="5dp"
+            android:textColor="#ffffff"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/hostChoice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Not chosen yet or not connected"
+            android:textColor="#ffffff"
+            android:paddingRight="5dp"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:elegantTextHeight="true"
+            android:textStyle="bold|italic"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_centerInParent="true"
+        android:layout_centerVertical="true"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="25dp"
+        android:background="@drawable/rectangular_box"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/hostChoiceLayout">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="YOUR CHOICE: "
+            android:paddingLeft="5dp"
+            android:paddingBottom="5dp"
+            android:elegantTextHeight="true"
+            android:paddingTop="5dp"
+            android:textColor="#ffffff"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/clientChoice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:elegantTextHeight="true"
+            android:paddingBottom="5dp"
+            android:paddingRight="5dp"
+            android:paddingTop="5dp"
+            android:text="Please wait for host to respond with list of DBs you and them have in common"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#ffffff"
+            android:textStyle="bold|italic" />
+
+    </LinearLayout>
+
+
 
 
     <Button
