@@ -21,6 +21,7 @@ import org.liberty.android.fantastischmemo.ui.QuizActivity;
 import org.liberty.android.fantastischmemo.ui.SettingsScreen;
 import org.liberty.android.fantastischmemo.ui.ShareScreen;
 import org.liberty.android.fantastischmemo.ui.StudyActivity;
+import org.liberty.android.fantastischmemo.ui.WorkoutSchedulingScreen;
 import org.liberty.android.fantastischmemo.utils.AMDateUtil;
 import org.liberty.android.fantastischmemo.utils.AMFileUtil;
 import org.liberty.android.fantastischmemo.utils.AMPrefUtil;
@@ -108,4 +109,6 @@ public interface ActivityComponents {
     void inject(SettingsScreen activity);
 
     void inject(ShareScreen activity);
+
+    void inject(WorkoutSchedulingScreen activity);
 }
