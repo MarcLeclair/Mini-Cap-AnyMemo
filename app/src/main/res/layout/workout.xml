@@ -1,19 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:anymemo="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#A9A9A9"
     android:orientation="vertical">
-
     <TextView
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#A9A9A9"
         android:gravity="center"
         android:text="WORKOUT MODE"
-        android:textColor="#ffffff"
         android:textSize="20sp" />
 
     <TextView
@@ -21,8 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="@string/add_to_workout_mode_message"
-        android:textColor="#ffffff" />
+        android:text="@string/add_to_workout_mode_message" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -51,56 +46,66 @@
         android:layout_height="wrap_content"
         android:layout_weight="0.5"
         android:orientation="vertical">
-    <RadioGroup android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-        <RadioButton
-            android:checked="false"
-            android:id="@+id/num_days_button"
-            android:text="@string/number_days_button" />
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/num_days_settings"
-            android:visibility="gone"
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:orientation="vertical">
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/num_days_input_wrapper"
-                android:layout_width="match_parent"
+
+            <RadioButton
+                android:id="@+id/num_days_button"
+                android:checked="false"
+                android:text="@string/number_days_button" />
+
+            <LinearLayout
+                android:id="@+id/num_days_settings"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp">
-                <EditText
-                    android:id="@+id/num_days_input"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/num_days_input_wrapper"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/add_number_of_days"
-                    android:inputType="number" />
-            </android.support.design.widget.TextInputLayout>
-        </LinearLayout>
-        <RadioButton
-            android:checked="false"
-            android:id="@+id/Num_cards_button"
-            android:text="@string/number_cards_button" />
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/num_cards_settings"
-            android:visibility="gone"
-            android:orientation="vertical">
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/num_cards_input_wrapper"
-                android:layout_width="match_parent"
+                    android:layout_marginTop="4dp">
+
+                    <EditText
+                        android:id="@+id/num_days_input"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/add_number_of_days"
+                        android:inputType="number" />
+                </android.support.design.widget.TextInputLayout>
+            </LinearLayout>
+
+            <RadioButton
+                android:id="@+id/num_cards_button"
+                android:checked="false"
+                android:text="@string/number_cards_button" />
+
+            <LinearLayout
+                android:id="@+id/num_cards_settings"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp">
-                <EditText
-                    android:id="@+id/num_cards_input"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/num_cards_input_wrapper"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/add_number_of_cards"
-                    android:inputType="number" />
-            </android.support.design.widget.TextInputLayout>
-        </LinearLayout>
-    </RadioGroup>
+                    android:layout_marginTop="4dp">
+
+                    <EditText
+                        android:id="@+id/num_cards_input"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/add_number_of_cards"
+                        android:inputType="number" />
+                </android.support.design.widget.TextInputLayout>
+            </LinearLayout>
+        </RadioGroup>
 </LinearLayout>
     <LinearLayout
     android:layout_width="match_parent"

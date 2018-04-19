@@ -134,8 +134,10 @@
 
         <activity 
             android:name=".ui.QuizActivity" />
-        <activity 
+        <activity
             android:name=".ui.CardPlayerActivity" />
+        <activity
+            android:name=".ui.WorkoutSchedulingScreen" />
         <receiver
             android:name=".receiver.AlarmReceiver"
             android:process=":remote" />
