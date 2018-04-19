@@ -86,4 +86,38 @@ public class WorkoutIncompleteLauncherDialogFragmentTest {
                         + "question: " + card2.getQuestion() + " answer: " + card2.getAnswer() + "\n"
                 , returnedText);
     }
+
+    @SmallTest
+    @Test
+    public void displayCardsNoQuestionCardTest() {
+        cards.add(card1);
+        cards.add(card2);
+        Mockito.when(card1.getQuestion()).thenReturn("");
+        Mockito.when(card1.getAnswer()).thenReturn("answer1");
+        Mockito.when(card1.getQuestion()).thenReturn("");
+        Mockito.when(card1.getAnswer()).thenReturn("answer2");
+
+        String returnedText = fragment.displayCards(cards, text);
+        Assert.assertEquals(
+                "question: " + card1.getQuestion() + " answer: " + card1.getAnswer() + "\n"
+                        + "question: " + card2.getQuestion() + " answer: " + card2.getAnswer() + "\n"
+                , returnedText);
+    }
+
+    @SmallTest
+    @Test
+    public void displayEmptyCardTest() {
+        cards.add(card1);
+        cards.add(card2);
+        Mockito.when(card1.getQuestion()).thenReturn("");
+        Mockito.when(card1.getAnswer()).thenReturn("");
+        Mockito.when(card1.getQuestion()).thenReturn("");
+        Mockito.when(card1.getAnswer()).thenReturn("");
+
+        String returnedText = fragment.displayCards(cards, text);
+        Assert.assertEquals(
+                "question: " + card1.getQuestion() + " answer: " + card1.getAnswer() + "\n"
+                        + "question: " + card2.getQuestion() + " answer: " + card2.getAnswer() + "\n"
+                , returnedText);
+    }
 }

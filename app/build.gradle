@@ -135,6 +135,7 @@ dependencies {
     compile 'com.github.aakira:expandable-layout:1.6.0@aar'
     compile 'com.github.aakira:expandable-layout:1.4.2@aar'
     compile 'com.oguzdev:CircularFloatingActionMenu:1.0.2'
+
     provided 'javax.annotation:jsr250-api:1.0'
 
     androidTestCompile 'com.linkedin.dexmaker:dexmaker-mockito:2.12.1'
@@ -161,6 +162,7 @@ dependencies {
     testCompile 'org.powermock:powermock-module-junit4:1.6.1'
     testCompile 'org.testng:testng:6.9.6'
     testCompile 'org.robolectric:robolectric:3.0'
+    testCompile 'org.robolectric:multidex:3.4.2'
     androidTestCompile 'com.android.support.test.espresso:espresso-contrib:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
         exclude group: 'com.android.support', module: 'support-v4'

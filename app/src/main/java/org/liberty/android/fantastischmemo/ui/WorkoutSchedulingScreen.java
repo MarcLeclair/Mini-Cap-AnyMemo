@@ -282,6 +282,11 @@ public class WorkoutSchedulingScreen extends BaseActivity {
         }
     };
 
+    /*
+    this method already exists in WorkoutDialogUtil. But because there was a null pointer when
+    passing the helper from WorkoutSchedulingScreen to that class's method, it had to be copied here. The methods are
+    identical. Therefore the test for this method resides in WorkoutDialogUtilTest in the "test" folder
+     */
     public List<Card> setWorkoutModeDates(AnyMemoDBOpenHelper helper, int numDaysOrCards, Date
             startDate, boolean daysMode) {
         int nbCardsPerWorkout = 0;
