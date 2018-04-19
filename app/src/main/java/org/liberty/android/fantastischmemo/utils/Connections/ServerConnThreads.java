@@ -1,4 +1,4 @@
-package org.liberty.android.fantastischmemo.utils;
+package org.liberty.android.fantastischmemo.utils.Connections;
 
 import java.io.IOException;
 import java.net.ServerSocket;

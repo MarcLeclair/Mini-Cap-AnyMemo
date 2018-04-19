@@ -1,4 +1,4 @@
-package org.liberty.android.fantastischmemo.ui;
+package org.liberty.android.fantastischmemo.ui.GameUI;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;

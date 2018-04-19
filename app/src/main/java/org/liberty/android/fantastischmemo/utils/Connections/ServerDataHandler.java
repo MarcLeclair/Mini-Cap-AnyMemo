@@ -1,14 +1,12 @@
-package org.liberty.android.fantastischmemo.utils;
+package org.liberty.android.fantastischmemo.utils.Connections;
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Message;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 
 import org.liberty.android.fantastischmemo.entity.Player;
-import org.liberty.android.fantastischmemo.ui.GameRoomListFragment;
+import org.liberty.android.fantastischmemo.ui.GameUI.GameRoomListFragment;
 
 import java.util.ArrayList;
 

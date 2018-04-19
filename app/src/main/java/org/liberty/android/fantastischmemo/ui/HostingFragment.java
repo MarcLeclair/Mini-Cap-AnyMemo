@@ -15,9 +15,10 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 
 import org.liberty.android.fantastischmemo.R;
 import org.liberty.android.fantastischmemo.common.BaseFragment;
+import org.liberty.android.fantastischmemo.ui.GameUI.GameRoomListFragment;
 import org.liberty.android.fantastischmemo.utils.DbBrowser;
-import org.liberty.android.fantastischmemo.utils.ServerConnThreads;
-import org.liberty.android.fantastischmemo.utils.ServerDataHandler;
+import org.liberty.android.fantastischmemo.utils.Connections.ServerConnThreads;
+import org.liberty.android.fantastischmemo.utils.Connections.ServerDataHandler;
 
 import java.io.File;
 import java.util.ArrayList;

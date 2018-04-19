@@ -1,10 +1,10 @@
-package org.liberty.android.fantastischmemo.utils;
+package org.liberty.android.fantastischmemo.utils.Connections;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Message;
 
-import org.liberty.android.fantastischmemo.ui.MultiPlayerRegistrationFragment;
+import org.liberty.android.fantastischmemo.ui.GameUI.MultiPlayerRegistrationFragment;
 
 import java.io.IOException;
 import java.io.InputStream;

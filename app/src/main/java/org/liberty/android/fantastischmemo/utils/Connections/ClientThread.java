@@ -1,17 +1,14 @@
-package org.liberty.android.fantastischmemo.utils;
+package org.liberty.android.fantastischmemo.utils.Connections;
 
 import android.content.Context;
-import android.os.Message;
 
 import org.liberty.android.fantastischmemo.entity.Player;
-import org.liberty.android.fantastischmemo.utils.WorkOutListUtil;
+import org.liberty.android.fantastischmemo.utils.DevicesConnectedHelper;
+
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Arrays;
-
-import javax.inject.Inject;
 
 
 /**
@@ -26,7 +23,6 @@ public class ClientThread extends Thread {
     private String userName;
     private ArrayList<String> dbList;
     private Context context;
-    @Inject WorkOutListUtil workOutListUtil;
 
     public ClientThread(String userName, ArrayList<String> dbList, Context context){
         this.userName = userName;

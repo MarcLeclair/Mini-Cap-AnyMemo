@@ -1,4 +1,4 @@
-package org.liberty.android.fantastischmemo.utils;
+package org.liberty.android.fantastischmemo.utils.Connections;
 
 import android.os.Bundle;
 import android.os.Message;

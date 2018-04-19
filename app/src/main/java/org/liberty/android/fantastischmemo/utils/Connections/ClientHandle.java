@@ -1,16 +1,11 @@
-package org.liberty.android.fantastischmemo.utils;
+package org.liberty.android.fantastischmemo.utils.Connections;
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.TextView;
 
-import org.liberty.android.fantastischmemo.R;
-import org.liberty.android.fantastischmemo.ui.GameActivity;
-import org.liberty.android.fantastischmemo.ui.GameJoinFragment;
+import org.liberty.android.fantastischmemo.ui.GameUI.GameJoinFragment;
 
 /**
  * Created by User on 2018-04-15.

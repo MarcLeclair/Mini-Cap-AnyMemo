@@ -1,4 +1,4 @@
-package org.liberty.android.fantastischmemo.ui;
+package org.liberty.android.fantastischmemo.ui.GameUI;
 
 
 
@@ -46,7 +46,6 @@ public class GameRoomListFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.game_room, container, false);
-        Button gameSettings = (Button) v.findViewById(R.id.gameSettings);
         Button playGame = (Button) v.findViewById(R.id.playGame);
 
 

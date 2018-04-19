@@ -1,11 +1,10 @@
-package org.liberty.android.fantastischmemo.ui;
+package org.liberty.android.fantastischmemo.ui.GameUI;
 
 import android.content.Context;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,8 +16,9 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 
 import org.liberty.android.fantastischmemo.R;
 import org.liberty.android.fantastischmemo.common.BaseFragment;
-import org.liberty.android.fantastischmemo.utils.ClientHandle;
-import org.liberty.android.fantastischmemo.utils.ClientThread;
+import org.liberty.android.fantastischmemo.ui.HostingFragment;
+import org.liberty.android.fantastischmemo.utils.Connections.ClientHandle;
+import org.liberty.android.fantastischmemo.utils.Connections.ClientThread;
 import org.liberty.android.fantastischmemo.utils.DbBrowser;
 
 import java.io.File;
