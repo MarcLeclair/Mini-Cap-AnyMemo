@@ -3,8 +3,10 @@ package org.liberty.android.fantastischmemo.ui;
 import android.content.Context;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,7 @@ import android.widget.Toast;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import org.liberty.android.fantastischmemo.R;
+import org.liberty.android.fantastischmemo.common.BaseFragment;
 import org.liberty.android.fantastischmemo.utils.ClientHandle;
 import org.liberty.android.fantastischmemo.utils.ClientThread;
 import org.liberty.android.fantastischmemo.utils.DbBrowser;
@@ -27,9 +30,9 @@ import java.util.ArrayList;
  * Created by User on 2018-04-15.
  */
 
-public class MultiPlayerRegistrationFragment extends Fragment {
+public class MultiPlayerRegistrationFragment extends BaseFragment {
 
-    private ClientHandle client;
+    private static ClientHandle client;
     private static MaterialEditText playerName;
 
     public MultiPlayerRegistrationFragment(){};
@@ -68,7 +71,7 @@ public class MultiPlayerRegistrationFragment extends Fragment {
                 });
             }
             else{
-                client = new ClientHandle();
+                client = new ClientHandle((AppCompatActivity) getActivity());
                 hostGame.setVisibility(View.GONE);
                 joinGame.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -78,7 +81,7 @@ public class MultiPlayerRegistrationFragment extends Fragment {
                         File currentDirectory = new File( "/");
                         ArrayList<String> result = trial.browseTo(currentDirectory);
 
-                        ClientThread clientConnect = new ClientThread(playerName.getText().toString(), result);
+                        ClientThread clientConnect = new ClientThread(playerName.getText().toString(), result, getContext());
                         clientConnect.start();
                         if ((playerName.getText().toString().compareTo("")) > 0) {
                             Bundle data = new Bundle();
@@ -87,7 +90,7 @@ public class MultiPlayerRegistrationFragment extends Fragment {
                             GameJoinFragment joinGame = new GameJoinFragment();
                             joinGame.setArguments(data);
                             getActivity().getSupportFragmentManager().beginTransaction()
-                                    .replace(R.id.container, joinGame).addToBackStack(GameJoinFragment.class.getName())
+                                    .replace(R.id.container, joinGame, "joinGame").addToBackStack(GameJoinFragment.class.getName())
                                     .commit();
                         } else {
                             Toast.makeText(getActivity(), "Check your Username. Please enter a valid value", Toast.LENGTH_SHORT).show();
@@ -105,4 +108,11 @@ public class MultiPlayerRegistrationFragment extends Fragment {
 
         return v;
     }
+
+    public static void handleMsg(Message msg){
+            if(client !=null){
+                client.handleMessage(msg);
+            }
+    }
+
 }

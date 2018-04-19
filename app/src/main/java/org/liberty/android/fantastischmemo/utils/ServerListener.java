@@ -4,6 +4,9 @@ import android.os.Bundle;
 import android.os.Message;
 import android.util.Log;
 
+import org.liberty.android.fantastischmemo.entity.Player;
+import org.liberty.android.fantastischmemo.ui.HostingFragment;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -37,13 +40,14 @@ public class ServerListener extends Thread {
                 Bundle data = new Bundle();
                 anyMemoObj = objectInputStream.readObject();
                 if(anyMemoObj !=null){
-                    data.putSerializable("test", "testingServerListerner");
+                    data.putSerializable("PlayerInfo", (Player)anyMemoObj);
                     Log.d("SERVERLISTENER THREAD", host.toString() + " testing");
-                    ServerConnThreads.userConnected(host, "testing");
+                    ServerConnThreads.userConnected(host, ((Player) anyMemoObj).getName());
                 }
                 Message msg = new Message();
                 msg.setData(data);
                 //TODO invoke sendMessage to pass to the handler.
+                HostingFragment.handleMessage(msg);
 
             }catch (IOException e) {
                 e.printStackTrace();

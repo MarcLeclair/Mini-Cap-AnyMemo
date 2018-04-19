@@ -9,22 +9,21 @@
     tools:context=".MainActivity$PlaceholderFragment">
 
     <View
+        android:id="@+id/view"
         android:layout_width="280dp"
         android:layout_height="470dp"
-        android:alpha="0.3"
-        android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:id="@+id/view" />
+        android:layout_marginStart="14dp"
+        android:alpha="0.3"
+        android:tag="gameRoom" />
 
     <TextView
         android:id="@+id/menuText"
         android:layout_width="280dp"
         android:paddingTop="10dp"
         android:layout_height="wrap_content"
-        android:text="JOIN GAME"
+        android:text="GAME CREATION"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:textStyle="bold"
@@ -34,12 +33,13 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/gameList"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/gameSettings"
+        android:layout_alignEnd="@+id/menuText"
+        android:layout_alignStart="@+id/menuText"
         android:layout_below="@+id/menuText"
         android:layout_marginBottom="10dp"
-        android:layout_marginLeft="100dp"
         android:layout_marginTop="5dp"
         android:alpha="0.5"
         android:background="#ffffff" />
@@ -49,25 +49,24 @@
         android:id="@+id/gameSettings"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/button_drawable"
         android:text="Game Settings"
         android:textAllCaps="true"
-        android:background="@drawable/button_drawable"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:layout_alignBottom="@+id/view"
-        android:layout_alignLeft="@+id/gameList"
-        android:layout_alignStart="@+id/gameList" />
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <Button
         android:id="@+id/playGame"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/gameSettings"
+        android:layout_alignBottom="@+id/gameSettings"
+        android:layout_alignParentStart="true"
+        android:background="@drawable/button_drawable"
         android:text="Play Game"
         android:textAllCaps="true"
-        android:background="@drawable/button_drawable"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:layout_alignTop="@+id/gameSettings"
-        android:layout_alignRight="@+id/gameList"
-        android:layout_alignEnd="@+id/gameList" />
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </RelativeLayout>
 

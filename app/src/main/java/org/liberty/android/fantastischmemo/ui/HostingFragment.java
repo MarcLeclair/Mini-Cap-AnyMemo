@@ -2,7 +2,9 @@ package org.liberty.android.fantastischmemo.ui;
 
 
 import android.os.Bundle;
+import android.os.Message;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +31,9 @@ public class HostingFragment extends BaseFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState){
+
         super.onCreate(savedInstanceState);
+        serverHandler = new ServerDataHandler((AppCompatActivity)getActivity());
     }
 
     @Override
@@ -49,7 +53,7 @@ public class HostingFragment extends BaseFragment {
                     ServerConnThreads startServerThread = new ServerConnThreads();
                     startServerThread.start();
                     fragmentManager.beginTransaction()
-                            .replace(R.id.container, new GameRoomListFragment()).addToBackStack(GameRoomListFragment.class.getName())
+                            .replace(R.id.container, new GameRoomListFragment(), "gameRoom").addToBackStack(GameRoomListFragment.class.getName())
                             .commit();
                 } else {
                     Toast.makeText(getActivity(), "Missing game name or number of players", Toast.LENGTH_SHORT).show();
@@ -57,5 +61,10 @@ public class HostingFragment extends BaseFragment {
             }
         });
         return v;
+    }
+    public static void handleMessage(Message msg){
+        if(serverHandler != null){
+            serverHandler.handleMessage(msg);
+        }
     }
 }

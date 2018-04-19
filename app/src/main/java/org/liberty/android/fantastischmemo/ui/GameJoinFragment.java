@@ -1,5 +1,6 @@
 package org.liberty.android.fantastischmemo.ui;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
@@ -20,6 +21,8 @@ import java.util.ArrayList;
  */
 
 public class GameJoinFragment extends BaseFragment {
+
+    private Activity mActivity;
     private ArrayList<String> dbList;
     private static String playerName;
     private static TextView gameName;
@@ -38,7 +41,11 @@ public class GameJoinFragment extends BaseFragment {
         }
 
     }
-
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mActivity = activity;
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -65,6 +72,21 @@ public class GameJoinFragment extends BaseFragment {
 
 
         return rootView;
+    }
+
+
+    public void setGameName(final String lobbyName){
+
+        mActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                gameName.setText(lobbyName);
+            }
+        });
+    }
+
+    public void setDbList(ArrayList<String> dbList){
+        this.dbList = dbList;
     }
 
 }

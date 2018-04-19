@@ -21,5 +21,6 @@ public class Player implements Serializable {
         this.name = name;
         this.dbOfPlayer =dbOfPlayer;
     }
+    public String getName(){return this.name;}
 
 }

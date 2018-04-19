@@ -1,8 +1,12 @@
 package org.liberty.android.fantastischmemo.ui;
 
 
+
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,11 +27,19 @@ import java.util.List;
 public class GameRoomListFragment extends BaseFragment {
 
 
-    public static ArrayList<String> deviceConnectedList = new ArrayList();
+    private static Activity mActivity;
+    private static ArrayList<String> deviceConnectedList = new ArrayList();
+    private static PlayerListAdapter plAdapter;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mActivity = activity;
     }
 
     @Override
@@ -39,8 +51,9 @@ public class GameRoomListFragment extends BaseFragment {
 
 
         RecyclerView listOfPlayer = (RecyclerView) v.findViewById(R.id.gameList);
-        PlayerListAdapter adapter = new PlayerListAdapter(deviceConnectedList);
-        listOfPlayer.setAdapter(adapter);
+        listOfPlayer.setLayoutManager(new LinearLayoutManager(this.getActivity()));
+        plAdapter = new PlayerListAdapter(deviceConnectedList);
+        listOfPlayer.setAdapter(plAdapter);
 
         return v;
     }
@@ -48,7 +61,20 @@ public class GameRoomListFragment extends BaseFragment {
     /**
      *  The recent list adapter to handle the actual recycler view logic
      */
-    private static class PlayerListAdapter extends SelectableAdapter<PlayerListAdapter.ViewHolder> {
+
+    public  static void addDevice(final String userName){
+
+        mActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+                deviceConnectedList.add(userName);
+                plAdapter.notifyItemChanged(deviceConnectedList.size() -1);
+            }
+        });
+    }
+
+    private static class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.ViewHolder> {
 
 
         private ArrayList<String> mDataSet;
@@ -59,6 +85,7 @@ public class GameRoomListFragment extends BaseFragment {
 
             public ViewHolder(View view) {
                 super(view);
+
                 playerName = (TextView)view.findViewById(R.id.textView);
             }
 
@@ -74,7 +101,7 @@ public class GameRoomListFragment extends BaseFragment {
             View v = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.list_of_players, parent, false);
 
-            return new PlayerListAdapter.ViewHolder(v);
+            return new ViewHolder(v);
         }
 
         public PlayerListAdapter(ArrayList<String> dataSet) {
@@ -98,7 +125,12 @@ public class GameRoomListFragment extends BaseFragment {
                     df.show(((FragmentActivity) context).getSupportFragmentManager(), "OpenActions");
                 }
             });*/
+        public synchronized  void setItems(ArrayList<String> devices){
+            this.mDataSet.clear();
+            this.mDataSet.addAll(devices);
 
+            this.notifyDataSetChanged();
+        }
         @Override
         public int getItemCount() {
             return mDataSet.size();

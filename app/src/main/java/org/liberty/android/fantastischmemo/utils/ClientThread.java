@@ -1,5 +1,8 @@
 package org.liberty.android.fantastischmemo.utils;
 
+import android.content.Context;
+import android.os.Message;
+
 import org.liberty.android.fantastischmemo.entity.Player;
 import org.liberty.android.fantastischmemo.utils.WorkOutListUtil;
 import java.io.IOException;
@@ -22,11 +25,13 @@ public class ClientThread extends Thread {
     private int port = 8080;
     private String userName;
     private ArrayList<String> dbList;
-
+    private Context context;
     @Inject WorkOutListUtil workOutListUtil;
-    public ClientThread(String userName, ArrayList<String> dbList){
+
+    public ClientThread(String userName, ArrayList<String> dbList, Context context){
         this.userName = userName;
         this.dbList = dbList;
+        this.context = context;
     }
 
     @Override
@@ -39,9 +44,8 @@ public class ClientThread extends Thread {
                     if (address != null) {
                         soc = new Socket(address, port);
                         if (soc.isConnected()) {
-                            ClientListener clientListener = new ClientListener(soc);
+                            ClientListener clientListener = new ClientListener(soc, context);
                             clientListener.start();
-
                             Player playerInfo = new Player(userName, dbList);
                             ClientSender sendUserName = new ClientSender(soc, playerInfo);
                             sendUserName.start();
