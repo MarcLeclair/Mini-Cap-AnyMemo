@@ -80,10 +80,6 @@ public class Option {
 
     public int getWorkoutCount(){return settings.getInt(AMPrefKeys.RECENT_COUNT_KEY, 7);}
 
-    public int getTagsCount(){
-        return settings.getInt(AMPrefKeys.RECENT_COUNT_KEY, 7);
-    }
-
     public int getQueueSize() {
         String size = settings.getString(AMPrefKeys.LEARN_QUEUE_SIZE_KEY, "10");
         int tmpSize = Integer.parseInt(size);
