@@ -234,8 +234,4 @@
     <string name="letter_hint">Lndice avec lettres</string>
     <string name="favourite_text" >Marquer comme favori</string>
     <string name="spell_test">mode test de sort </string>
-    <string name="tags">Tags</string>
-    <string name="add_tag">Add a Tag</string>
-    <string name="add_a_tag">Add a tag</string>
-    <string name="add_tag_name">Add tag Name</string>
 </resources>
