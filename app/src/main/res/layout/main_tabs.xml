@@ -40,16 +40,17 @@
                 android:layout_height="match_parent"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
+
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/add_db_fab"
-                android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="bottom|end"
-                app:srcCompat="@drawable/ic_add"
-                app:layout_anchorGravity="bottom|end"
-                app:layout_anchor="@id/viewpager"
                 android:layout_margin="16dp"
-                android:clickable="true"/>
+                android:clickable="true"
+                app:layout_anchor="@id/viewpager"
+                app:layout_anchorGravity="bottom|end"
+                app:srcCompat="@drawable/ic_add" />
         </android.support.design.widget.CoordinatorLayout>
 
         <android.support.design.widget.NavigationView
@@ -62,6 +63,8 @@
             app:itemTextColor="@drawable/navigation_text_color"
             android:fitsSystemWindows="true"
             app:headerLayout="@layout/main_navigation_view_header"
-            app:menu="@menu/main_screen_drawer_menu"/>
+            app:menu="@menu/main_screen_drawer_menu">
+
+        </android.support.design.widget.NavigationView>
     </android.support.v4.widget.DrawerLayout>
 </layout>

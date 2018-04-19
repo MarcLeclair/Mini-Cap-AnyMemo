@@ -5,6 +5,7 @@ import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.DatabaseTableConfig;
 
+import org.liberty.android.fantastischmemo.downloader.google.Folder;
 import org.liberty.android.fantastischmemo.entity.Card;
 import org.liberty.android.fantastischmemo.entity.Category;
 
@@ -63,6 +64,7 @@ public class CategoryDaoImpl extends AbstractHelperDaoImpl<Category, Integer> im
                         refresh(c.getCategory());
                     }
                     return null;
+
                 }
             });
         } catch (Exception e) {
