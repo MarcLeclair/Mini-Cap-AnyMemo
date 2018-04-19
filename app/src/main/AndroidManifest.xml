@@ -8,7 +8,9 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+
+
     <supports-screens android:anyDensity="true"/>
 
     <application 
@@ -138,6 +140,8 @@
             android:name=".ui.CardPlayerActivity" />
         <activity
             android:name=".ui.WorkoutSchedulingScreen" />
+       <activity
+            android:name=".ui.GameUI.GameActivity"/>
         <receiver
             android:name=".receiver.AlarmReceiver"
             android:process=":remote" />

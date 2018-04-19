@@ -128,6 +128,7 @@ dependencies {
     compile 'com.daimajia.androidanimations:library:1.1.2@aar'
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.daimajia.swipelayout:library:1.2.0@aar'
+    compile 'com.rengwuxian.materialedittext:library:2.0.3'
     // This dude gave a shoutout to you (daimajia) on his github page:
 
     compile 'jp.wasabeef:recyclerview-animators:1.0.3@aar'

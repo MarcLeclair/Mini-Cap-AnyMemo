@@ -62,6 +62,7 @@ import org.liberty.android.fantastischmemo.common.BaseActivity;
 import org.liberty.android.fantastischmemo.databinding.MainTabsBinding;
 import org.liberty.android.fantastischmemo.receiver.SetAlarmReceiver;
 import org.liberty.android.fantastischmemo.service.AnyMemoService;
+import org.liberty.android.fantastischmemo.ui.GameUI.GameActivity;
 import org.liberty.android.fantastischmemo.ui.loader.MultipleLoaderManager;
 import org.liberty.android.fantastischmemo.utils.AMFileUtil;
 import org.liberty.android.fantastischmemo.utils.AboutUtil;
@@ -203,9 +204,15 @@ public class AnyMemo extends BaseActivity {
                         case R.id.option_tab_menu:
                             startActivity(new Intent(tabLayout.getContext(), OptionScreen.class));
                             break;
+                        case R.id.play_game:
+
+                            Intent i = new Intent(AnyMemo.this, GameActivity.class);
+                            startActivity(i);
+
                         case R.id.about_tab_menu:
                             aboutUtil.createAboutDialog();
                             break;
+
                     }
                     menuItem.setChecked(true);
                     binding.drawerLayout.closeDrawers();
