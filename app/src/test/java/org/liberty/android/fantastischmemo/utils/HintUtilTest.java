@@ -84,8 +84,8 @@ public class HintUtilTest {
         String result = hintUtil.generateLetterHint(1, word);
         String result2 = hintUtil.generateLetterHint(middleHintCounter, word);
         String result3 = hintUtil.generateLetterHint(pastLastCharacterHintCounter, word);
-        Assert.assertEquals("l _ _ _ _ _ _", result);
-        Assert.assertEquals("la   _ _ _ _", result2);
+        Assert.assertEquals("_ _ _ _ _ t _", result);
+        Assert.assertEquals("l _   _ _ t _", result2);
         Assert.assertEquals("la  tête", result3);
 
     }
