@@ -50,7 +50,7 @@
             android:orientation="horizontal">
 
             <com.rengwuxian.materialedittext.MaterialEditText
-                android:id="@+id/gameName"
+                    android:id="@+id/gameName"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:hint="Game Name"

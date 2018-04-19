@@ -1,7 +1,10 @@
 package org.liberty.android.fantastischmemo.utils;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Message;
+
+import org.liberty.android.fantastischmemo.ui.MultiPlayerRegistrationFragment;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,9 +17,10 @@ import java.net.Socket;
 
 public class ClientListener extends Thread {
     Socket socket;
-
-    ClientListener(Socket soc) {
+    private Context context;
+    ClientListener(Socket soc, Context context) {
         socket = soc;
+        this.context = context;
     }
 
     @Override
@@ -30,7 +34,15 @@ public class ClientListener extends Thread {
                 Bundle data = new Bundle();
                 Object serverObject = (Object) objectInputStream.readObject();
               //TODO HANDLE MSG
-                
+                if(serverObject instanceof String){
+                    data.putSerializable("name",(String)serverObject);
+                    data.putInt("one",1);
+                }
+                Message msg = new Message();
+                msg.setData(data);
+
+                MultiPlayerRegistrationFragment.handleMsg(msg);
+
             }
         } catch (IOException e) {
             e.printStackTrace();
