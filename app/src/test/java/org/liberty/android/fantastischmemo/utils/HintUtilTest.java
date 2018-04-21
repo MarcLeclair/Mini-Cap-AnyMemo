@@ -17,6 +17,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import android.test.suitebuilder.annotation.SmallTest;
 import android.util.Log;
@@ -33,6 +34,7 @@ public class HintUtilTest {
     private int pastLastCharacterHintCounter;
     private HintUtil hintUtil;
     private String word;
+    private HashSet<Integer> used;
     private List<Card> cards;
     private List<Card> copyOfDeckNotShuffled;
     private Card card1;
@@ -43,6 +45,7 @@ public class HintUtilTest {
     @Before
     public void setUp() {
         word = "la tête";
+        used = new HashSet<>();
 
         // 0.5 * length of word is equal to the number of clicks on letter option
         //if word is 7 letters, round down to 3 letters as the number of clicks
@@ -81,11 +84,11 @@ public class HintUtilTest {
     @Test
     public void generateLetterHintTest() {
         boolean valid = false;
-        String result = hintUtil.generateLetterHint(1, word);
-        String result2 = hintUtil.generateLetterHint(middleHintCounter, word);
-        String result3 = hintUtil.generateLetterHint(pastLastCharacterHintCounter, word);
-        Assert.assertEquals("l _ _ _ _ _ _", result);
-        Assert.assertEquals("la   _ _ _ _", result2);
+        String result = hintUtil.generateLetterHint(1, word, used);
+        String result2 = hintUtil.generateLetterHint(middleHintCounter, word, used);
+        String result3 = hintUtil.generateLetterHint(pastLastCharacterHintCounter, word, used);
+        Assert.assertEquals("_ _ _ t _ _ _", result);
+        Assert.assertEquals("_ a _  t _ _ _", result2);
         Assert.assertEquals("la  tête", result3);
 
     }
