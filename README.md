@@ -1,3 +1,4 @@
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/384e59a9d78349a9b64a20b54ce0c6c8)](https://app.codacy.com/app/MarcLeclair/Mini-Cap-AnyMemo?utm_source=github.com&utm_medium=referral&utm_content=MarcLeclair/Mini-Cap-AnyMemo&utm_campaign=badger)
 [![Build Status](http://anymemominicap.pagekite.me/buildStatus/icon?job=AnyMemo)](http://anymemominicap.pagekite.me/job/AnyMemo)
 
 
