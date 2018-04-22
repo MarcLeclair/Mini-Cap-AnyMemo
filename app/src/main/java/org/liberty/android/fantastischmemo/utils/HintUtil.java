@@ -16,7 +16,7 @@ public class HintUtil {
     public HintUtil() {
     }
 
-    public static String generateLetterHint(int count, String word, HashSet<Integer> used) {
+    public String generateLetterHint(int count, String word, HashSet<Integer> used) {
         //this function is called in the displayLetterHint method, line 276
         //String word = getCurrentCard().getAnswer();
         StringBuilder string = new StringBuilder();

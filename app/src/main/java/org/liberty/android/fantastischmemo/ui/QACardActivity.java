@@ -119,7 +119,7 @@ public abstract class QACardActivity extends BaseActivity {
 
     private HintUtil hintUtil;
 
-    static HashSet<Integer> used = new HashSet<>();
+    HashSet<Integer> used = new HashSet<>();
 
     /**
      * This needs to be defined before onCreate so in onCreate, all loaders will
