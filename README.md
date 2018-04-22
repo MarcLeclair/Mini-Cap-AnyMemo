@@ -98,3 +98,6 @@ Android studio user
 It is easy! Install all the dependencies listed in the "How to compile" section
 and you can import directly into Android studio.
 
+Add Static Analysis Tool
+-----------------
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/ecfdb883812843ac83976cb1a3adb887)](https://www.codacy.com/app/MarcLeclair/Mini-Cap-AnyMemo?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=MarcLeclair/Mini-Cap-AnyMemo&amp;utm_campaign=Badge_Grade)
