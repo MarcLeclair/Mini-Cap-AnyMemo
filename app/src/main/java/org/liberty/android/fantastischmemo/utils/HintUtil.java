@@ -33,7 +33,7 @@ public class HintUtil {
 
         //check if each index exists in the used list, if it does, copy the corresponding letter to answers, otherwise copy _ to answers
         for (int i = 0; i < word.length(); i++) {
-            if (i <= count ) {
+            if (i <= count -1) {
                 if (used.contains(i)) {
                     answers[i] = letters[i];
                 }
