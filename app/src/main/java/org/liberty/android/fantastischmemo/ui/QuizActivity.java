@@ -302,12 +302,14 @@ public class QuizActivity extends QACardActivity {
     }
 
     @Override
-    protected boolean onClickAnswerView() {
+    protected boolean onClickAnswerView () {
         if (!isAnswerShown()) {
             displayCard(true);
             //when the answer of a flash card is shown, the counter of the letterhint is set back
             // to 0
             letterHintCounter = 0;
+            used.clear();
+
         } else if (setting.getCardStyle() == Setting.CardStyle.DOUBLE_SIDED && isAnswerShown()) {
             displayCard(false);
         }

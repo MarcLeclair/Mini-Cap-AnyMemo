@@ -66,6 +66,7 @@ import org.liberty.android.fantastischmemo.widget.AnyMemoWidgetProvider;
 import java.io.File;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -117,6 +118,8 @@ public abstract class QACardActivity extends BaseActivity {
     String TAG = "spellingHint";
 
     private HintUtil hintUtil;
+
+    HashSet<Integer> used = new HashSet<>();
 
     /**
      * This needs to be defined before onCreate so in onCreate, all loaders will
@@ -397,7 +400,7 @@ public abstract class QACardActivity extends BaseActivity {
         onPostDisplayCard();
     }
 
-    protected void displayLetterHint(boolean enableLetterHint, int letterHintCounter) {
+    protected void displayLetterHint(boolean enableLetterHint, int letterHintCounter, HashSet<Integer> used) {
 
         // First prepare the text to display
 
@@ -461,7 +464,7 @@ public abstract class QACardActivity extends BaseActivity {
                 questionTypefaceValue, imageSearchPaths);
 
         CardFragment.Builder showHintFragmentBuilder = new CardFragment.Builder
-                (hintUtil.generateLetterHint(letterHintCounter, getCurrentCard().getAnswer()))
+                (hintUtil.generateLetterHint(letterHintCounter, getCurrentCard().getAnswer(), used))
                 .setTextAlignment(answerAlign)
                 .setTypefaceFromFile(answerTypefaceValue)
                 .setTextOnClickListener(onAnswerTextClickListener)
@@ -983,7 +986,11 @@ public abstract class QACardActivity extends BaseActivity {
     }
 
     protected boolean isAnswerShown() {
+        if (isAnswerShown){
+            used.clear();
+        }
         return isAnswerShown;
+
     }
 
     protected AnyMemoDBOpenHelper getDbOpenHelper() {
@@ -1098,7 +1105,7 @@ public abstract class QACardActivity extends BaseActivity {
 
     protected boolean showLetterHint(int letterHintCounter) {
         //the method is in the line 206
-        displayLetterHint(true, letterHintCounter);
+        displayLetterHint(true, letterHintCounter, used);
         return true;
     }
 
